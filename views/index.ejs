@@ -1,0 +1,21 @@
+<html lang="en" dir="ltr">
+<%-include('partials/header.ejs')-%>
+
+  <script>
+    let solveCounter = "<%- count%>"
+  </script>
+
+  <div id = "container" class = "container">
+  <body onload = "setup()"> 
+  
+        <div class="buttons">
+          <button onClick="setInputToBoard()" class="button" id="solveButton" display="inline" type="Solve-Button" name="Solve"> Solve </button>
+          <button onClick="resetBoard()" class="button" id="resetButton"display="inline" type="Reset-Board" name="Reset Board"> Reset Board </button>
+          <div class="Solvedbutton" id="SolvedCounterDisplay" display="inline"> Solved: <%= count%></div>
+        </div>
+        <!-- <button class="button" display="inline" type="Reset-Board" name="Reset Board"></button> <a href = '/countSolve'>Solved Sudoku</a> </button> -->
+
+  </div>
+  </body>
+  <%-include('partials/footer.ejs')-%>
+</html>

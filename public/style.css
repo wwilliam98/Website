@@ -1,0 +1,373 @@
+body{
+  background-color: white;
+}
+
+a {
+  color: black;
+  text-decoration: none; /* no underline */
+}
+
+.container{
+  display: center;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-top: 2px;
+  border-bottom: 2px;
+  border-right: 2px;
+  border-left: 2px;
+
+}
+
+.row{
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.col{
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  border-top: 1px;
+  border-bottom: 1px;
+  border-right: 1px;
+  border-left: 1px;
+  border-style: solid;
+  border-color: black;
+}
+
+.col[type=number] {
+  font-size: 200%;
+  font-style: oblique;
+  font-family: cursive;
+  text-align: center;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.Square3x3{
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  border-radius: 30px;
+  display: inline-block;
+} 
+
+.SolvedButton{
+  border-radius: 30px;
+  display: inline-block;
+  letter-spacing: 0.075em;
+  padding: .8em 1em;
+  margin: auto 2em;
+  position: relative;
+  align-self: center;
+  text-transform: uppercase;
+}
+.button:hover
+{
+background-color:#fee9968c;
+}
+.button:active
+{
+background-color:#ffcc00b9;
+}
+
+.buttons {
+  align-self: center;
+} 
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+h1, h2, h3, h4, ul, li, a, p, input, label, button, div, footer{
+  margin: 0;
+  padding: 0;
+  font-family: 'Quicksand', sans-serif;
+  color: #444;
+}
+ul{
+  list-style-type: none;
+}
+
+nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+nav ul{
+  display: flex;
+  align-items: center;
+}
+nav li{
+  margin-left: 20px;
+}
+nav li a{
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.8em;
+  display: block;
+  padding: 10px 16px;
+  letter-spacing: 2px;
+}
+
+.btn{
+  border-radius: 36px;
+  background: #FEE996;
+}
+
+form h2{
+  font-size: 2.4em;
+  font-weight: 900;
+  margin-bottom: 40px;
+}
+form{
+  width: 360px;
+  margin: 0 auto;
+  padding: 30px;
+  box-shadow: 2px 4px 50px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  background: white;
+}
+input{
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 1em;
+  width: 100%;
+}
+
+label{
+  display: block;
+  margin: 20px 0 10px;
+}
+
+button{
+  margin-top: 30px;
+  border-radius: 36px;
+  background: #FEE996;
+  border:0;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.8em;
+  display: block;
+  padding: 10px 16px;
+  letter-spacing: 2px;
+}
+.error{
+  color: #ff0099;
+  margin: 10px 2px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+header{
+  display: flex;
+  align-items: center;
+}
+header img{
+  width: 250px;
+  margin-right: 40px;
+}
+header h2{
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+header h3{
+  font-size: 1.6em;
+  margin-bottom: 10px;
+  margin-left: 2px;
+  color: #999;
+}
+header .btn{
+  margin-top: 20px;
+  padding: 12px 18px;
+  text-transform: uppercase;
+  font-weight: bold;
+  display: inline-block;
+  font-size: 0.8em;
+}
+.recipes{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 30px;
+  row-gap: 80px;
+  margin: 80PX AUTO;
+  max-width: 1200px;
+}
+.recipe{
+  display: inline-block;
+  border-radius: 20px;
+  background: white;
+  position: relative;
+  text-align: center;
+  padding: 0 20px 30px 20px
+}
+.recipe img{
+  width: 100px;
+  margin: -30px auto 20px;
+}
+footer{
+  text-align: center;
+  margin-top: 120px;
+  color: #aaa;
+}
+
+
+/* Front Web Page */
+#canvas1{
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  background: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#tutorial {
+  position: absolute;
+  z-index: 3;
+  background-color: rgba(255, 255, 255, 1);
+  width: 50%;
+  height: 70%;
+  border: 3px solid #34495e;
+  border-radius: 4px;
+  text-align: center;
+  float: right;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+#tutorial > h3 {
+  padding-bottom: 10px;
+  padding-top: 20px;
+}
+
+h3,
+.h3 {
+  font-size: 40px;
+}
+
+#WKeyDisplay{
+  width: 10%;
+  height: 10%;
+  border: 5px solid #1abc9c;
+  background: white;
+  border-radius: 25px;
+  text-align: center;
+  padding: 5px;
+  margin: 10px auto;
+  line-height: 50px;
+}
+
+#AKeyDisplay{
+  width: 10%;
+  height: 10%;
+  border: 5px solid #1abc9c;
+  border-radius: 25px;
+  background: white;
+  text-align: center;
+  padding: 5px;
+  margin: 10px auto;
+  display: inline-block;
+  line-height: 50px;
+}
+#SKeyDisplay{
+  width: 10%;
+  height: 10%;
+  border: 5px solid #1abc9c;
+  border-radius: 25px;
+  background: white;
+  text-align: center;
+  padding: 5px;
+  margin: 10px auto;
+  display: inline-block;
+  line-height: 50px;
+}
+#DKeyDisplay{
+  width: 10%;
+  height: 10%;
+  border: 5px solid #1abc9c;
+  border-radius: 25px;
+  background: white;
+  text-align: center;
+  padding: 5px;
+  margin: 10px auto;
+  display: inline-block;
+  line-height: 50px;
+}
+
+#EnterKeyDisplay{
+  width: 50%;
+  height: 10%;
+  border: 5px solid #1abc9c;
+  border-radius: 25px;
+  background: white;
+  text-align: center;
+  padding: 5px;
+  margin: 10px auto;
+  display: inline-block;
+  line-height: 50px;
+}
+
+#nextButton {
+  color: #ffffff;
+  background-color: #1abc9c;
+  position: absolute;
+  right: 2%;
+  bottom: 2%;
+}
+
+#skipButton {
+  color: #ffffff;
+  background-color: #1abc9c;
+  position: absolute;
+  left: 2%;
+  bottom: 2%;
+}
+
+#previousButton {
+  color: #ffffff;
+  background-color: #1abc9c;
+  position: absolute;
+  right: 17%;
+  bottom: 2%;
+}
+
+#tutorial > p {
+  font-weight: bolder;
+  padding: 5px 20px 5px 20px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.72222;
+  margin: 0 0 15px;
+}
+
+#finishButton:hover,
+#nextButton:hover,
+#previousButton:hover,
+#skipButton:hover {
+  background-color: #48c9b0;
+}
