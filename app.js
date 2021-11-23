@@ -21,15 +21,16 @@ mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: t
     .then((result) => console.log("connected to port 3000"), app.listen(3000))
     .catch((err) => console.log(err));
 
+app.get('*', checkUser);
 app.get('/', function(req, res){
-  res.render('main.html')
+  res.render('main')
 });
-// app.get('*', checkUser);
-// app.get('/', requireAuth,function(req, res){
-//   const token = req.cookies.jwt;
-//   jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
-//     const user = await User.findById(decodedToken.id);
-//     res.render('index', {count: user.solvedSudoku});
-//   })
-// });
-// app.use(authRoutes);
+app.get('/SudokuSolver', requireAuth,function(req, res){
+  const token = req.cookies.jwt;
+  jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
+    const user = await User.findById(decodedToken.id);
+    res.render('index', {count: user.solvedSudoku});
+  })
+});
+
+app.use(authRoutes);
