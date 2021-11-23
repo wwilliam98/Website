@@ -25,7 +25,8 @@ app.get('*', checkUser);
 app.get('/', function(req, res){
   res.render('main')
 });
-app.get('/SudokuSolver', requireAuth,function(req, res){
+
+app.get('/SudokuSolver', requireAuth, function(req, res){
   const token = req.cookies.jwt;
   jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
     const user = await User.findById(decodedToken.id);

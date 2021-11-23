@@ -112,8 +112,9 @@ function setInputToBoard(){
   else{
     alert("Invalid Input on Board")
   }
-  // console.log(solveCounter);
 
+  // console.log(solveCounter);
+  
 }
 ///////////////////////////////////////////////////////
 

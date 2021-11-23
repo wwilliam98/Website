@@ -30,6 +30,19 @@ background.src = "../images/pokemon_beach_base.jpeg";
 const clouds = new Image();
 clouds.src = "../images/clouds.png";
 
+function loopClouds(speed = 0.5){
+    ctx.drawImage(clouds, cloudsAxis.cloud1, 233, canvas.width, canvas.height/4.8);
+    cloudsAxis.cloud1 -= speed;
+    ctx.drawImage(clouds, cloudsAxis.cloud2, 233, canvas.width, canvas.height/4.8);
+    cloudsAxis.cloud2 -= speed;
+    if (cloudsAxis.cloud1 < -800){
+        cloudsAxis.cloud1 = 0
+    }
+    if (cloudsAxis.cloud2 < 0){
+        cloudsAxis.cloud2 = 800
+    }
+}
+
 //build in canvas attributes to make it simplier
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH){
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
@@ -139,6 +152,7 @@ function nextPreviousTutorial(){
         else if (counter === 2){
             if (e.key == "Enter"){
                 document.getElementById("EnterKeyDisplay").style.background = "lightgreen";
+                window.location.href = '/login'
             }
         }
     });
@@ -180,29 +194,6 @@ function nextPreviousTutorial(){
     document.getElementById("previousButton").onclick = () => {
         if (counter > 1) counter--;
         nextPreviousTutorial();
-    }
-}
-
-// function animate(){
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//     // ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
-//     drawSprite(playerSprite, player.width * player.frameX, player.height * player.frameY, player.width, player.height, player.x, player.y, player.width, player.height);
-//     movePlayer();
-//     handlePlayerFrame();
-//     requestAnimationFrame(animate);
-// }
-
-// animate();
-function loopClouds(speed = 0.5){
-    ctx.drawImage(clouds, cloudsAxis.cloud1, 233, canvas.width, canvas.height/4.8);
-    cloudsAxis.cloud1 -= speed;
-    ctx.drawImage(clouds, cloudsAxis.cloud2, 233, canvas.width, canvas.height/4.8);
-    cloudsAxis.cloud2 -= speed;
-    if (cloudsAxis.cloud1 < -800){
-        cloudsAxis.cloud1 = 0
-    }
-    if (cloudsAxis.cloud2 < 0){
-        cloudsAxis.cloud2 = 800
     }
 }
 
