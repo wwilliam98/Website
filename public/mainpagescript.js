@@ -1,9 +1,11 @@
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 let runGame = false;
+let interact = [false, ]; //interaction, category(projects, social med, etc)
 canvas.width = 800;
 canvas.height = 500;
 
+//Objects
 const keys = [];
 const player = {
     x: 0,
@@ -12,7 +14,7 @@ const player = {
     height: 64,
     frameX: 0,
     frameY: 0,
-    speed: 5,
+    speed: 3,
     moving: false
 };
 
@@ -21,6 +23,7 @@ const cloudsAxis = {
     cloud2: 800
 };
 
+//Load Images
 const playerSprite = new Image();
 playerSprite.src = "../images/pikachu_sprite.png";
 
@@ -29,6 +32,7 @@ background.src = "../images/pokemon_beach_base.jpeg";
 
 const clouds = new Image();
 clouds.src = "../images/clouds.png";
+///////////////////////////////////////////////
 
 function loopClouds(speed = 0.5){
     ctx.drawImage(clouds, cloudsAxis.cloud1, 233, canvas.width, canvas.height/4.8);
@@ -48,17 +52,23 @@ function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH){
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
 };
 
-window.addEventListener("keydown", function(e){
-    keys[e.key] = true;
-    if (e.key === ("w" || "a" || "s" || "d")){
-        player.moving = true;
-    }
-});
-
-window.addEventListener("keyup", function(e){
-    delete keys[e.key];
-    player.moving = false;
-})
+function keyListener(){
+    window.addEventListener("keydown", function(e){
+        keys[e.key] = true;
+        if (e.key === ("w" || "a" || "s" || "d")){
+            player.moving = true;
+        }
+        
+        if (e.repeat){
+            return
+        }
+    });
+    
+    window.addEventListener("keyup", function(e){
+        delete keys[e.key];
+        player.moving = false;
+    })
+}
 
 function movePlayer(){
     if ((keys["ArrowUp"] || keys["w"] == true)){
@@ -97,6 +107,7 @@ function movePlayer(){
     }
 }
 
+//Motion change
 function handlePlayerFrame(){
     if (player.frameX < 3 && player.moving == true){
         player.frameX ++
@@ -106,6 +117,7 @@ function handlePlayerFrame(){
     }
 }
 
+//Tutorial Page
 let counter = 1;
 function nextPreviousTutorial(){
     if (counter === 1) {
@@ -152,7 +164,6 @@ function nextPreviousTutorial(){
         else if (counter === 2){
             if (e.key == "Enter"){
                 document.getElementById("EnterKeyDisplay").style.background = "lightgreen";
-                window.location.href = '/login'
             }
         }
     });
@@ -197,8 +208,196 @@ function nextPreviousTutorial(){
     }
 }
 
+//Check for interaction, Show pop-up bubbles
+function interaction(){
+    //About Me
+
+    //Education
+
+    //Skills
+
+    //Projects
+    if ((player.x >= 50 && player.x <= 100) && (335 <= player.y && player.y <= 370) && (keys["Enter"] === true)){
+        runGame = false;
+        interact[0] = true;
+        interact[1] = "Projects";
+        projects_text_bubble = document.getElementById("text_bubble")
+        projects_text_bubble.style.display = "block"
+        projects_text_bubble.innerHTML = '<p class = "bubbles">Projects</p>     <ul class = "bubbles"><li class = "bubbles"><i class="arrow"  id = "arrow1"></i>Sudoku Solver</li>     <li class = "bubbles"><i class="arrow" id = "arrow2"></i>Automated Desk Lamp</li>     <li class = "bubbles"><i class="arrow" id = "arrow3"></i>Google Tech Challenge</li>       <li class = "bubbles"><i class="arrow" id = "arrow4"></i>Path Finding Robot</li>      <li class = "bubbles"><i class="arrow" id = "arrow5"></i>Dare Mighty Things Hackaton</li></ul>'
+    
+    //Work Experience
+
+    };
+    //Social Media
+    if ((player.x >= 150 && player.x <= 200) && (335 <= player.y && player.y <= 370) && (keys["Enter"] === true)){
+        runGame = false;
+        interact[0] = true;
+        interact[1] = "Social Media";
+        projects_text_bubble = document.getElementById("text_bubble")
+        projects_text_bubble.style.display = "block"
+        projects_text_bubble.innerHTML = '<p class = "bubbles">Social Media</p>     <ul class = "bubbles"><li class = "bubbles"><i class="arrow"  id = "arrow1"></i>Linked In</li>     <li class = "bubbles"><i class="arrow" id = "arrow2"></i>Github</li>     <li class = "bubbles"><i class="arrow" id = "arrow3"></i>Instagram</li>     <li class = "bubbles"><i class="arrow" id = "arrow4"></i>Facebook</li>'
+    };
+};
+//Continue Game
+function checkStopInteraction(){
+    window.addEventListener("keydown", function(e){
+        keys[e.key] = true;
+        if (keys["Escape"] === true){
+            projects_text_bubble.style.display = "none";
+            runGame = true;
+            arrowCounter = 1;
+            interact[0] = false;
+            interact[1] = "";
+        }
+    });
+    window.addEventListener("keyup", function(e){
+        delete keys[e.key]
+    });
+}
+
+//Draw Selection Arrow
+let arrowCounter = 1;
+async function drawArrow(assignmentType){
+    var assignmentSize = {"Projects": 5, "Work Experience": 1, "Education": 2, "Social Media": 4} 
+    const half = Math.ceil(assignmentSize[assignmentType] / 2)
+
+    if (await keys["ArrowDown"] === true){
+        if ((0 < arrowCounter + 1) && (arrowCounter + 1 < assignmentSize[assignmentType] + 1)){
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
+            await arrowCounter++;
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "inline-block";
+        }
+    }
+
+    if (await keys["ArrowUp"] === true){
+        if ((0 < arrowCounter - 1) && (arrowCounter - 1 < assignmentSize[assignmentType] + 1)){
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
+            arrowCounter --;
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "inline-block";
+        }
+    }
+
+    if (await keys["ArrowRight"] === true){
+        if ((0 < arrowCounter + half) && (arrowCounter + half < assignmentSize[assignmentType] + 1)){
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
+            arrowCounter += half;
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "inline-block";
+        }
+    }
+
+    if (await keys["ArrowLeft"] === true){
+        if ((0 < arrowCounter - half) && (arrowCounter - half < assignmentSize[assignmentType] + 1)){
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
+            arrowCounter -= half;
+            projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "inline-block";
+        }
+    }
+
+    // window.addEventListener("keypress", function(e){
+    //     if (e.key === "Enter"){
+    //         if (arrowCounter === 1){
+    //             window.location.href = '/login';
+    //             return
+    //         }
+    //     }
+    // });
+
+    // if (window.KeyboardEvent("Enter")){
+    //     console.log("hi")
+    // }
+
+    // await router(interact[1], arrowCounter);
+};
+
+//Router
+function router(category, arrowPointer){
+    //Projects
+    var getSudokuSolver = function(e){
+        if (category === "Projects"){
+            if ((keys["Enter"] === true) && (arrowPointer === 1)){
+                console.log("e.key")
+                // window.location.href = '/login';
+                window.location.href = "/login";
+            }
+        }
+        window.removeEventListener("keydown", getSudokuSolver, false)
+    };
+    window.addEventListener("keydown", getSudokuSolver);
+
+    //Social Media
+    var getLinkedIn = function(e){
+        if (category === "Social Media"){
+            if ((e.key === "Enter") && (arrowPointer === 1)){
+                window.location.href = 'https://www.linkedin.com/in/wwilliam1908/';
+            }
+        }
+        window.removeEventListener("keydown", getLinkedIn, false)
+    };
+    window.addEventListener("keydown", getLinkedIn);
+
+    var getGithub = function(e){
+        if (category === "Social Media"){
+            if ((e.key === "Enter") && (arrowPointer === 2)){
+                window.location.href = 'https://github.com/wwilliam98';
+            }
+        }
+        window.removeEventListener("keydown", getGithub, false);
+    };
+    window.addEventListener("keydown", getGithub);
+
+    var getInstagram = function(e){
+        if (category === "Social Media"){
+            if ((e.key === "Enter") && (arrowPointer === 3)){
+                window.location.href = 'https://www.instagram.com/wwilliam_98/';
+            }
+        }
+        window.removeEventListener("keydown", getInstagram, false);
+    };
+    window.addEventListener("keydown", getInstagram);
+
+    var getFacebook = function(e){
+        if (category === "Social Media"){
+            if ((e.key === "Enter") && (arrowPointer === 4)){
+                window.location.href = 'https://www.facebook.com/wwilliam1908';
+            }
+        }
+        window.removeEventListener("keydown", getFacebook, false);
+    };
+    window.addEventListener("keydown", getFacebook);
+}
+
+// setInterval(async () => {
+//         ctx.clearRect(0, 0, canvas.width, canvas.height);
+//         ctx.drawImage(background, 0, 0, canvas.width, canvas.height) 
+//         loopClouds();
+//         drawSprite(playerSprite, player.width * player.frameX, player.height * player.frameY, player.width, player.height, player.x, player.y, player.width, player.height);
+//         if (runGame === true){
+//             movePlayer();
+//             handlePlayerFrame();
+//             console.log(player.x, player.y)
+//             interaction(player.x, player.y);
+//             //drawArrow(6);
+//         }
+// }, 60);
+
+let fps, fpsInterval, startTime, now, then, elapsed;
+function startAnimating(fps){
+    fpsInterval = 1000/fps;
+    then = Date.now();
+    startTime = then;
+    animate();
+}
+
 nextPreviousTutorial()
-setInterval(() => {
+async function animate(){
+    requestAnimationFrame(animate);
+    now = Date.now();
+    elapsed = now - then;
+    if (elapsed > fpsInterval){
+        then = now - (elapsed % fpsInterval);
+
+        //code
+        keyListener();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height) 
         loopClouds();
@@ -206,5 +405,14 @@ setInterval(() => {
         if (runGame === true){
             movePlayer();
             handlePlayerFrame();
+            interaction();
         }
-}, 60);
+        if (interact[0] === true){
+            await drawArrow(interact[1]);
+            checkStopInteraction();
+            router(interact[1], arrowCounter);
+        }
+    }
+}
+
+startAnimating(17);
