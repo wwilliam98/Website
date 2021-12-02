@@ -38,10 +38,10 @@ const playerSprite = new Image();
 playerSprite.src = "../images/pikachu_sprite.png";
 
 const background = new Image();
-background.src = "../images/pokemon_beach_base.jpeg";
+background.src = "../images/Pokemon_Beach_Base.jpeg";
 
 const clouds = new Image();
-clouds.src = "../images/clouds.png";
+clouds.src = "../images/Clouds.png";
 
 //Signs
 const AboutMeSign = new Image();
@@ -297,7 +297,7 @@ function objectInteraction(radius){
         createTextBubble("About Me", "70%");
         projects_text_bubble.style.display = "inline";
         projects_text_bubble.innerHTML =`<p class = "AboutMe">About Me</p>
-                                        <img src="/images/work pp.jpeg" alt="my picture" style="width:20%;height:50%; float:left; padding: 10px;">
+                                        <img src="/images/Work PP.jpeg" alt="my picture" style="width:20%;height:50%; float:left; padding: 10px;">
                                         <h4 class = "AboutMe">Hi there! My name is Fnu William. I graduated from Illinois Institute of technology on May 22, 2012. I majored in Computer Engineering and I am currently looking for a full time job as a software engineer. 
                                         Initially, I was interested in majoring computer engineering because of the ability to combine the possibilities of computer software and hardware together into reality.
                                         I first realized my passion in computer engineering after seeing just how many problems in the world, espescially underdevelop areas,
