@@ -547,6 +547,7 @@ p.Skills{
 ul.Skills > li{
   font-size: 23px;
   text-decoration: underline;
+  font-weight: bold;
 }
 
 li.Skills{
@@ -561,7 +562,7 @@ ul.SkillsSublist{
   column-count: 4;
   list-style-type: none;
   margin-bottom: 20px;
-  font-size: larger;
+  font-size: 22px;
 }
 
 ul.SkillsSublist > li:before {
@@ -576,11 +577,15 @@ p.AboutMe{
   margin: 0 0 0px;
   font-weight: bold;
   text-align: center;
-  text-decoration: underline
+  text-decoration: underline;
+}
+
+#textbubble img{
+  float: left;
 }
 
 h4.AboutMe{
   margin: 12px;
   text-align: justify;
-  float: right;
+  text-indent: 2em;
 }

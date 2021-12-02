@@ -23,8 +23,13 @@ const cloudsXAxis = {
     cloud2: 800
 };
 
-const signAxis = {
-    projectSign: [30, 380]
+const signsCoordinate = {
+    aboutmeCoordinate: [50, 350],
+    educationCoordinate: [150, 400],
+    skillsCoordinate: [270, 350],
+    projectCoordinate: [400, 420],
+    workexperienceCoordinate: [550, 350],
+    socialmediaCoordinate: [650, 400]
 };
 /////////////////////
 
@@ -80,14 +85,17 @@ function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH){
     //last 2 is the width and height in the canvas
 };
 
-function drawSigns(sizeX, sizeY){
-    ctx.drawImage(AboutMeSign, 0, 0, AboutMeSign.width, AboutMeSign.height, 50, 350, sizeX, sizeY)
-    ctx.drawImage(EducationSign, 0, 0, EducationSign.width, EducationSign.height, 150, 350, sizeX, sizeY)
-    ctx.drawImage(SkillsSign, 0, 0, SkillsSign.width, SkillsSign.height, 250, 350, sizeX, sizeY)
-    ctx.drawImage(ProjectSign, 0, 0, ProjectSign.width, ProjectSign.height, 350, 350, sizeX, sizeY)
-    ctx.drawImage(WorkExperienceSign, 0, 0, WorkExperienceSign.width, WorkExperienceSign.height, 450, 350, sizeX, sizeY)
-    ctx.drawImage(SocialMediaSign, 0, 0, SocialMediaSign.width, SocialMediaSign.height, 550, 350, sizeX, sizeY)
+function drawFrontSigns(sizeX, sizeY){
+    ctx.drawImage(AboutMeSign, 0, 0, AboutMeSign.width, AboutMeSign.height, signsCoordinate.aboutmeCoordinate[0], signsCoordinate.aboutmeCoordinate[1], sizeX, sizeY)
+    ctx.drawImage(SkillsSign, 0, 0, SkillsSign.width, SkillsSign.height, signsCoordinate.skillsCoordinate[0], signsCoordinate.skillsCoordinate[1], sizeX, sizeY)
+    ctx.drawImage(WorkExperienceSign, 0, 0, WorkExperienceSign.width, WorkExperienceSign.height, signsCoordinate.workexperienceCoordinate[0], signsCoordinate.workexperienceCoordinate[1], sizeX, sizeY)
 };
+
+function drawBehindSigns(sizeX, sizeY){
+    ctx.drawImage(EducationSign, 0, 0, EducationSign.width, EducationSign.height, signsCoordinate.educationCoordinate[0], signsCoordinate.educationCoordinate[1], sizeX, sizeY)
+    ctx.drawImage(ProjectSign, 0, 0, ProjectSign.width, ProjectSign.height, signsCoordinate.projectCoordinate[0], signsCoordinate.projectCoordinate[1], sizeX, sizeY)
+    ctx.drawImage(SocialMediaSign, 0, 0, SocialMediaSign.width, SocialMediaSign.height, signsCoordinate.socialmediaCoordinate[0], signsCoordinate.socialmediaCoordinate[1], sizeX, sizeY)
+}
 
 function keyListener(){
     window.addEventListener("keydown", function(e){
@@ -173,7 +181,7 @@ function nextPreviousTutorial(){
 
     if (counter === 2) {
         document.getElementById("tutorial").innerHTML = `<h3>Site Menu?</h3>
-                                                        <p>To quickly navigate through each sections, walk your character to the nearest navigation menu and press</p>
+                                                        <p>To bring up the site menu, walk your character to the nearest navigation menu and press</p>
                                                         <div id="EnterKeyDisplay"> <h1>Enter↵</h1> </div>
                                                         <p></p>
                                                         <p>If you want to skip the tutorial, feel free to press the "Skip Tutorial" button below. Otherwise, press "Next"</p>
@@ -183,8 +191,8 @@ function nextPreviousTutorial(){
     }
 
     if (counter === 3) {
-        document.getElementById("tutorial").innerHTML = `<h3>How to Select</h3>
-                                                        <p>To quickly navigate through each sections, walk your character to the nearest navigation sign and press</p>
+        document.getElementById("tutorial").innerHTML = `<h3>How to Quit from menu</h3>
+                                                        <p>To quit from the menu display, press</p>
                                                         <div id="EscapeKeyDisplay"> <h1>Esc</h1> </div>
                                                         <p></p>
                                                         <p>If you want to skip the tutorial, feel free to press the "Skip Tutorial" button below. Otherwise, press "Next"</p>
@@ -283,22 +291,28 @@ function createTextBubble (category, heightSize){
 }
 
 //Check for interaction, Show pop-up bubbles
-function objectInteraction(){
+function objectInteraction(radius){
     //About Me
-    if ((player.x >= 0 && player.x <= 450) && (335 <= player.y && player.y <= 380) && (keys["Enter"] === true)){
+    if ((player.x >= signsCoordinate.aboutmeCoordinate[0]-radius && player.x <= signsCoordinate.aboutmeCoordinate[0]+radius) && (signsCoordinate.aboutmeCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.aboutmeCoordinate[1]+radius) && (keys["Enter"] === true)){
         createTextBubble("About Me", "70%");
-        projects_text_bubble.style.position = "fixed";
+        projects_text_bubble.style.display = "inline";
         projects_text_bubble.innerHTML =`<p class = "AboutMe">About Me</p>
-                                        <img src="/images/work pp.jpeg" alt="my picture" style="width:30%;height:30%; align:left">
-                                        <h4 class = "AboutMe">Hi there! My name is Fnu William, I graduated from Illinois Institute of technology on May 22, 2012. I majored in Computer Engineering and I am currently looking for a full time job as a software engineer. 
+                                        <img src="/images/work pp.jpeg" alt="my picture" style="width:20%;height:50%; float:left; padding: 10px;">
+                                        <h4 class = "AboutMe">Hi there! My name is Fnu William. I graduated from Illinois Institute of technology on May 22, 2012. I majored in Computer Engineering and I am currently looking for a full time job as a software engineer. 
+                                        Initially, I was interested in majoring computer engineering because of the ability to combine the possibilities of computer software and hardware together into reality.
+                                        I first realized my passion in computer engineering after seeing just how many problems in the world, espescially underdevelop areas,
+                                        that can be solved or simplified by utilizing computer hardware such as microcontrollers and with technology that the world offers in computer software. 
                                         In my experience in programming, I have won Dare Mighty Things hackathon in 2019 for a multi-million dollar company Jones Lang LaSalle (JLL). I also joined Google's Tech Challenge in their Headquarters in Chicago with the theme of "Video Games".
-                                        Initially, I was interested in computer engineering because of the ability to combine computer software and hardware together into reality. I first realized my passion in computer engineering after seeing just how many problems in the world espescially underdevelop areas
-                                        can be solved by using computer software.</h4>
-                                        `
+                                        </h4>
+                                        
+                                        <h4 = class = "AboutMe">
+                                        I am a dedicated person working toward the future where I can see myself as an expert in programming in the next 5 years,
+                                        becoming a senior as a Software Engineer, solving complex problem and continuing my knowlegdge.
+                                        If you like me so far and want to know more about me, you can keep and moving around the landscape and press enter on which section you are interested</h4>`
     };
 
     //Education
-    if ((player.x >= 400 && player.x <= 450) && (335 <= player.y && player.y <= 380) && (keys["Enter"] === true)){
+    if ((player.x >= signsCoordinate.educationCoordinate[0]-radius && player.x <= signsCoordinate.educationCoordinate[0]+radius) && (signsCoordinate.educationCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.educationCoordinate[1]+radius) && (keys["Enter"] === true)){
         createTextBubble("Education", "70%");
         projects_text_bubble.innerHTML =`<p class = "Education">Education</p>
                                         <ul class = "Education" style= "list-style-type:disc;">
@@ -317,7 +331,7 @@ function objectInteraction(){
     };
 
     //Skills
-    if ((player.x >= 350 && player.x <= 399) && (335 <= player.y && player.y <= 380) && (keys["Enter"] === true)){
+    if ((player.x >= signsCoordinate.skillsCoordinate[0]-radius && player.x <= signsCoordinate.skillsCoordinate[0]+radius) && (signsCoordinate.skillsCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.skillsCoordinate[1]+radius) && (keys["Enter"] === true)){
         createTextBubble("Skills", "70%");
         projects_text_bubble.innerHTML =`<p class = "Skills">Skills</p>
                                         <ul class = "Skills" style= "list-style-type:disc;">
@@ -352,7 +366,7 @@ function objectInteraction(){
     };
 
     //Projects
-    if ((player.x >= 50 && player.x <= 100) && (335 <= player.y && player.y <= 380) && (keys["Enter"] === true)){
+    if ((player.x >= signsCoordinate.projectCoordinate[0]-radius && player.x <= signsCoordinate.projectCoordinate[0]+radius) && (signsCoordinate.projectCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.projectCoordinate[1]+radius) && (keys["Enter"] === true)){
         createTextBubble("Projects", "60%");
         projects_text_bubble.innerHTML =`<p class = "projects">Projects</p>
                                         <ul class = "projects">
@@ -364,7 +378,7 @@ function objectInteraction(){
     };
 
     //Work Experience
-    if ((player.x >= 150 && player.x <= 200) && (335 <= player.y && player.y <= 380) && (keys["Enter"] === true)){
+    if ((player.x >= signsCoordinate.workexperienceCoordinate[0]-radius && player.x <= signsCoordinate.workexperienceCoordinate[0]+radius) && (signsCoordinate.workexperienceCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.workexperienceCoordinate[1]+radius) && (keys["Enter"] === true)){
         createTextBubble("Work Experience", "60%");
         projects_text_bubble.innerHTML =`<p class = "workExperience">Work Experience</p>
                                         <h3 class = "workExperience">OpenSlot Solution INC</h4>
@@ -376,7 +390,7 @@ function objectInteraction(){
     };
 
     //Social Media
-    if ((player.x >= 250 && player.x <= 300) && (335 <= player.y && player.y <= 380) && (keys["Enter"] === true)){
+    if ((player.x >= signsCoordinate.socialmediaCoordinate[0]-radius && player.x <= signsCoordinate.socialmediaCoordinate[0]+radius) && (signsCoordinate.socialmediaCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.socialmediaCoordinate[1]+radius) && (keys["Enter"] === true)){
         createTextBubble("Social Media", "60%");
         projects_text_bubble.innerHTML =`<p class = "SocialMedia">Social Media</p>
                                         <ul class = "SocialMedia">
@@ -520,12 +534,13 @@ async function animate(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
         loopClouds();
-        drawSigns(70, 70);
+        drawFrontSigns(70, 70);
         drawSprite(playerSprite, player.width * player.frameX, player.height * player.frameY, player.width, player.height, player.x, player.y, player.width, player.height);
+        drawBehindSigns(70, 70)
         if (runGame === true){
             movePlayer();
             handlePlayerFrame();
-            objectInteraction();
+            objectInteraction(50);
         }
         if (interact[0] === true){
             await drawArrow(interact[1]);
