@@ -331,6 +331,19 @@ h3,
   line-height: 50px;
 }
 
+#EscapeKeyDisplay{
+  width: 30%;
+  height: 10%;
+  border: 5px solid #1abc9c;
+  border-radius: 25px;
+  background: white;
+  text-align: center;
+  padding: 5px;
+  margin: 10px auto;
+  display: inline-block;
+  line-height: 50px;
+}
+
 #nextButton {
   color: #ffffff;
   background-color: #1abc9c;
@@ -352,6 +365,14 @@ h3,
   background-color: #1abc9c;
   position: absolute;
   right: 17%;
+  bottom: 2%;
+}
+
+#finishButton {
+  color: #ffffff;
+  background-color: #1abc9c;
+  position: absolute;
+  right: 2%;
   bottom: 2%;
 }
 
@@ -395,27 +416,6 @@ p {
   display: none;
 }
 
-p.bubbles{
-  font-size: 45px;
-  line-height: 1.72222;
-  margin: 0 0 15px;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: underline
-}
-
-ul.bubbles{
-  border-radius: 2px;
-  margin-left: 10px;
-  column-count: 2;
-  font-size: 32;
-}
-
-li.bubbles{
-  font-size: 32;
-  margin-bottom: 40;
-}
-
 .arrow {
   border: solid black;
   border-width: 0 3px 3px 0;
@@ -429,4 +429,158 @@ li.bubbles{
 
 #arrow1.arrow{
   display: inline-block;
+}
+
+/* dash */
+ul.dashed {
+  list-style-type: none;
+}
+ul.dashed > li {
+  margin-top: 10px;
+}
+ul.dashed > li:before {
+  content: "-";
+  text-indent: -20px;
+}
+
+/* Education */
+p.Education{
+  font-size: 45px;
+  line-height: 1.72222;
+  margin: 0 0 0px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline
+}
+
+h3.Education{
+  font-size: 23px;
+  text-decoration: underline;
+}
+
+li.Education{
+  font-size: 22px;
+  margin-bottom: 10px;
+  margin-left: 25px;
+  margin-right: 20px;
+  text-align: justify;
+}
+
+/* Projects */
+p.projects{
+  font-size: 45px;
+  line-height: 1.72222;
+  margin: 0 0 15px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline
+}
+
+ul.projects{
+  border-radius: 2px;
+  margin-left: 10px;
+  column-count: 2;
+  font-size: 32;
+}
+
+li.projects{
+  font-size: 32;
+  margin-bottom: 40;
+}
+
+/* Work Experience */
+p.workExperience{
+  font-size: 45px;
+  line-height: 1.72222;
+  margin: 0 0 0px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline
+}
+
+h3.workExperience{
+  font-size: 23px;
+  text-decoration: underline;
+  margin-left: 15px;
+}
+
+li.workExperience{
+  font-size: 22px;
+  margin-bottom: 10px;
+  margin-left: 25px;
+  margin-right: 20px;
+  text-align: justify;
+}
+
+/* Social Media */
+p.SocialMedia{
+  font-size: 45px;
+  line-height: 1.72222;
+  margin: 0 0 15px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline
+}
+
+ul.SocialMedia{
+  border-radius: 2px;
+  margin-left: 10px;
+  column-count: 2;
+  font-size: 32;
+}
+
+li.SocialMedia{
+  font-size: 32;
+  margin-bottom: 40;
+}
+
+/* Skills */
+p.Skills{
+  font-size: 45px;
+  line-height: 1.72222;
+  margin: 0 0 0px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline
+}
+
+ul.Skills > li{
+  font-size: 23px;
+  text-decoration: underline;
+}
+
+li.Skills{
+  font-size: 22px;
+  margin-bottom: 10px;
+  margin-left: 25px;
+  margin-right: 20px;
+  text-align: justify;
+}
+
+ul.SkillsSublist{
+  column-count: 4;
+  list-style-type: none;
+  margin-bottom: 20px;
+  font-size: larger;
+}
+
+ul.SkillsSublist > li:before {
+  content: "-";
+  text-indent: -20px;
+}
+
+/* About Me */
+p.AboutMe{
+  font-size: 45px;
+  line-height: 1.72222;
+  margin: 0 0 0px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline
+}
+
+h4.AboutMe{
+  margin: 12px;
+  text-align: justify;
+  float: right;
 }
