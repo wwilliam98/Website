@@ -562,6 +562,7 @@ async function animate(){
             movePlayer();
             handlePlayerFrame();
             objectInteraction(50);
+            imageisTouched();
         }
         if (interact[0] === true){
             await drawArrow(interact[1]);
