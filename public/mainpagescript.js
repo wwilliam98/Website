@@ -76,41 +76,6 @@ function loopClouds(speed = 0.5){
     }
 }
 
-function imageisTouched(){
-    AboutMeSign.addEventListener("touchstart", function(e){
-        createTextBubble("About Me", "70%");
-        projects_text_bubble.style.display = "inline";
-        projects_text_bubble.innerHTML =`<p class = "AboutMe">About Me</p>
-                                        <img src="/images/Work PP.jpeg" alt="my picture" style="width:20%;height:50%; float:left; padding: 10px;">
-                                        <h4 class = "AboutMe">Hi there! My name is Fnu William. I graduated from Illinois Institute of technology on May 22, 2012. I majored in Computer Engineering and I am currently looking for a full time job as a software engineer. 
-                                        Initially, I was interested in majoring computer engineering because of the ability to combine the possibilities of computer software and hardware together into reality.
-                                        I first realized my passion in computer engineering after seeing just how many problems in the world, espescially underdevelop areas,
-                                        that can be solved or simplified by utilizing computer hardware such as microcontrollers and with technology that the world offers in computer software. 
-                                        In my experience in programming, I have won Dare Mighty Things hackathon in 2019 for a multi-million dollar company Jones Lang LaSalle (JLL). I also joined Google's Tech Challenge in their Headquarters in Chicago with the theme of "Video Games".
-                                        </h4>
-                                        
-                                        <h4 = class = "AboutMe">
-                                        I am a dedicated person working toward the future where I can see myself as an expert in programming in the next 5 years,
-                                        becoming a senior as a Software Engineer, solving complex problem and continuing my knowlegdge.
-                                        If you like me so far and want to know more about me, you can keep and moving around the landscape and press enter on which section you are interested</h4>`
-    });
-    EducationSign.addEventListener("touchstart", function(e){
-
-    });
-    SkillsSign.addEventListener("touchstart", function(e){
-
-    });
-    ProjectSign.addEventListener("touchstart", function(e){
-
-    });
-    WorkExperienceSign.addEventListener("touchstart", function(e){
-
-    });
-    SocialMediaSign.addEventListener("touchstart", function(e){
-
-    });
-}
-
 //build in canvas attributes to make it simplier
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH){
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
@@ -150,11 +115,39 @@ function keyListener(){
     })
 }
 
+function playerBlocked(x, y){
+        console.log(signsCoordinate.aboutmeCoordinate[0] - 50, signsCoordinate.aboutmeCoordinate[0] + 50);
+        if (//FrontSign
+            ((signsCoordinate.aboutmeCoordinate[0] - 50) < x) && (x < (signsCoordinate.aboutmeCoordinate[0] + 50))
+            && ((signsCoordinate.aboutmeCoordinate[1] - 50) <= y) && (y <= (signsCoordinate.aboutmeCoordinate[1] + 10))
+
+            || ((signsCoordinate.skillsCoordinate[0] - 50) < x) && (x < (signsCoordinate.skillsCoordinate[0] + 50))
+            && ((signsCoordinate.skillsCoordinate[1] - 50) <= y) && (y <= (signsCoordinate.skillsCoordinate[1] + 10))
+            
+            || ((signsCoordinate.workexperienceCoordinate[0] - 50) < x) && (x < (signsCoordinate.workexperienceCoordinate[0] + 50))
+            && ((signsCoordinate.workexperienceCoordinate[1] - 50) <= y) && (y <= (signsCoordinate.workexperienceCoordinate[1] + 10))
+            
+            //BackSign
+            || ((signsCoordinate.educationCoordinate[0] - 20) < x) && (x < (signsCoordinate.educationCoordinate[0] + 20))
+            && ((signsCoordinate.educationCoordinate[1]) <= y) && (y <= (signsCoordinate.educationCoordinate[1] + 30))
+            
+            || ((signsCoordinate.projectCoordinate[0] - 20) < x) && (x < (signsCoordinate.projectCoordinate[0] + 20))
+            && ((signsCoordinate.projectCoordinate[1]) <= y) && (y <= (signsCoordinate.projectCoordinate[1] + 30))
+            
+            || ((signsCoordinate.socialmediaCoordinate[0] - 20) < x) && (x < (signsCoordinate.socialmediaCoordinate[0] + 20))
+            && ((signsCoordinate.socialmediaCoordinate[1]) <= y) && (y <= (signsCoordinate.socialmediaCoordinate[1] + 30)))
+
+        {
+            console.log("hi");
+            return true;
+        }
+    };
+
 function movePlayer(){
     if ((keys["ArrowUp"] || keys["w"] == true)){
         player.frameY = 3;
         player.moving = true;
-        if (player.y >= 340){
+        if (player.y >= 340 && !playerBlocked(player.x, player.y - player.speed)){
             player.y -= player.speed;
         }
         
@@ -162,21 +155,21 @@ function movePlayer(){
     if (keys["ArrowDown"] || keys["s"] == true){
         player.frameY = 0;
         player.moving = true;
-        if (player.y < 440){
+        if (player.y < 440 && !playerBlocked(player.x, player.y + player.speed)){
             player.y += player.speed;
         }
     }
     if (keys["ArrowLeft"] || keys["a"] == true){
         player.frameY = 1;
         player.moving = true;
-        if (player.x > -15){
+        if (player.x > -15 && !playerBlocked(player.x - player.speed, player.y)){
             player.x -= player.speed;
         }
     }
     if (keys["ArrowRight"] || keys["d"] == true){
         player.frameY = 2;
         player.moving = true;
-        if (player.x < 750){
+        if (player.x < 750 && !playerBlocked(player.x + player.speed, player.y)){
             player.x += player.speed;
         }
     }
@@ -461,7 +454,7 @@ async function drawArrow(assignmentType){
     if (await keys["ArrowDown"] === true){
         if ((0 < arrowCounter + 1) && (arrowCounter + 1 < assignmentSize[assignmentType] + 1)){
             projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
-            await arrowCounter++;
+            arrowCounter++;
             projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "inline-block";
         }
     }
@@ -576,7 +569,6 @@ async function animate(){
             movePlayer();
             handlePlayerFrame();
             objectInteraction(50);
-            imageisTouched();
         }
         if (interact[0] === true){
             await drawArrow(interact[1]);

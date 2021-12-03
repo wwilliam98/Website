@@ -563,6 +563,7 @@ ul.SkillsSublist{
   list-style-type: none;
   margin-bottom: 20px;
   font-size: 22px;
+  margin-left: 15px;
 }
 
 ul.SkillsSublist > li:before {
