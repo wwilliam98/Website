@@ -78,7 +78,21 @@ function loopClouds(speed = 0.5){
 
 function imageisTouched(){
     AboutMeSign.addEventListener("touchstart", function(e){
-        console.log("hi");
+        createTextBubble("About Me", "70%");
+        projects_text_bubble.style.display = "inline";
+        projects_text_bubble.innerHTML =`<p class = "AboutMe">About Me</p>
+                                        <img src="/images/Work PP.jpeg" alt="my picture" style="width:20%;height:50%; float:left; padding: 10px;">
+                                        <h4 class = "AboutMe">Hi there! My name is Fnu William. I graduated from Illinois Institute of technology on May 22, 2012. I majored in Computer Engineering and I am currently looking for a full time job as a software engineer. 
+                                        Initially, I was interested in majoring computer engineering because of the ability to combine the possibilities of computer software and hardware together into reality.
+                                        I first realized my passion in computer engineering after seeing just how many problems in the world, espescially underdevelop areas,
+                                        that can be solved or simplified by utilizing computer hardware such as microcontrollers and with technology that the world offers in computer software. 
+                                        In my experience in programming, I have won Dare Mighty Things hackathon in 2019 for a multi-million dollar company Jones Lang LaSalle (JLL). I also joined Google's Tech Challenge in their Headquarters in Chicago with the theme of "Video Games".
+                                        </h4>
+                                        
+                                        <h4 = class = "AboutMe">
+                                        I am a dedicated person working toward the future where I can see myself as an expert in programming in the next 5 years,
+                                        becoming a senior as a Software Engineer, solving complex problem and continuing my knowlegdge.
+                                        If you like me so far and want to know more about me, you can keep and moving around the landscape and press enter on which section you are interested</h4>`
     });
     EducationSign.addEventListener("touchstart", function(e){
 
