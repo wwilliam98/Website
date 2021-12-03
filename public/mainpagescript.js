@@ -76,6 +76,27 @@ function loopClouds(speed = 0.5){
     }
 }
 
+function imageisTouched(){
+    AboutMeSign.addEventListener("touchstart", function(e){
+        console.log("hi");
+    });
+    EducationSign.addEventListener("touchstart", function(e){
+
+    });
+    SkillsSign.addEventListener("touchstart", function(e){
+
+    });
+    ProjectSign.addEventListener("touchstart", function(e){
+
+    });
+    WorkExperienceSign.addEventListener("touchstart", function(e){
+
+    });
+    SocialMediaSign.addEventListener("touchstart", function(e){
+
+    });
+}
+
 //build in canvas attributes to make it simplier
 function drawSprite(img, sX, sY, sW, sH, dX, dY, dW, dH){
     ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
