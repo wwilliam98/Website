@@ -14,7 +14,7 @@ const player = {
     height: 64,
     frameX: 0,
     frameY: 0,
-    speed: 20,
+    speed: 5,
     moving: false
 };
 
