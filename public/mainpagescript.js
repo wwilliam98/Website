@@ -14,7 +14,7 @@ const player = {
     height: 64,
     frameX: 0,
     frameY: 0,
-    speed: 5,
+    speed: 20,
     moving: false
 };
 
@@ -116,7 +116,6 @@ function keyListener(){
 }
 
 function playerBlocked(x, y){
-        console.log(signsCoordinate.aboutmeCoordinate[0] - 50, signsCoordinate.aboutmeCoordinate[0] + 50);
         if (//FrontSign
             ((signsCoordinate.aboutmeCoordinate[0] - 50) < x) && (x < (signsCoordinate.aboutmeCoordinate[0] + 50))
             && ((signsCoordinate.aboutmeCoordinate[1] - 50) <= y) && (y <= (signsCoordinate.aboutmeCoordinate[1] + 10))
@@ -138,7 +137,6 @@ function playerBlocked(x, y){
             && ((signsCoordinate.socialmediaCoordinate[1]) <= y) && (y <= (signsCoordinate.socialmediaCoordinate[1] + 30)))
 
         {
-            console.log("hi");
             return true;
         }
     };
@@ -309,7 +307,7 @@ function nextPreviousTutorial(){
 }
 
 //Show textBubble
-function createTextBubble (category, heightSize){
+function createProjectTextBubble (category, heightSize){
     runGame = false;
     interact[0] = true;
     interact[1] = category;
@@ -318,11 +316,18 @@ function createTextBubble (category, heightSize){
     projects_text_bubble.style.height = heightSize;
 }
 
+function createTextBubble (heightSize){
+    runGame = false;
+    text_bubble = document.getElementById("text_bubble")
+    text_bubble.style.display = "block"
+    text_bubble.style.height = heightSize;
+}
+
 //Check for interaction, Show pop-up bubbles
 function objectInteraction(radius){
     //About Me
     if ((player.x >= signsCoordinate.aboutmeCoordinate[0]-radius && player.x <= signsCoordinate.aboutmeCoordinate[0]+radius) && (signsCoordinate.aboutmeCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.aboutmeCoordinate[1]+radius) && (keys["Enter"] === true)){
-        createTextBubble("About Me", "70%");
+        createProjectTextBubble("About Me", "70%");
         projects_text_bubble.style.display = "inline";
         projects_text_bubble.innerHTML =`<p class = "AboutMe">About Me</p>
                                         <img src="/images/Work PP.jpeg" alt="my picture" style="width:20%;height:50%; float:left; padding: 10px;">
@@ -341,7 +346,7 @@ function objectInteraction(radius){
 
     //Education
     if ((player.x >= signsCoordinate.educationCoordinate[0]-radius && player.x <= signsCoordinate.educationCoordinate[0]+radius) && (signsCoordinate.educationCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.educationCoordinate[1]+radius) && (keys["Enter"] === true)){
-        createTextBubble("Education", "70%");
+        createProjectTextBubble("Education", "70%");
         projects_text_bubble.innerHTML =`<p class = "Education">Education</p>
                                         <ul class = "Education" style= "list-style-type:disc;">
                                         <li class = "Education"><h3 class = "Education">Illinois Institute of Technology</h3> (Graduated May 22, 2021)</li>
@@ -360,7 +365,7 @@ function objectInteraction(radius){
 
     //Skills
     if ((player.x >= signsCoordinate.skillsCoordinate[0]-radius && player.x <= signsCoordinate.skillsCoordinate[0]+radius) && (signsCoordinate.skillsCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.skillsCoordinate[1]+radius) && (keys["Enter"] === true)){
-        createTextBubble("Skills", "70%");
+        createProjectTextBubble("Skills", "70%");
         projects_text_bubble.innerHTML =`<p class = "Skills">Skills</p>
                                         <ul class = "Skills" style= "list-style-type:disc;">
                                             <li class = "Skills">Programming Language:</li>
@@ -395,7 +400,7 @@ function objectInteraction(radius){
 
     //Projects
     if ((player.x >= signsCoordinate.projectCoordinate[0]-radius && player.x <= signsCoordinate.projectCoordinate[0]+radius) && (signsCoordinate.projectCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.projectCoordinate[1]+radius) && (keys["Enter"] === true)){
-        createTextBubble("Projects", "60%");
+        createProjectTextBubble("Projects", "60%");
         projects_text_bubble.innerHTML =`<p class = "projects">Projects</p>
                                         <ul class = "projects">
                                         <li class = "projects"><i class="arrow"  id = "arrow1"></i>Sudoku Solver</li>
@@ -407,7 +412,7 @@ function objectInteraction(radius){
 
     //Work Experience
     if ((player.x >= signsCoordinate.workexperienceCoordinate[0]-radius && player.x <= signsCoordinate.workexperienceCoordinate[0]+radius) && (signsCoordinate.workexperienceCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.workexperienceCoordinate[1]+radius) && (keys["Enter"] === true)){
-        createTextBubble("Work Experience", "60%");
+        createProjectTextBubble("Work Experience", "60%");
         projects_text_bubble.innerHTML =`<p class = "workExperience">Work Experience</p>
                                         <h3 class = "workExperience">OpenSlot Solution INC</h4>
                                         <ul class = "workExperience" style= "list-style-type:disc;">
@@ -419,7 +424,7 @@ function objectInteraction(radius){
 
     //Social Media
     if ((player.x >= signsCoordinate.socialmediaCoordinate[0]-radius && player.x <= signsCoordinate.socialmediaCoordinate[0]+radius) && (signsCoordinate.socialmediaCoordinate[1]-radius <= player.y && player.y <= signsCoordinate.socialmediaCoordinate[1]+radius) && (keys["Enter"] === true)){
-        createTextBubble("Social Media", "60%");
+        createProjectTextBubble("Social Media", "60%");
         projects_text_bubble.innerHTML =`<p class = "SocialMedia">Social Media</p>
                                         <ul class = "SocialMedia">
                                         <li class = "SocialMedia"><i class="arrow" id = "arrow1"></i>Linked In</li>
@@ -451,7 +456,7 @@ async function drawArrow(assignmentType){
     var assignmentSize = {"Projects": 5, "Work Experience": 1, "Education": 2, "Social Media": 4} 
     const half = Math.ceil(assignmentSize[assignmentType] / 2)
 
-    if (await keys["ArrowDown"] === true){
+    if (keys["ArrowDown"] === true){
         if ((0 < arrowCounter + 1) && (arrowCounter + 1 < assignmentSize[assignmentType] + 1)){
             projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
             arrowCounter++;
@@ -459,7 +464,7 @@ async function drawArrow(assignmentType){
         }
     }
 
-    if (await keys["ArrowUp"] === true){
+    if (keys["ArrowUp"] === true){
         if ((0 < arrowCounter - 1) && (arrowCounter - 1 < assignmentSize[assignmentType] + 1)){
             projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
             arrowCounter --;
@@ -467,7 +472,7 @@ async function drawArrow(assignmentType){
         }
     }
 
-    if (await keys["ArrowRight"] === true){
+    if (keys["ArrowRight"] === true){
         if ((0 < arrowCounter + half) && (arrowCounter + half < assignmentSize[assignmentType] + 1)){
             projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
             arrowCounter += half;
@@ -475,7 +480,7 @@ async function drawArrow(assignmentType){
         }
     }
 
-    if (await keys["ArrowLeft"] === true){
+    if (keys["ArrowLeft"] === true){
         if ((0 < arrowCounter - half) && (arrowCounter - half < assignmentSize[assignmentType] + 1)){
             projects_text_bubble.getElementsByTagName('i')["arrow" + arrowCounter.toString()].style.display = "none";
             arrowCounter -= half;
@@ -490,14 +495,24 @@ function router(category, arrowPointer){
     var getSudokuSolver = function(e){
         if (category === "Projects"){
             if ((keys["Enter"] === true) && (arrowPointer === 1)){
-                console.log("e.key")
-                // window.location.href = '/login';
+                // nextPreviousProject();
                 window.location.href = "/login";
             }
         }
         window.removeEventListener("keydown", getSudokuSolver, false)
     };
     window.addEventListener("keydown", getSudokuSolver);
+
+    var getDaremightythings = function(e){
+        if (category === "Projects"){
+            if ((keys["Enter"] === true) && (arrowPointer === 5)){
+                window.location.href = "http://127.0.0.1:5000";
+            }
+        }
+        window.removeEventListener("keydown", getDaremightythings, false)
+    };
+    window.addEventListener("keydown", getDaremightythings);
+
 
     //Social Media
     var getLinkedIn = function(e){
@@ -539,6 +554,62 @@ function router(category, arrowPointer){
         window.removeEventListener("keydown", getFacebook, false);
     };
     window.addEventListener("keydown", getFacebook);
+}
+
+let nextPreviousProjectCounter = 1;
+function nextPreviousProject(){
+    createTextBubble("80%");
+    if (nextPreviousProjectCounter === 1) {
+        text_bubble.innerHTML = `<h3>Sudoku Solver</h3>
+                                            <p>First, get familiar with moving around the landscape. You can move the character around by pressing</p>
+                                            <p>If you want to skip the tutorial, you can always press the "Skip Tutorial" button below. Otherwise, press "Next"</p>
+                                            <button id="nextButton" type="button">Next</button>
+                                            <button id="previousButton" type="button">Previous</button>
+                                            <button id="skipButton" type="button">Skip Tutorial</button>`
+    }
+
+    if (nextPreviousProjectCounter === 2) {
+        text_bubble.innerHTML = `<h3>Site Menu?</h3>
+                                            <p>To bring up the site menu, walk your character to the nearest navigation menu and press</p>
+                                            <div id="EnterKeyDisplay"> <h1>Enter↵</h1> </div>
+                                            <p></p>
+                                            <p>If you want to skip the tutorial, feel free to press the "Skip Tutorial" button below. Otherwise, press "Next"</p>
+                                            <button id="nextButton" type="button">Next</button>
+                                            <button id="previousButton" type="button">Previous</button>
+                                            <button id="skipButton" type="button">Skip Tutorial</button>`
+    }
+
+    if (nextPreviousProjectCounter === 3) {
+        text_bubble.innerHTML = `<h3>How to Quit from menu</h3>
+                                            <p>To quit from the menu display, press</p>
+                                            <div id="EscapeKeyDisplay"> <h1>Esc</h1> </div>
+                                            <p></p>
+                                            <p>If you want to skip the tutorial, feel free to press the "Skip Tutorial" button below. Otherwise, press "Next"</p>
+                                            <button id="finishButton" type="button">Finish</button>
+                                            <button id="previousButton" type="button">Previous</button>
+                                            <button id="skipButton" type="button">Skip Tutorial</button>`
+        document.getElementById("finishButton").onclick = () => {
+            text_bubble.style.display = "none";
+            runGame = true;
+        }
+    }
+
+    document.getElementById("skipButton").onclick = () => {
+        document.getElementById("text_bubble").style.display = "none";
+        runGame = true;
+        console.log("skip");
+    }
+
+    document.getElementById("nextButton").onclick = () => {
+          if (nextPreviousProjectCounter < 3) nextPreviousProjectCounter++;
+          nextPreviousProject();
+      }
+    
+    document.getElementById("previousButton").onclick = () => {
+        if (nextPreviousProjectCounter > 1) nextPreviousProjectCounter--;
+        nextPreviousProject();
+    }
+    console.log(nextPreviousProjectCounter);
 }
 
 let fps, fpsInterval, startTime, now, then, elapsed;
