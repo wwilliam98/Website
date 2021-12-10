@@ -14,7 +14,7 @@ const player = {
     height: 64,
     frameX: 0,
     frameY: 0,
-    speed: 5,
+    speed: 20,
     moving: false
 };
 
@@ -496,7 +496,7 @@ function router(category, arrowPointer){
         if (category === "Projects"){
             if ((keys["Enter"] === true) && (arrowPointer === 1)){
                 // nextPreviousProject();
-                window.location.href = "/login";
+                window.location.href = "/SudokuSolver";
             }
         }
         window.removeEventListener("keydown", getSudokuSolver, false)
