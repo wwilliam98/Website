@@ -37,7 +37,6 @@ API_KEY = ""
 
 with open('auth.json') as json_file:
     data = json.load(json_file)
-    print(type(data), data)
     API_KEY = data['keys']
 
 gmaps = googlemaps.Client(key=API_KEY)
@@ -370,4 +369,4 @@ def lookup(add, geo1, key, type ,distance, mode):
     return lm_data
 
 if __name__ =="__main__":  
-    app.run(debug = True)
+    app.run(host = 'localhost', port = 5000, debug = True)

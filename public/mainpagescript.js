@@ -506,7 +506,7 @@ function router(category, arrowPointer){
     var getDaremightythings = function(e){
         if (category === "Projects"){
             if ((keys["Enter"] === true) && (arrowPointer === 5)){
-                window.location.href = "http://127.0.0.1:5000";
+                window.location.href = "/dare-mighty-things";
             }
         }
         window.removeEventListener("keydown", getDaremightythings, false)
