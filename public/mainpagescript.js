@@ -14,7 +14,7 @@ const player = {
     height: 64,
     frameX: 0,
     frameY: 0,
-    speed: 20,
+    speed: 13,
     moving: false
 };
 
@@ -506,7 +506,7 @@ function router(category, arrowPointer){
     var getDaremightythings = function(e){
         if (category === "Projects"){
             if ((keys["Enter"] === true) && (arrowPointer === 5)){
-                window.location.href = "https://willwebx.com/dare-mighty-things";
+                window.location.href = "/dare-mighty-things";
             }
         }
         window.removeEventListener("keydown", getDaremightythings, false)

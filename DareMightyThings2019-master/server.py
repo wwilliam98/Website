@@ -44,7 +44,7 @@ gmaps = googlemaps.Client(key=API_KEY)
 #airport
 print("Loaded data!")
 
-@app.route('/')
+@app.route('/dare-mighty-things')
 def index():
     return render_template('index.html', api_key=API_KEY)
 

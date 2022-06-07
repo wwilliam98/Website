@@ -34,4 +34,8 @@ app.get('/SudokuSolver', requireAuth, function(req, res){
   })
 });
 
+app.get('/dare-mighty-things', function(req, res){
+  request('http://localhost:5000/')
+});
+
 app.use(authRoutes);
