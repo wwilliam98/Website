@@ -8,7 +8,7 @@ canvas.height = 500;
 //Objects
 const keys = [];
 const player = {
-    x: 0,
+    x: 350,
     y: 400,
     width: 64,
     height: 64,

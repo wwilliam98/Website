@@ -15,6 +15,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 
+//Connect to MongoDB
 var connectionString = config.mongoKey;
 var JWT_SECRET = config.JWT_SECRET;
 mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
@@ -33,6 +34,10 @@ app.get('/SudokuSolver', requireAuth, function(req, res){
     res.render('index', {count: user.solvedSudoku});
   })
 });
+
+// app.get('/PathFindingVisualizer', function(req, res){
+//   res.render('PathFindingVisualizerMain')
+// });
 
 app.get('/dare-mighty-things', function(req, res){
   request('http://localhost:5000/')
