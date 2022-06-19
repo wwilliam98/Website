@@ -13,12 +13,22 @@
     <ul>
       <%if (email) {%>
         <li> Welcome, <%= email %> </li>
-        <li><a href ='/logout'>Logout</a></li>
       <%} else {%>
-        <li><a href ='/guest'>Guest</a></li>
         <li><a href ='/login'>Login</a></li>
         <li><a href ='/signup'>Sign Up</a></li>
       <% }%>
     </ul>
   </nav>
-  
+
+  <div id = "container" class = "container">
+  <body onload = "setup()"> 
+        <div class="buttons">
+          <button onClick="setInputToBoard(false)" class="button" id="solveButton" display="inline" type="Solve-Button" name="Solve"> Solve </button>
+          <button onClick="resetBoard()" class="button" id="resetButton"display="inline" type="Reset-Board" name="Reset Board"> Reset Board </button>
+        </div>
+        <!-- <button class="button" display="inline" type="Reset-Board" name="Reset Board"></button> <a href = '/countSolve'>Solved Sudoku</a> </button> -->
+
+  </div>
+  </body>
+<%-include('partials/footer.ejs')-%>
+</html>

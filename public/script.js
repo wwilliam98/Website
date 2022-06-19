@@ -81,7 +81,7 @@ function setup(){
 ///////////////////////////////////////////////////////
 
 //Put input to board and get http post and show the answer on board
-function setInputToBoard(){
+function setInputToBoard(isUser){
   for (var i = 0; i < 9; i++){
     for (var j = 0; j < 9; j++){
       var input = Number(document.getElementById(i + "-" + j).value)
@@ -90,21 +90,41 @@ function setInputToBoard(){
   }
 
   if ((check_valid_board() === true) && (isSolved() === false)){
-    fetch('/solve', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(Board.board)
-    })
-    .then(response => {
-      return response.json();
-    })
-    .then(solvedSudoku => {
-      draw_board(solvedSudoku[0]);
-      console.log(solvedSudoku[1]);
-      document.getElementById("SolvedCounterDisplay").innerHTML = "Solved: " + solvedSudoku[1];
-    })
+    if (isUser){
+      fetch('/solve', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(Board.board)
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(solvedSudoku => { //SolvedSudoku->[data, newCount] check authController for details
+        draw_board(solvedSudoku[0]);
+        console.log(solvedSudoku[1]);
+        document.getElementById("SolvedCounterDisplay").innerHTML = "Solved: " + solvedSudoku[1];
+      })
+    }
+
+    else{
+      fetch('/guest_solve', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(Board.board)
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => { //SolvedSudoku->[data, newCount] check authController for details
+        draw_board(data);
+        console.log(data);
+        //document.getElementById("SolvedCounterDisplay").innerHTML = "Solved: " + solvedSudoku[1];
+      })
+    }
   }
   else if(isSolved() === true){
     alert("Board Has Been Solved")
