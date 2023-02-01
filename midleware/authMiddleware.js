@@ -17,7 +17,7 @@ const requireAuth = (req, res, next) =>{
             }
         });
     }else {
-        console.log ('redirect to login');
+        console.log ('redirecting to Login Page');
         res.redirect ('/login');
     }
 }
@@ -27,6 +27,7 @@ const checkUser = (req, res, next) =>{
     const token = req.cookies.jwt;
     if (token){
         jwt.verify (token, JWT_SECRET, async (err,decodedToken) =>{
+            // if there is error in verification
             if (err){
                 res.locals.email = null;
                 next();
@@ -37,7 +38,9 @@ const checkUser = (req, res, next) =>{
                 next();
             }
         });
-    }else {
+    }
+    // If there is no tokern
+    else {
         res.locals.email = null;
         next();
     }

@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require ('express');
 const app = express();
 const mongoose = require("mongoose");
@@ -10,6 +11,7 @@ const User = require ('./models/user');
 
 app.set ('view engine', 'ejs');
 app.use(express.static('public'));
+app.use(express.static(path.resolve(__dirname, './portfolio/build')));
 app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: true }));
@@ -23,9 +25,15 @@ mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: t
     .catch((err) => console.log(err));
 
 app.get('*', checkUser);
+
 app.get('/', function(req, res){
   res.render('main')
 });
+
+// app.get('/', function(req, res){
+//   // All other GET requests not handled before will return our React app
+//   res.sendFile(path.resolve(__dirname, './portfolio/build', 'index.html'));
+// });
 
 app.get('/SudokuSolver', requireAuth, function(req, res){
   const token = req.cookies.jwt;
@@ -35,12 +43,16 @@ app.get('/SudokuSolver', requireAuth, function(req, res){
   })
 });
 
-// app.get('/PathFindingVisualizer', function(req, res){
-//   res.render('PathFindingVisualizerMain')
-// });
+app.get('/PathFindingVisualizer', function(req, res){
+  res.render('PathFindingVisualizerMain')
+});
 
 app.get('/dare-mighty-things', function(req, res){
   request('http://localhost:5000/')
+});
+
+app.get('/api', function(req,res){
+  res.json({ message: "Hello from server!" });
 });
 
 app.use(authRoutes);

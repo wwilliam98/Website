@@ -407,7 +407,8 @@ function objectInteraction(radius){
                                         <li class = "projects"><i class="arrow" id = "arrow2"></i>Automated Desk Lamp</li>
                                         <li class = "projects"><i class="arrow" id = "arrow3"></i>Google Tech Challenge</li>
                                         <li class = "projects"><i class="arrow" id = "arrow4"></i>Path Finding Robot</li>
-                                        <li class = "projects"><i class="arrow" id = "arrow5"></i>Dare Mighty Things Hackaton</li></ul>`
+                                        <li class = "projects"><i class="arrow" id = "arrow5"></i>Dare Mighty Things Hackaton</li>
+                                        </ul>`
     };
 
     //Work Experience
@@ -427,10 +428,11 @@ function objectInteraction(radius){
         createProjectTextBubble("Social Media", "60%");
         projects_text_bubble.innerHTML =`<p class = "SocialMedia">Social Media</p>
                                         <ul class = "SocialMedia">
-                                        <li class = "SocialMedia"><i class="arrow" id = "arrow1"></i>Linked In</li>
-                                        <li class = "SocialMedia"><i class="arrow" id = "arrow2"></i>Github</li>
-                                        <li class = "SocialMedia"><i class="arrow" id = "arrow3"></i>Instagram</li>
-                                        <li class = "SocialMedia"><i class="arrow" id = "arrow4"></i>Facebook</li>`
+                                        <li class = "fa fa-linkedin"><i class="arrow" id = "arrow1"></i>Linked In</li>
+                                        <li class = "fa fa-github"><i class="arrow" id = "arrow2"></i>Github</li>
+                                        <li class = "fa fa-instagram"><i class="arrow" id = "arrow3"></i>Instagram</li>
+                                        <li class = "fa fa-facebook"><i class="arrow" id = "arrow4"></i> Facebook</li>
+                                        </ul>`
     };
 };
 //Continue Game
