@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .coverButton{
+        @apply px-6 py-2 border-[#242424] rounded-full uppercase text-xs tracking-widest text-gray-500 transition-all
+        hover:border-[#F7AB0A]/40 hover:text-[#F7AB0A]/40
+    }
+
+    /* .wave {
+        animation: wave-animation 1s linear infinite;
+      }
+      
+      @keyframes wave-animation {
+        0% {
+          color: transparent;
+        }
+        10% {
+          color: white;
+        }
+        20% {
+          color: transparent;
+        }
+      } */
+}

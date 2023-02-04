@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4b0155da.css",
+    "main.js": "/static/js/main.1940cfe2.js",
+    "static/media/pass-photo09Oct2022.jpeg": "/static/media/pass-photo09Oct2022.2e862380708487a1fe48.jpeg",
+    "index.html": "/index.html",
+    "main.4b0155da.css.map": "/static/css/main.4b0155da.css.map",
+    "main.1940cfe2.js.map": "/static/js/main.1940cfe2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4b0155da.css",
+    "static/js/main.1940cfe2.js"
+  ]
+}
