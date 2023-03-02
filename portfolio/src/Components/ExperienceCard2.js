@@ -1,12 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import CoverPic from "../Images/pass-photo09Oct2022.jpeg"
-import STLogo from "../Images/STMicroelectronicLogo.png"
-import JavascriptLogo from "../Images/jslogo.png"
-import PythonLogo from "../Images/pythonlogo.jpeg"
-import PHPLogo from "../Images/phplogo.jpeg"
-import PerlLogo from "../Images/perllogo.jpeg"
-import MysqlLogo from "../Images/MysqlLogo.png"
+import OpenSlotPic from "../Images/OpenSlot.png"
 
 function ExperienceCard() {
   return (
@@ -21,46 +16,41 @@ function ExperienceCard() {
             whileInView={{ opacity: 1, y: 0}}
             viewport={{ once:true }}
             className='w-32 h-32 rounded-full object-cover object-center xl:w-[200px] xl:h-[200px]'
-            src={STLogo}
+            src={OpenSlotPic}
         />
 
         <div className='px-5 md:px-10'>
-            <h4 className='text-4xl font-light'>Software Engineer</h4>
-            <p className='font-bold text-2xl mt-1'>STMicroelectronics</p>
+            <h4 className='text-4xl font-light'>Quality Assurance</h4>
+            <p className='font-bold text-2xl mt-1'>OpenSlot Inc.</p>
             <div className='flex space-x-2 my-1'>
                 <img 
                     className='h-10 w-10 rounded-full'
-                    src={PythonLogo}
+                    src={CoverPic}
                     alt="Tech Used"
                 />
                 <img 
                     className='h-10 w-10 rounded-full'
-                    src={PHPLogo}
+                    src={CoverPic}
                     alt="Tech Used"
                 />
                 <img 
                     className='h-10 w-10 rounded-full'
-                    src={JavascriptLogo}
+                    src={CoverPic}
                     alt="Tech Used"
                 />
                 <img 
                     className='h-10 w-10 rounded-full'
-                    src={PerlLogo}
-                    alt="Tech Used"
-                />
-                <img 
-                    className='h-10 w-10 rounded-full'
-                    src={MysqlLogo}
+                    src={CoverPic}
                     alt="Tech Used"
                 />
             </div>
-            <p className='uppercase py-5 text-gray-300'>May 2022 - Present</p>
+            <p className='uppercase py-5 text-gray-300'>Summer 2018, Summer 2019</p>
             <ul className='list-disc space-y-2 ml-5 text-lg text-justify'>
-                {/* <li>Maintained and developed website applications using PHP, HTML, and CSS, which resulted in a reduced run time and increased productivity by 80%.</li> */}
-                <li>Maintained and developed website applications using PHP, HTML, and CSS reducing run time and increased productivity by 80%.</li>
-                <li>Migrated excel files to MySQL Database using Python Pandas, which streamlined the data management process and saved the company time and resources.</li>
-                <li>Designed and implemented a Mask Request Form web application using PHP, HTML, and CSS.</li>
-                <li>Identified and documented problems with program function, output, and content to improve quality of product</li>
+                <li>Collaborated with a team of developers to identify and document faults in the OpenSlot application, resulting in a 50% reduction in faults.</li>
+                <li>Participate in code reviews and provide feedback on the quality of the code.</li>
+                <li>Identified and documented problems with program function, output, and content to improve quality of product.</li>
+                <li>Designed test plans and procedures with end users which are doctors and dentists by understanding and analyzing functionality of applications to fit business needs.</li>
+                <li>Proposed feedbacks and recommendations to software developers on usability and functionality to improve application features.</li>
             </ul>
         </div>
     </article>

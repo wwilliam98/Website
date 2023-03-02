@@ -5,12 +5,13 @@ import AboutMe from './Components/AboutMe.js';
 import WorkExperience from './Components/WorkExperience.js';
 import Skills from "./Components/Skills";
 import Projects from "./Components/Projects";
+import ContactMe from "./Components/ContactMe";
 // import Footer from "./Components/Footer";
 
 function App(){
     return (
         // <div className="bg-gray-50 h-screen snap-y snap-mandatory overflow-y-scroll scrollbar-hide z-0">
-        <div className="bg-gray-800 text-white h-screen snap-y snap-mandatory overflow-scroll z-0">
+        <div className="bg-gray-800 text-white h-screen snap-y snap-mandatory overflow-y-scroll overflow-x-hidden z-0">
             <Header/>
             <section id="hero" className="snap-center">
                 <Cover/>
@@ -26,6 +27,9 @@ function App(){
             </section>
             <section id="projects" className="snap-center">
                 <Projects/>
+            </section>
+            <section id="contact" className="snap-center">
+                <ContactMe/>
             </section>
             
 

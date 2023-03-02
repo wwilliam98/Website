@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import ExperienceCard from './ExperienceCard'
+import ExperienceCard2 from './ExperienceCard2'
 
 function WorkExperience() {
   return (
@@ -11,7 +12,7 @@ function WorkExperience() {
         className='flex flex-col h-screen relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'
     >
         {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
-        <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base">
+        <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">
           Experience
           <motion.span
             // initial={{ opacity: 0 }}
@@ -40,7 +41,7 @@ function WorkExperience() {
         {/* <div className='absolute w-full h-3/4 top-28 flex space-x-5 overflow-x-scroll snap-x snap-mandatory'> */}
         {/* <div className='mb-20 md:mb-0 flex-shrink-0 w-56 h-56 rounded-full object-cover md:rounded-lg md:w-64 md:h-95 xl:w-[500px] xl:h-[500px]'> */}
             <ExperienceCard />
-            <ExperienceCard />
+            <ExperienceCard2 />
             <ExperienceCard />
             <ExperienceCard />
         </div>

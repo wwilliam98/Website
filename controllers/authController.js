@@ -10,70 +10,6 @@ const createToken = (id) => {
         expiresIn : maxAge
     });
 }
-module.exports.signup_get = (req, res)=>{
-    res.render('signup');
-}
-
-module.exports.login_get = (req, res)=>{
-    res.render('login');
-}
-
-module.exports.guest_login_get = (req, res)=>{
-    res.render('guest');
-}
-
-module.exports.signup_post = async (req, res)=>{
-    const {email, password} = req.body;
-    const solvedSudoku = 0;
-    try{
-        const user = await User.create ({ email, password, solvedSudoku});
-        const token = createToken (user._id);
-        res.cookie ('jwt', token, {httpOnly: true, maxAge: maxAge*1000});
-        res.status(201).json({ user : user._id});
-        
-    } catch (err) {
-        console.log (err)
-        res.status(400).send('failed to create a user');
-    }
-}
-
-module.exports.login_post = async (req, res)=>{
-    const {email, password} = req.body;
-    try {
-        const user = await User.login_get(email,password);
-        const token = createToken (user._id);
-        res.cookie ('jwt', token, {httpOnly: true, maxAge: maxAge*1000});
-        res.status(200).json({user: user._id});
-    }catch (err) {
-        res.status(400).json({});
-    }
-}
-
-module.exports.logout_get = async (req, res) =>{
-    res.cookie ('jwt', '', {maxAge : 1});
-    res.redirect ('/login');
-}
-
-module.exports.regular_solve_post = async(req, res) =>{
-    var input_board = req.body;
-    var data = SolveBoard(input_board);
-    res.send(data);
-}
-
-module.exports.solve_post = async (req, res) =>{
-    var input = req.body;
-    const token = req.cookies.jwt;
-    jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
-      const user = await User.findById(decodedToken.id);
-      const prevCount = user.solvedSudoku;
-      const newCount = prevCount + 1;
-      console.log(newCount);
-      await User.findByIdAndUpdate({_id: user.id}, {solvedSudoku: newCount});
-
-      var data = SolveBoard(input);
-      res.send([data, newCount]);
-    });
-}
 
 function SolveBoard(input){
   //Solve the Board
@@ -236,4 +172,75 @@ function SolveBoard(input){
   
   // console.log(Board.board);
   return Board.board;
+}
+
+module.exports.signup_get = (req, res)=>{
+    res.render('signup');
+}
+
+module.exports.login_get = (req, res)=>{
+    res.render('login');
+}
+
+module.exports.guest_login_get = (req, res)=>{
+    res.render('guest');
+}
+
+module.exports.signup_post = async (req, res)=>{
+    const {email, password} = req.body;
+    const solvedSudoku = 0;
+    try{
+        const user = await User.create ({ email, password, solvedSudoku});
+        const token = createToken (user._id);
+        res.cookie ('jwt', token, {httpOnly: true, maxAge: maxAge*1000});
+        res.status(201).json({ user : user._id});
+        
+    } catch (err) {
+        console.log (err)
+        res.status(400).send('failed to create a user');
+    }
+}
+
+module.exports.login_post = async (req, res)=>{
+    const {email, password} = req.body;
+    try {
+        const user = await User.login_get(email,password);
+        const token = createToken (user._id);
+        res.cookie ('jwt', token, {httpOnly: true, maxAge: maxAge*1000});
+        res.status(200).json({user: user._id});
+    }catch (err) {
+        res.status(400).json({});
+    }
+}
+
+module.exports.logout_get = async (req, res) =>{
+    res.cookie ('jwt', '', {maxAge : 1});
+    res.redirect ('/login');
+}
+
+module.exports.regular_solve_post = async(req, res) =>{
+    var input_board = req.body;
+    var data = SolveBoard(input_board);
+    res.send(data);
+}
+
+module.exports.solve_post = async (req, res) =>{
+  var input = req.body;
+  const token = req.cookies.jwt;
+  jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
+    const user = await User.findById(decodedToken.id);
+    const prevCount = user.solvedSudoku;
+    const newCount = prevCount + 1;
+    console.log(newCount);
+    await User.findByIdAndUpdate({_id: user.id}, {solvedSudoku: newCount});
+
+    var data = SolveBoard(input);
+    res.send([data, newCount]);
+  });
+}
+
+module.exports.send_contactme_email_post = async (req, res)=>{
+  const { name, email, subject, message } = req.body;
+  console.log(name+email+subject+message+"this is server")
+  res.send(JSON.stringify({ name: name, email: email, subject: subject, message: message }));
 }
