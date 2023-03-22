@@ -7,6 +7,15 @@ import MySQLSkill from './MySQLSkill'
 import PerlSkill from './PerlSkill'
 import HtmlSkill from './HtmlSkill'
 import CSSSkill from './CSSSkill'
+import NodejsSkill from './NodejsSkill'
+import ReactSkill from './ReactSkill'
+import MongoDBSkill from './MongoDBSkill'
+import JavaSkill from './JavaSkill'
+import PandasSkill from './PandasSkill'
+import CPPSkill from './CPPSkill'
+import ExpressSkill from './ExpressSkill'
+import TailwindSkill from './TailwindSkill'
+import LinuxSkill from './LinuxSkill'
 
 function Skills() {
   return (
@@ -17,17 +26,18 @@ function Skills() {
     // className='flex relative flex-col text-center md:text-left xl:flex-row max-w-[2000px] xl:px-10 min-h-screen justify-center xl:space-y-0 mx-auto items-center'
     // >
     
-    <div className='flex relative flex-col text-center md:text-left xl:flex-row max-w-[2000px] xl:px-10 min-h-screen justify-center xl:space-y-0 mx-auto items-center'>
+    <div className='flex relative flex-col text-center md:text-left max-w-[2000px] xl:px-10 min-h-screen justify-evenly xl:space-y-0 mx-auto items-center'>
     {/* <div className='flex flex-col h-screen relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'> */}
         <motion.h3
           initial={{ opacity: 0 }}
           whileInView= {{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className='absolute top-16 uppercase tracking-[20px] text-gray-500 text-2xl font-bold'
+          // className='top-16 uppercase tracking-[20px] text-gray-500 text-2xl font-bold'
+          className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold'
         >
           Skills
         </motion.h3>
-        <h3 className='absolute top-36 uppercase tracking-[3px] text-gray-500 text-sm'>
+        <h3 className='top-36 uppercase tracking-[3px] text-gray-500 text-sm'>
           Hover over a skill for currency proficiency
         </h3>
 
@@ -42,15 +52,22 @@ function Skills() {
             <PythonSkill />
             <PhpSkill />
             <MySQLSkill />
+            <LinuxSkill />
+
+            <MongoDBSkill />
+            <ExpressSkill />
+            <ReactSkill />
+            <NodejsSkill />
+
+            <PandasSkill />
             <PerlSkill />
+            <JavaSkill />
+            <CPPSkill />
+
             <JsSkill />
             <HtmlSkill />
             <CSSSkill />
-            <JsSkill />
-            <JsSkill />
-            <JsSkill />
-            <JsSkill />
-            <JsSkill />
+            <TailwindSkill />
         </div>
     </div>
     // </motion.div>

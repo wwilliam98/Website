@@ -1,7 +1,8 @@
 function Node(id, status) {
     this.id = id;
     this.weight = 0;
-    this.status = status;
+    this.type = "normal" // Node Type (Start, Target, Wall or Weight)
+    this.status = status; //Visited or Not Visited
     this.previousNode = null;
     this.path = null;
 

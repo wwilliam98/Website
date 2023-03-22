@@ -1,7 +1,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import CoverPic from "../Images/pass-photo09Oct2022.jpeg"
 import OpenSlotPic from "../Images/OpenSlot.png"
+import JavascriptLogo from "../Images/jslogo.png"
+import HTMLLogo from "../Images/HTMLlogo.jpeg"
+
 
 function ExperienceCard() {
   return (
@@ -25,22 +27,12 @@ function ExperienceCard() {
             <div className='flex space-x-2 my-1'>
                 <img 
                     className='h-10 w-10 rounded-full'
-                    src={CoverPic}
+                    src={JavascriptLogo}
                     alt="Tech Used"
                 />
                 <img 
                     className='h-10 w-10 rounded-full'
-                    src={CoverPic}
-                    alt="Tech Used"
-                />
-                <img 
-                    className='h-10 w-10 rounded-full'
-                    src={CoverPic}
-                    alt="Tech Used"
-                />
-                <img 
-                    className='h-10 w-10 rounded-full'
-                    src={CoverPic}
+                    src={HTMLLogo}
                     alt="Tech Used"
                 />
             </div>

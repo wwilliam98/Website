@@ -2,7 +2,7 @@ const jwt = require ('jsonwebtoken');
 const User = require ('../models/user');
 const config = require('../config');
 
-var JWT_SECRET = config.JWT_SECRET;
+var JWT_SECRET = config.db.JWT_SECRET;
 
 const requireAuth = (req, res, next) =>{
     const token = req.cookies.jwt;

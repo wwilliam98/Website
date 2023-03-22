@@ -5,7 +5,7 @@ body{
 #board {
     margin-left: 5px;
     margin-right: 5px;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
 #board td{
@@ -29,6 +29,14 @@ body{
   animation-fill-mode: forwards;
   animation-play-state: running;
   border: 1.5px solid rgb(0,0,0);
+}
+
+/* Header Buttons */
+.visualizeAvailable{
+  background-color:white;
+}
+.visualizeUnavailable{
+  background-color:red;
 }
 
 @keyframes wallAnimation {

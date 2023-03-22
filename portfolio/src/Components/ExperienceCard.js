@@ -57,10 +57,10 @@ function ExperienceCard() {
             <p className='uppercase py-5 text-gray-300'>May 2022 - Present</p>
             <ul className='list-disc space-y-2 ml-5 text-lg text-justify'>
                 {/* <li>Maintained and developed website applications using PHP, HTML, and CSS, which resulted in a reduced run time and increased productivity by 80%.</li> */}
-                <li>Maintained and developed website applications using PHP, HTML, and CSS reducing run time and increased productivity by 80%.</li>
-                <li>Migrated excel files to MySQL Database using Python Pandas, which streamlined the data management process and saved the company time and resources.</li>
-                <li>Designed and implemented a Mask Request Form web application using PHP, HTML, and CSS.</li>
-                <li>Identified and documented problems with program function, output, and content to improve quality of product</li>
+                <li>Maintain and develop website applications using PHP, HTML, and CSS reducing run time and increased productivity by 80%.</li>
+                <li>Migrate excel files to MySQL Database using Python Pandas, which streamlined the data management process and saved the company time and resources.</li>
+                <li>Design and implement a Mask Request Form web application using PHP, HTML, and CSS.</li>
+                <li>Identify problems with program function, output, and content to improve quality of product</li>
             </ul>
         </div>
     </article>

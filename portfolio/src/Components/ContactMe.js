@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { PhoneIcon, MapPinIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
+import Alert from 'react-bootstrap/Alert';
 
-function ContactMe() {        
+function ContactMe() {       
+    const [alertmessage, setMessage] = useState(null);
+
     function handleSubmit(event) {
         event.preventDefault();
         const form = document.querySelector('form')
@@ -19,15 +22,27 @@ function ContactMe() {
             body : JSON.stringify({name, email, subject, message}),
             headers : {'Content-Type': 'application/json'},
         })
-        .then((response) => response.json())
-        .then((data) => console.log(data))
-        .catch((error) => console.error(error));
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data)
+            if (data.success) {
+                setMessage("Your message has been sent successfully!");
+            } else {
+                setMessage("Failed to send message. Please try again.");
+            }
+        })
+        .catch((error) => {
+            setMessage("Failed to send message. Please try again.");
+            console.error(error);
+        });
     }
 
     return (
-        <div className='h-screen flex flex-col relative text-center md:text-left md:flex-row max-w-7xl justify-evenly mx-auto items-center'>
+        <div className='h-screen flex flex-col relative text-center md:text-left max-w-full justify-evenly mx-auto items-center'>
             {/* <h3 className="absolute top-16 p-1 uppercase tracking-[20px] text-gray-400 text-2xl"> */}
-            <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base md:absolute font-bold">
+            <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">
                 Contact Me
             </h3>
             
@@ -66,6 +81,8 @@ function ContactMe() {
                     <button className='bg-[#F7AB0A] py-5 px-10 rounded-md text-black font-bold'>Submit</button>
                 </form>
             </div>
+
+            {alertmessage && <Alert variant={alertmessage.includes("success") ? "success" : "danger"}>{alertmessage}</Alert>}
         </div>
     )
 }

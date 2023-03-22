@@ -11,7 +11,7 @@ function smoothScroll(target) {
 
 function Cover() {
 	const [text, count] = useTypewriter({
-		words: ["Welcome to My Website!!", "My name is William", "@STMicroelectronics"],
+		words: ["Welcome to My Portfolio!!", "My name is William", "@STMicroelectronics"],
 		loop: true,
 		typeSpeed: 50,
 		deleteSpeed: 50,

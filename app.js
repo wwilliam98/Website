@@ -2,7 +2,7 @@ const path = require('path');
 const express = require ('express');
 const app = express();
 const mongoose = require("mongoose");
-const {config, my_email} = require('./config');
+const config = require('./config');
 const authRoutes = require ('./routes/authRoutes');
 const cookieParser = require ('cookie-parser');
 const {requireAuth, checkUser} = require ('./midleware/authMiddleware');
@@ -15,13 +15,12 @@ app.use(express.static('public'));
 app.use(express.static(path.resolve(__dirname, './portfolio/build')));
 app.use(cookieParser());
 
-app.use(authRoutes);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); 
 
 //Connect to MongoDB
-var connectionString = config.mongoKey;
-var JWT_SECRET = config.JWT_SECRET;
+var connectionString = config.db.mongoKey;
+var JWT_SECRET = config.db.JWT_SECRET;
 mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
     .then((result) => console.log("connected to port 3000"), app.listen(3000))
     .catch((err) => console.log(err));
@@ -29,7 +28,7 @@ mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: t
 app.get('*', checkUser);
 
 // app.get('/', function(req, res){
-//   res.render('main')
+  //   res.render('main')
 // });
 
 app.get('/', function(req, res){
@@ -55,17 +54,16 @@ app.get('/dare-mighty-things', function(req, res){
 
 app.post('/send_contactme_email', function(req, res){
   const { name, email, subject, message } = req.body;
-  console.log(name, email, subject, message)
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
-      user: my_email.user,
-      pass: my_email.pass
+      user: config.my_email.user,
+      pass: config.my_email.pass
     }
   });
-
+  
   const mailOptions = {
     from: '"Website Portfolio" wwilliam1908@gmail.com',
     to: 'wwilliam1908@gmail.com',
@@ -74,16 +72,16 @@ app.post('/send_contactme_email', function(req, res){
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Message:</strong> ${message}</p>
-    `
-  };
+      `
+    };
 
   transporter.sendMail(mailOptions, function(error, info){
     if (error){
-      console.log(error)
+    //   console.log(error)
       res.status(500).json({ error: 'Failed to send email' });
     }else{
-      console.log('Email Send: ' + info.response)
-      res.status(200).json({ message: 'Email sent successfully' });
+    //   console.log('Email Send: ' + info.response)
+      res.status(200).json({ success: 'Email sent successfully' });
     }
   })
 
@@ -98,3 +96,5 @@ app.post('/send_contactme_email', function(req, res){
   // res.send(JSON.stringify({ name: name, email: email, subject: subject, message: message }));
   // res.send(JSON.stringify({ message: "Hello from server!" }));
 });
+
+app.use(authRoutes);

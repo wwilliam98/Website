@@ -15,9 +15,9 @@
     "nodemon": "^2.0.12"
   },
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "startdev": "(cd portfolio && npm run build) && (nodemon app.js)"
+    "app": "nodemon app.js",
+    "dev": "(cd portfolio && npm run build) && (nodemon app.js)",
+    "startdev": "nodemon app.js"
   },
   "author": "",
   "license": "ISC"

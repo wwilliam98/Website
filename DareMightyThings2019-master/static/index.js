@@ -53,7 +53,8 @@ function displayPlace(place, prop_id) {
     $('#facts').empty();
 
     const narrativeQueryID = ++narrativeQueryCount;
-    const url = window.location.href + `narrative?prop_id=${prop_id.toString()}`;
+    // const url = window.location.href + `narrative?prop_id=${prop_id.toString()}`;
+    const url = `narrative?prop_id=${prop_id.toString()}`;
     fetch(url).then(function(response) {
         return response.json();
     }).then(function(json) {
@@ -101,7 +102,8 @@ $(function() {
     
         $("#results").append($("<p></p>").text("Loading..."));
     
-        const url = window.location.href + `search?address=${query}`;
+        // const url = window.location.href + `search?address=${query}`;
+        const url = `search?address=${query}`;
         fetch(url).then(function(response) {
             return response.json();
         }).then(function(json) {

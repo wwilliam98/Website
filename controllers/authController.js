@@ -2,7 +2,7 @@ const User = require ('../models/user');
 const jwt = require ('jsonwebtoken');
 const config = require('../config');
 
-var JWT_SECRET = config.JWT_SECRET;
+var JWT_SECRET = config.db.JWT_SECRET;
 
 const maxAge = 3*24*60*60;
 const createToken = (id) => {
