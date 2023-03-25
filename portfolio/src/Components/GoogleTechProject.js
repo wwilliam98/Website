@@ -17,7 +17,7 @@ function GoogleTechProject() {
                 <a href="https://techchallenge.withgoogle.com/" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Google Tech Challenge</a>
             </h4>
 
-            <p className='text-lg text-center md:text-left'>
+            <p className='text-sm sm:text-lg text-center md:text-left'>
                 • Built a team of 5 students in a national tech game competition to solve 5 levels of difficulties of puzzles which include 3 coding challenges and 2 riddle challenges in 2 hours <br></br>
                 • Solved coding and logical problems, algorithm puzzles, and riddles as much as possible in a given time
             </p>

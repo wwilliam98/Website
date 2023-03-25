@@ -25,14 +25,14 @@ return (
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }} //So it doesnt keep looping when entering view 
         src={CoverPic}
-        className="flex-shrink-0 w-56 h-56 rounded-full object-cover mb-0 md:mb-0 md:rounded-lg md:w-64 md:h-95"
+        className="flex-shrink-0 w-40 h-40 sm:w-56 sm:h-56 rounded-full object-cover mb-0 md:mb-0 md:rounded-lg md:w-64 md:h-95"
         /> 
 
         <div className='space-y-5 px-0 md:px-10'>
             <h4 className='text-4xl font-semibold'>Hello Everyone!!
             {/* <span className='underline decoration-slate-500'>little</span> Background */}
             </h4>
-            <p className='text-base text-justify md:text-xl overflow-scroll'>
+            <p className='text-sm sm:text-base text-justify md:text-xl overflow-scroll'>
             My name is William and I am a Computer Engineering graduate from the Illinois Institute of Technology. I am currently working as full-time Software Engineer at STMicroelectronics where I get to apply my passion for combining computer software and hardware to create real-world solutions. I discovered my passion for this field after realizing that there are many problems that can be solved using the current advance technology. In my accomplishment in programming, I was a top 10 finalist in the Google Tech Challenge held at their Chicago headquarters, and I'm proud to have won the Dare Mighty Things hackathon in 2019 with my team. These experiences have been invaluable in helping me grow as a programmer and a problem solver.
             </p>
         </div>

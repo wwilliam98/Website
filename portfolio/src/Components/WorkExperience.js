@@ -9,7 +9,7 @@ function WorkExperience() {
         initial={{ opacity: 0 }}
         whileInView= {{ opacity: 1 }}
         transition={{ duration: 1.2 }}
-        className='flex flex-col h-screen relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'
+        className='flex flex-col h-screen relative text-left overflow-hidden px-10 max-w-full items-center justify-evenly mx-auto'
     >
         {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
         <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">

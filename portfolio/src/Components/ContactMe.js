@@ -40,14 +40,14 @@ function ContactMe() {
     }
 
     return (
-        <div className='h-screen flex flex-col relative text-center md:text-left max-w-full justify-evenly mx-auto items-center'>
+        <div className='relative flex flex-col h-screen overflow-hidden text-center max-w-full md:text-left justify-evenly mx-auto items-center'>
             {/* <h3 className="absolute top-16 p-1 uppercase tracking-[20px] text-gray-400 text-2xl"> */}
             <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">
                 Contact Me
             </h3>
             
-            <div className='flex flex-col space-y-10'>
-                <h4 className='text-4xl font-semibold text-center'>
+            <div className='flex flex-col space-y-10 p-10'>
+                <h4 className='text-2xl sm:text-4xl font-semibold text-center'>
                     For any questions, comments, or feedback. Feel free to contact me below.
                     <span>
                     </span>
@@ -70,7 +70,7 @@ function ContactMe() {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} id="contactme_form" className='flex flex-col space-y-2 w-fit mx-auto'>
+                <form onSubmit={handleSubmit} id="contactme_form" className='flex flex-col space-y-2 mx-auto px-10'>
                     <div className='flex space-x-2'>
                         <input className='contactInput' placeholder='Name' type='text' id='name' name='name' required></input>
                         <input className='contactInput' placeholder='Email' type='email' id='email' name='email' required></input>

@@ -17,7 +17,7 @@ function LightProject() {
                 <a href="https://techchallenge.withgoogle.com/" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Automated Desk Light</a>
             </h4>
 
-            <p className='text-lg text-center md:text-left'>
+            <p className='text-sm sm:text-lg text-center md:text-left'>
                 • Created an Automated Desk Light using Raspberry 4, and XCode environment to control light status using mobile phone (ios). <br></br>
                 • Successfully implemented 2 way communication using Raspberry Pi 4 as the client and Firebase as the server <br></br>
                 • Utilized python to push/retrieve data in real time and swift to create the user interface (UI) for mobile application

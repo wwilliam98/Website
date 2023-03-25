@@ -17,7 +17,7 @@ function DareMightyThings() {
                 <a href="https://techchallenge.withgoogle.com/" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>DareMightyThings Hackaton 2019</a>
             </h4>
 
-            <p className='text-lg text-center md:text-left'>
+            <p className='text-sm sm:text-lg text-center md:text-left'>
                 • Won 1st place to implement a generated text application for a multi-billion dollar real estate company (JLL)<br></br>
                 • Successfully created an application that takes an address and write a paragraph long generally about the property and location<br></br>
                 • Utilized Python, Java, HTML, CSS, and Javascript with support of Flask as the framework, Google Cloud, and NarrativeGenerator API

@@ -26,7 +26,7 @@ function SudokuProject() {
                 <a href="/SudokuSolver" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Sudoku Solver</a>
             </h4>
 
-            <p className='text-lg text-center md:text-left'>
+            <p className='text-sm sm:text-lg text-center md:text-left'>
                 • Built a full-stack web application to allow user to login and visualize outcomes of sudoku using Javascript, Html, CSS. <br></br>
                 • Utilized Node.js as the framework, MongoDB as the database, and AWS(EC2) as web service. <br></br>
                 • Using object oriented design, built a backtracking algorithm that could solve a partially completed sudoku board in Javascript.

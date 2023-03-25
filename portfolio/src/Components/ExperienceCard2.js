@@ -17,13 +17,13 @@ function ExperienceCard() {
             transition={{ duration: 1.2 }}
             whileInView={{ opacity: 1, y: 0}}
             viewport={{ once:true }}
-            className='w-32 h-32 rounded-full object-cover object-center xl:w-[200px] xl:h-[200px]'
+            className='w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover object-center xl:w-[200px] xl:h-[200px]'
             src={OpenSlotPic}
         />
 
         <div className='px-5 md:px-10'>
-            <h4 className='text-4xl font-light'>Quality Assurance</h4>
-            <p className='font-bold text-2xl mt-1'>OpenSlot Inc.</p>
+            <h4 className='text-3xl sm:text-4xl font-light'>Quality Assurance</h4>
+            <p className='font-bold text-xl sm:text-2xl mt-1'>OpenSlot Inc.</p>
             <div className='flex space-x-2 my-1'>
                 <img 
                     className='h-10 w-10 rounded-full'
@@ -36,8 +36,8 @@ function ExperienceCard() {
                     alt="Tech Used"
                 />
             </div>
-            <p className='uppercase py-5 text-gray-300'>Summer 2018, Summer 2019</p>
-            <ul className='list-disc space-y-2 ml-5 text-lg text-justify'>
+            <p className='uppercase py-3 sm:py-5 text-gray-300'>Summer 2018, Summer 2019</p>
+            <ul className='list-disc space-y-2 ml-5 text-sm sm:text-lg text-justify'>
                 <li>Collaborated with a team of developers to identify and document faults in the OpenSlot application, resulting in a 50% reduction in faults.</li>
                 <li>Participate in code reviews and provide feedback on the quality of the code.</li>
                 <li>Identified and documented problems with program function, output, and content to improve quality of product.</li>
