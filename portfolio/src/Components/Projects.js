@@ -15,7 +15,7 @@ function Projects() {
         // className='flex flex-col w-full h-screen relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'
     >
         {/* <h3 className='top-16 uppercase tracking-[20px] text-gray-500 text-2xl'> */}
-        <h3 className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold'>
+        <h3 className='top-16 p-1 mt-16 uppercase tracking-[20px] text-gray-400 text-base font-bold'>
             Projects
             <motion.span
                 animate={{ opacity: [0.2, 0.4, 0.6, 0.8, 1, 0.8, 0.4, 0.2] }}

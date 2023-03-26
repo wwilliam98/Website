@@ -46,41 +46,39 @@ function ContactMe() {
                 Contact Me
             </h3>
             
-            <div className='flex flex-col space-y-10 p-10'>
-                <h4 className='text-2xl sm:text-4xl font-semibold text-center'>
-                    For any questions, comments, or feedback. Feel free to contact me below.
-                    <span>
-                    </span>
-                </h4>
+            <h4 className='text-2xl sm:text-4xl font-semibold text-center'>
+                For any questions, comments, or feedback. Feel free to contact me below.
+                <span>
+                </span>
+            </h4>
 
-                <div className='space-y-10'>
-                    <div className='flex items-center space-x-5 justify-center'>
-                        <PhoneIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
-                        <p className='text-2xl'>+65 9420 0655</p>
-                    </div>
-
-                    <div className='flex items-center space-x-5 justify-center'>
-                        <EnvelopeIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
-                        <p className='text-2xl'>wwilliam1908@gmail.com</p>
-                    </div>
-
-                    <div className='flex items-center space-x-5 justify-center'>
-                        <MapPinIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
-                        <p className='text-2xl'>Singapore, Singapore</p>
-                    </div>
+            <div className='space-y-10'>
+                <div className='flex items-center space-x-5 justify-center'>
+                    <PhoneIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
+                    <p className='text-2xl'>+65 9420 0655</p>
                 </div>
 
-                <form onSubmit={handleSubmit} id="contactme_form" className='flex flex-col space-y-2 mx-auto px-10'>
-                    <div className='flex space-x-2'>
-                        <input className='contactInput' placeholder='Name' type='text' id='name' name='name' required></input>
-                        <input className='contactInput' placeholder='Email' type='email' id='email' name='email' required></input>
-                    </div>
+                <div className='flex items-center space-x-5 justify-center'>
+                    <EnvelopeIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
+                    <p className='text-2xl'>wwilliam1908@gmail.com</p>
+                </div>
 
-                    <input className='contactInput' placeholder='Subject' type='text' id='subject' name='subject' required></input>
-                    <textarea className='contactInput' placeholder='Message' id='message' name='message' required></textarea>
-                    <button className='bg-[#F7AB0A] py-5 px-10 rounded-md text-black font-bold'>Submit</button>
-                </form>
+                <div className='flex items-center space-x-5 justify-center'>
+                    <MapPinIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
+                    <p className='text-2xl'>Singapore, Singapore</p>
+                </div>
             </div>
+
+            <form onSubmit={handleSubmit} id="contactme_form" className='relative flex flex-col p-10 space-y-2 max-w-full'>
+                <div className='flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-2 '>
+                    <input className='contactInput' placeholder='Name' type='text' id='name' name='name' required></input>
+                    <input className='contactInput' placeholder='Email' type='email' id='email' name='email' required></input>
+                </div>
+
+                <input className='contactInput' placeholder='Subject' type='text' id='subject' name='subject' required></input>
+                <textarea className='contactInput' placeholder='Message' id='message' name='message' required></textarea>
+                <button className='bg-[#F7AB0A] py-5 px-10 rounded-md text-black font-bold'>Submit</button>
+            </form>
 
             {alertmessage && <Alert variant={alertmessage.includes("success") ? "success" : "danger"}>{alertmessage}</Alert>}
         </div>
