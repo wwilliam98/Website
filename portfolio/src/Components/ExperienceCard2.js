@@ -8,7 +8,7 @@ import HTMLLogo from "../Images/HTMLlogo.jpeg"
 function ExperienceCard() {
   return (
     // <article className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-screen md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 hover:opacity-100 opacity-40 cursor-pointer transition-opacity duration-200 overflow-hidden'>
-    <article className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-screen md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 hover:opacity-100 opacity-40 cursor-pointer transition-opacity duration-200 overflow-x-scroll'>
+    <article className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-screen md:w-[900px] xl:w-[900px] snap-center bg-[#292929] p-10 hover:opacity-100 opacity-40 cursor-pointer transition-opacity duration-200 overflow-x-scroll'>
         <motion.img
             initial={{
                 y: -100,
@@ -17,7 +17,7 @@ function ExperienceCard() {
             transition={{ duration: 1.2 }}
             whileInView={{ opacity: 1, y: 0}}
             viewport={{ once:true }}
-            className='w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover object-center xl:w-[200px] xl:h-[200px]'
+            className='w-10 h-10 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full object-cover object-center'
             src={OpenSlotPic}
         />
 

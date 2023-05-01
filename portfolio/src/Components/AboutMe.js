@@ -1,6 +1,6 @@
 import React from 'react'
 import {motion} from "framer-motion";
-import CoverPic from "../Images/pass-photo09Oct2022.jpeg"
+import coverImage from "../Images/coverImage2.jpeg";
 
 function AboutMe() {
 return (
@@ -12,7 +12,7 @@ return (
         className='flex flex-col relative h-screen text-center max-w-7xl px-10 justify-evenly mx-auto items-center md:text-left md:flex-row'
     >
         {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
-        <h3 className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base md:absolute font-bold'>
+        <h3 className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold md:absolute'>
             About Me
         </h3>
         
@@ -24,8 +24,8 @@ return (
         transition={{ duration: 1.2 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }} //So it doesnt keep looping when entering view 
-        src={CoverPic}
-        className="flex-shrink-0 w-40 h-40 sm:w-56 sm:h-56 rounded-full object-cover mb-0 md:mb-0 md:rounded-lg md:w-64 md:h-95"
+        src={coverImage}
+        className="flex-shrink-0 w-40 h-40 sm:w-56 sm:h-56 rounded-full object-cover border-white border-4 mb-0 md:mb-0 md:rounded-lg md:w-64 md:h-95"
         /> 
 
         <div className='space-y-5 px-0 md:px-10'>
@@ -33,8 +33,16 @@ return (
             {/* <span className='underline decoration-slate-500'>little</span> Background */}
             </h4>
             <p className='text-sm sm:text-base text-justify md:text-xl overflow-scroll'>
-            My name is William and I am a Computer Engineering graduate from the Illinois Institute of Technology. I am currently working as full-time Software Engineer at STMicroelectronics where I get to apply my passion for combining computer software and hardware to create real-world solutions. I discovered my passion for this field after realizing that there are many problems that can be solved using the current advance technology. In my accomplishment in programming, I was a top 10 finalist in the Google Tech Challenge held at their Chicago headquarters, and I'm proud to have won the Dare Mighty Things hackathon in 2019 with my team. These experiences have been invaluable in helping me grow as a programmer and a problem solver.
+            My name is William and I'm currently a full-time Software Engineer at STMicroelectronics with 5 years of experience in programming. I discovered my passion for Computer Science after realizing that there are many problems that can be solved using the current advanced technology. When I'm not working, I like to go for a walk or hike and look for beautiful spots. I find that exploring nature helps me clear my mind and recharge for the next challenge.
+
+            {/* If you're interested in working together, please feel free to reach out to me at +1(312)788-7357 or +65 9420 0655. I'd love to hear from you and discuss how we can work together to achieve your goals. */}
+            <br></br>
+            <br></br>
+            In my programming accomplishments, I was a top 10 finalist in the Google Tech Challenge held at their headquarters in Chicago, and I'm proud to have won 1st place the Dare Mighty Things hackathon in 2019 with my team. These experiences have been invaluable in helping me grow as a programmer and a problem solver.
+
+            I'm skilled in Python, Javascript, and PHP, and I have experience working with databases such as MySQL using Pandas. My long-term goal is to become a technical lead and mentor for junior developers to help them reach their full potential.
             </p>
+
         </div>
     </motion.div>
 )

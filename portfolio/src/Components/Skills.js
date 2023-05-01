@@ -39,7 +39,7 @@ function Skills() {
         </motion.h3>
 
         <div>
-          <h3 className='top-36 uppercase tracking-[3px] text-gray-500 text-sm'>
+          <h3 className='top-36 p-5 uppercase tracking-[3px] text-gray-500 text-sm'>
             Hover over a skill for currency proficiency
           </h3>
 

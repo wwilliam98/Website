@@ -12,7 +12,7 @@ function WorkExperience() {
         className='flex flex-col h-screen relative text-left overflow-hidden px-10 max-w-full items-center justify-evenly mx-auto'
     >
         {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
-        <h3 className="top-16 p-1 mt-16 uppercase tracking-[20px] text-gray-400 text-base font-bold">
+        <h3 className="top-16 p-4 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">
           Experience
           <motion.span
             // initial={{ opacity: 0 }}

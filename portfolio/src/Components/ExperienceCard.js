@@ -1,6 +1,5 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import CoverPic from "../Images/pass-photo09Oct2022.jpeg"
 import STLogo from "../Images/STMicroelectronicLogo.png"
 import JavascriptLogo from "../Images/jslogo.png"
 import PythonLogo from "../Images/pythonlogo.jpeg"
@@ -11,7 +10,7 @@ import MysqlLogo from "../Images/MysqlLogo.png"
 function ExperienceCard() {
   return (
     // <article className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-screen md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 hover:opacity-100 opacity-40 cursor-pointer transition-opacity duration-200 overflow-hidden'>
-    <article className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-screen md:w-[600px] xl:w-[900px] snap-center bg-[#292929] p-10 opacity-40 hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-x-scroll'>
+    <article className='flex flex-col rounded-lg items-center space-y-7 flex-shrink-0 w-screen p-10 opacity-40 md:w-[900px] xl:w-[900px] snap-center bg-[#292929] hover:opacity-100 cursor-pointer transition-opacity duration-200 overflow-x-scroll'>
         <motion.img
             initial={{
                 y: -100,
@@ -20,7 +19,7 @@ function ExperienceCard() {
             transition={{ duration: 1.2 }}
             whileInView={{ opacity: 1, y: 0}}
             viewport={{ once:true }}
-            className='w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover object-center xl:w-[200px] xl:h-[200px]'
+            className='w-10 h-10 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full object-cover object-center'
             src={STLogo}
         />
 
