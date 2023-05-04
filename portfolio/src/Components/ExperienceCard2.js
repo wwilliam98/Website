@@ -17,7 +17,7 @@ function ExperienceCard() {
             transition={{ duration: 1.2 }}
             whileInView={{ opacity: 1, y: 0}}
             viewport={{ once:true }}
-            className='w-10 h-10 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full object-cover object-center'
+            className='w-24 h-24 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full object-cover object-center'
             src={OpenSlotPic}
         />
 
