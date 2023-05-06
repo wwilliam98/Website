@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import { Cursor, useTypewriter } from 'react-simple-typewriter'
 import BackgroundCircle from './BackgroundCircle'
-import CoverPic from "../Images/pass-photo09Oct2022.jpeg"
+import CoverPic from "../Images/CoverImage1Large.jpeg"
 
 function smoothScroll(target) {
   document.querySelector(target).scrollIntoView({
