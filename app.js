@@ -10,7 +10,7 @@ const jwt = require ('jsonwebtoken');
 const User = require ('./models/user');
 const nodemailer = require('nodemailer');
 
-app.set ('view engine', 'ejs');
+app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.static(path.resolve(__dirname, './portfolio/build')));
 app.use(cookieParser());
@@ -27,10 +27,6 @@ mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: t
 
 app.get('*', checkUser);
 
-// app.get('/', function(req, res){
-  //   res.render('main')
-// });
-
 app.get('/', function(req, res){
   // All other GET requests not handled before will return our React app
   res.sendFile(path.resolve(__dirname, './portfolio/build', 'index.html'));
@@ -42,6 +38,10 @@ app.get('/SudokuSolver', requireAuth, function(req, res){
     const user = await User.findById(decodedToken.id);
     res.render('index', {count: user.solvedSudoku});
   })
+});
+
+app.get('/oldPortfolio', function(req, res){
+  res.render('oldPortfolio')
 });
 
 app.get('/PathFindingVisualizer', function(req, res){

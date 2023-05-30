@@ -8,8 +8,8 @@ import {BFS, DFS, twoBFS} from "./PathFinding/PathFindingUnweightedAlgorithm.js"
 // Board attributes
 function Board(height, width){
     // Setups the board
-    this.width = width; //used
     this.height = height; //used
+    this.width = width; //used
 
     this.boardArray = []; //used
     this.getNodesByID = {}; //used
@@ -34,7 +34,7 @@ function Board(height, width){
     this.AnimateFoundPath = [];
     this.objectShortestPathNodesToAnimate = [];
     this.animateWalls = []; //used
-
+    
     this.selectedAlgorithm = 'DFS'; //used
     this.isAlgoRunning = false;
     this.currentHeuristic = null;
@@ -49,7 +49,7 @@ Board.prototype.createGrid = function(){
     let tableHTML = "";
     for (let r = 0; r < this.height; r++){
         let currentArrayRow = [];
-        let currentHTMLRow = "";
+        let currentHTMLRow = "<tr>";
 
         for (let c = 0; c < this.width; c++){
             let newNodeId = `${r}-${c}`, nodeType, newNode;
@@ -66,7 +66,7 @@ Board.prototype.createGrid = function(){
             }
 
             // Create new node for the div
-            newNode = new Node(newNodeId, nodeType);
+            newNode = new Node(newNodeId, nodeType); //ID, weight, type, status, previousNode, Path
             this.getNodesByID[`${newNodeId}`] = newNode;
             currentArrayRow.push(newNode);
             currentHTMLRow += `<td id="${newNodeId}" class="${nodeType}"></td>`;
@@ -123,7 +123,7 @@ Board.prototype.connectNodes = function(){
 // End of Board Setup ##############################################################################################################
 
 // Get Node, given the id (ex. "0-0")
-Board.prototype.getNode = function(id) {
+Board.prototype.getNodefromBoard = function(id) {
     let coordinates = id.split("-");
     let r = parseInt(coordinates[0]);
     let c = parseInt(coordinates[1]);
@@ -139,7 +139,7 @@ Board.prototype.animate = function(){
             }
 
             let currentId = `${i}-${j}`;
-            let currentNode = board.getNode(currentId);
+            let currentNode = board.getNodefromBoard(currentId);
             let currentelement = document.getElementById(currentId);
 
             if (currentNode.status == "visited" || currentNode.type == "wall" || currentNode.type == "target"){
@@ -191,7 +191,7 @@ Board.prototype.addEventListener = function(){
     for (let i = 0; i < board.height; i++){
         for (let j = 0; j < board.width; j++){
             let currentId = `${i}-${j}`;
-            let currentNode = board.getNode(currentId);
+            let currentNode = board.getNodefromBoard(currentId);
             let currentTableElement = document.getElementById(currentId);
             
             // Just set to wall when initial click is a wall and vice versa
@@ -208,6 +208,22 @@ Board.prototype.addEventListener = function(){
                     board.pressedNode = "normal";
                     board.changeNormalNodeToWall(currentNode);
                 }
+            };
+
+            currentTableElement.onmouseup = () =>{
+                board.mouseDown = false;
+                if (board.pressedNode === "target") {
+                    board.target = currentId;
+                }
+                else if (board.pressedNode === "start") {
+                    board.start = currentId;
+                } 
+                // else if (board.pressedNode === "object") {
+                //     board.object = currentId;
+                // }
+                board.pressedNode = "nothing";
+                // currentTableElement.className = "wall";
+                // console.log(board);
             };
 
             currentTableElement.onmouseenter = () =>{
@@ -271,22 +287,6 @@ Board.prototype.addEventListener = function(){
                     }
                 //}
             }
-
-            currentTableElement.onmouseup = () =>{
-                board.mouseDown = false;
-                if (board.pressedNode === "target") {
-                    board.target = currentId;
-                }
-                else if (board.pressedNode === "start") {
-                    board.start = currentId;
-                } 
-                // else if (board.pressedNode === "object") {
-                //     board.object = currentId;
-                // }
-                board.pressedNode = "nothing";
-                // currentTableElement.className = "wall";
-                // console.log(board);
-            };
         }
     }
 };
@@ -504,9 +504,9 @@ Board.prototype.visualize = function(algorithm) {
 
 Board.prototype.initialise = function(){
     this.createGrid(); 
-    this.connectNodes();
+    // this.connectNodes();
     this.addEventListener();
-    this.toggleButtons();
+    // this.toggleButtons();
 };
 
 // let height = Math.floor(($(document).height()) / 28);

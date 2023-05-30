@@ -13,8 +13,8 @@ function LightProject() {
 
         <div className='space-y-10 px-0 md:pd-10 max-w-6xl'>
             <h4 className='text-4xl font-semibold text-center'> 
-                <span>Project 4 of 4:</span>{" "}
-                <a href="https://techchallenge.withgoogle.com/" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Automated Desk Light</a>
+                <span>Project 5 of 5:</span>{" "}
+                <a href="" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Automated Desk Light</a>
             </h4>
 
             <p className='text-sm sm:text-lg text-center md:text-left'>

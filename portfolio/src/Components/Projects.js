@@ -3,6 +3,7 @@ import React from 'react'
 import DareMightyThings from './DareMightyThingsProject.js'
 import DeskLightProject from './DeskLightProject.js'
 import GoogleTechProject from './GoogleTechProject.js'
+import OldPortfolioProject from './OldPortfolioProject.js'
 import SudokuProject from "./SudokuProject.js"
 
 function Projects() {
@@ -29,6 +30,7 @@ function Projects() {
             <SudokuProject />
             <DareMightyThings />
             <GoogleTechProject />
+            <OldPortfolioProject />
             <DeskLightProject />
         </div>
 
