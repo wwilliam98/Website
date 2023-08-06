@@ -1,12 +1,11 @@
-function Node(id, status) {
+function Node(id, nodetype) {
     this.id = id;
-    this.weight = 0;
-    this.type = "normal" // Node Type (Start, Target, Wall or Weight)
-    this.status = status; //Visited or Not Visited
-    this.previousNode = null;
-    this.path = null;
+    this.weight = 1;
+    this.type = nodetype // Node Type (Start, Target, Wall, Weight or Normal)
+    this.status = "unvisited"; //Visited or Not Visited
 
-    this.direction = null;
+    this.neighborsNode = [];
+    
     this.storedDirection = null;
     this.distance = Infinity;
     this.totalDistance = Infinity;

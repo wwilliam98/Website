@@ -1,6 +1,213 @@
 body{
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
+
+.navbar {
+  background-color: rgb(31 41 55);
+}
+
+.container-fluid {
+  display: flex;
+}
+
+.navbar-inverse .navbar-nav{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.navbar-inverse .navbar-nav>li>a{
+  color: rgb(156 163 175);;
+}
+
+.navbar-brand {
+  color: rgb(156 163 175);
+}
+
+.navbar-nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.dropdown:hover{
+  /* opacity: 0.7; */
+  background-color: #d3d3d3;
+  border-style: separate;
+  border-radius: 14cm;
+  border-width: 10px;
+  transition: opacity 0.3s ease;
+  
+}
+
+.navbar-nav li>a:hover{
+  color: black
+}
+
+.navbar-nav{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.navbar-btn:focus, .navbar-btn:active {
+  outline: none;
+}
+
+.navbar-btn > p {
+  color: rgb(156 163 175);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn-disabled{
+  display: flex;
+  justify-content: space-evenly;
+  background-color: red;
+  
+}
+
+/* For Tutorial buttons */
+#tutorial {
+  position: absolute;
+  z-index: 3;
+  background-color: rgba(255, 255, 255, 1);
+  width: 50%;
+  height: 70%;
+  border: 8px solid #34495e;
+  border-radius: 25px;
+  text-align: center;
+  float: right;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+#tutorial > h3 {
+  padding-bottom: 10px;
+  padding-top: 20px;
+}
+
+#tutorial > p {
+  font-weight: bolder;
+  padding: 5px 20px 5px 20px;
+}
+
+#mainTutorialImage {
+  width: 70%;
+  padding-top: 5px;
+}
+
+.KeyDisplay{
+  flex: 1;
+  flex-basis: 0;
+  
+  /* Styles for individual items */
+  /* For demonstration purposes */
+  width: 10%;
+  height: 10%;
+  border: 5px solid rgb(31 41 55);
+  background: white;
+  border-radius: 25px;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+  margin: 10px;
+}
+
+.WeightDisplay{
+  flex: 1;
+  flex-basis: 0;
+  
+  /* Styles for individual items */
+  /* For demonstration purposes */
+  width: 5%;
+  height: 5%;
+  border: 5px solid rgb(31 41 55);
+  background: white;
+  border-radius: 25px;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+  margin: 10px;
+}
+
+#nextButton {
+  color: #ffffff;
+  background-color: rgb(31 41 55);
+  position: absolute;
+  right: 2%;
+  bottom: 2%;
+}
+
+#skipButton {
+  color: #ffffff;
+  background-color: rgb(31 41 55);
+  position: absolute;
+  left: 2%;
+  bottom: 2%;
+}
+
+#previousButton {
+  color: #ffffff;
+  background-color: rgb(31 41 55);
+  position: absolute;
+  right: 17%;
+  bottom: 2%;
+}
+
+#finishButton {
+  color: #ffffff;
+  background-color: rgb(31 41 55);
+  position: absolute;
+  right: 2%;
+  bottom: 2%;
+}
+
+.slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+/* .slider:hover { */
+  /* opacity: 1; Fully shown on mouse-over */
+/* } */
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: rgb(31 41 55); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: rgb(31 41 55); /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+/* For Tutorial buttons */
 
 #board {
     margin-left: 5px;
@@ -20,10 +227,223 @@ body{
 }
 
 .wall{
+  /* background-image:url(../images/brick.jpeg); */
+  background-color: darkgrey;
   animation-name: wallAnimation;
   animation-duration: 0.3s;
   animation-timing-function: ease-out;
-  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.weight2{
+  background-color:lightcyan;
+  background-image:url(../images/weight2.png);
+  background-size: contain;
+  animation-name: wallAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.weight4{
+  background-color:lightgreen;
+  background-image:url(../images/weight4.png);
+  background-size: contain;
+  animation-name: wallAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.weight6{
+  background-color:turquoise;
+  background-image:url(../images/weight6.png);
+  background-size: contain;
+  animation-name: wallAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.weight8{
+  background-color:yellow;
+  background-image:url(../images/weight8.png);
+  background-size: contain;
+  animation-name: wallAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.weight10{
+  background-color:red;
+  background-image:url(../images/weight10.png);
+  background-size: contain;
+  animation-name: wallAnimation;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+/* Visited Wights */
+.visitedweight2{
+  background-color:lightcyan;
+  background-image:url(../images/weight2.png);
+  background-size: contain;
+  animation-name: visitedAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.visitedweight4{
+  background-color:lightgreen;
+  background-image:url(../images/weight4.png);
+  background-size: contain;
+  animation-name: visitedAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.visitedweight6{
+  background-color:turquoise;
+  background-image:url(../images/weight6.png);
+  background-size: contain;
+  animation-name: visitedAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.visitedweight8{
+  background-color:yellow;
+  background-image:url(../images/weight8.png);
+  background-size: contain;
+  animation-name: visitedAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.visitedweight10{
+  background-color:red;
+  background-image:url(../images/weight10.png);
+  background-size: contain;
+  animation-name: visitedAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+/* Path Wights */
+.pathweight2{
+  background-color:lightcyan;
+  background-image:url(../images/weight2.png);
+  background-size: contain;
+  animation-name: pathAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.pathweight4{
+  background-color:lightgreen;
+  background-image:url(../images/weight4.png);
+  background-size: contain;
+  animation-name: pathAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.pathweight6{
+  background-color:turquoise;
+  background-image:url(../images/weight6.png);
+  background-size: contain;
+  animation-name: pathAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.pathweight8{
+  background-color:yellow;
+  background-image:url(../images/weight8.png);
+  background-size: contain;
+  animation-name: pathAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+  border: 1.5px solid rgb(0,0,0);
+}
+
+.pathweight10{
+  background-color:red;
+  background-image:url(../images/weight10.png);
+  background-size: contain;
+  animation-name: pathAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
   animation-direction: alternate;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
@@ -42,17 +462,12 @@ body{
 @keyframes wallAnimation {
   0% {
     transform: scale(.1);
-    background-color: darkgrey;
   }
-
   50% {
     transform: scale(1.2);
-    background-color: darkgrey;
   }
-
   100% {
     transform: scale(1);
-    background-color: darkgrey;
   }
 }
 
@@ -68,6 +483,42 @@ body{
   animation-play-state: running;
 }
 
+/* .startImage{
+  background-image: url(../images/pathFindingStartIcon.svg);
+  width: 50px;
+  height: 50px;
+} */
+
+.visitedstart{
+  background-image: url(../images/pathFindingStartIcon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: visitedAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.visitedtarget{
+  background-image: url(../images/pathFindingTargetIcon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: visitedAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
 @keyframes visitedAnimation {
   0% {
     transform: scale(.3);
@@ -76,25 +527,92 @@ body{
   }
 
   50% {
-    background-color: lightgreen;
+    background-color: yellow;
     border: 1.5px solid rgb(0,0,0);
   }
 
   75% {
-    transform: scale(1.2);
-    background-color: lightseagreen;
+    transform: scale(.5);
+    background-color: yellowgreen;
     border: 1.5px solid rgb(0,0,0);
   }
 
   100% {
     transform: scale(1.0);
-    background-color: turquoise;
+    background-color: lightyellow;
+    border: 1.5px solid rgb(0,0,0);
+  }
+}
+
+.path{
+  border: 1px solid rgb(175, 216, 248);
+  animation-name: pathAnimation;
+  animation-duration: 2s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.pathstart{
+  background-image: url(../images/pathFindingStartIcon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: pathAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+.pathtarget{
+  background-image: url(../images/pathFindingTargetIcon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation-name: pathAnimation;
+  animation-duration: 2.0s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes pathAnimation {
+  0% {
+    transform: scale(.3);
+    background-color: rgba(0, 0, 66, 0.75);
+    border-radius: 100%;
+  }
+
+  50% {
+    background-color: lightsteelblue;
+    border: 1.5px solid rgb(0,0,0);
+  }
+
+  75% {
+    transform: scale(1.2);
+    background-color: lightskyblue;
+    border: 1.5px solid rgb(0,0,0);
+  }
+
+  100% {
+    transform: scale(1.0);
+    background-color: lightseagreen;
     border: 1.5px solid rgb(0,0,0);
   }
 }
 
 .start{
-    background-image:url(../images/pathFindingStartIcon.png);
+    background-image:url(../images/pathFindingStartIcon.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -109,7 +627,7 @@ body{
 }
 
 .target{
-    background-image: url(../images/pathFindingTargetIcon.jpeg);
+    background-image: url(../images/pathFindingTargetIcon.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -138,4 +656,14 @@ body{
     transform: scale(1.0);
     /*background-color: darkslategrey;*/
   }
+}
+
+/* Misc */
+.circle-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid black;
 }

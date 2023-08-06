@@ -10,8 +10,6 @@ function getNeighbors(id, Node, boardArray){  //Taking id, Node, and boardArray,
         let dy = directions[directionIndex][1];
         let nx = x;
         let ny = y;
-        
-
     }
 };
 

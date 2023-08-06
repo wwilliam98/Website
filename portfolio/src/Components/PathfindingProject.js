@@ -1,5 +1,5 @@
 import React from 'react'
-import SudokuSS from "../Images/SudokuSS.png"
+import PathfindingSS from "../Images/PathfindingSS.png"
 
 function SudokuProject() {
   return (
@@ -11,10 +11,10 @@ function SudokuProject() {
             }}
             transition={{ duration: 1.2 }}
             whileInView={{ opacity:1, y:0 }} */}
-        <a href='/SudokuSolver'>
+        <a href='/PathFindingVisualizer'>
         <img
-            src={SudokuSS}
-            alt='SudokuSS'
+            src={PathfindingSS}
+            alt='PathfindingSS'
             className='w-[400px] h-[200px] sm:w-[600px] sm:h-[300px] md:w-[800px] md:h-[400px] transition-all duration-300 rounded-lg cursor-pointer filter grayscale hover:grayscale-0'
             // className='max-w-7xl h-[400px]'
         />
@@ -22,14 +22,14 @@ function SudokuProject() {
 
         <div className='space-y-10 px-0 md:pd-10 max-w-6xl'>
             <h4 className='text-4xl font-semibold text-center'> 
-                <span>Project 2 of 6:</span>{" "}
-                <a href="/SudokuSolver" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Sudoku Solver</a>
+                <span>Project 1 of 6:</span>{" "}
+                <a href="/PathFindingVisualizer" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Pathfinding Visualizer</a>
             </h4>
 
             <p className='text-sm sm:text-lg text-center md:text-left'>
-                • Built a full-stack web application to allow user to login and visualize outcomes of sudoku using Javascript, Html, CSS. <br></br>
-                • Utilized Node.js as the framework, MongoDB as the database, and AWS(EC2) as web service. <br></br>
-                • Using object oriented design, built a backtracking algorithm that could solve a partially completed sudoku board in Javascript.
+                • Built an Interactive Web-Application that allow user to Visualize Shortest Path between 2 nodes. <br></br>
+                • Utilized Object Oriented Programming, JQuery and Popular Pathfinding Algorithms such as Dijkstra, A*, BFS, and DFS. <br></br>
+                • Implemented in Javascript, Html, CSS and AWS(EC2) as web service. 
             </p>
         </div>
     </div>

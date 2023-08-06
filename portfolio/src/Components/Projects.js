@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion'
 import React from 'react'
+import PathfindingProject from "./PathfindingProject.js"
+import SudokuProject from "./SudokuProject.js"
 import DareMightyThings from './DareMightyThingsProject.js'
-import DeskLightProject from './DeskLightProject.js'
 import GoogleTechProject from './GoogleTechProject.js'
 import OldPortfolioProject from './OldPortfolioProject.js'
-import SudokuProject from "./SudokuProject.js"
+import DeskLightProject from './DeskLightProject.js'
 
 function Projects() {
   return (
@@ -27,6 +28,7 @@ function Projects() {
         </h3>
 
         <div className='relative w-full flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory z-20'>
+            <PathfindingProject />
             <SudokuProject />
             <DareMightyThings />
             <GoogleTechProject />

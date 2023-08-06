@@ -13,7 +13,7 @@ function LightProject() {
 
         <div className='space-y-10 px-0 md:pd-10 max-w-6xl'>
             <h4 className='text-4xl font-semibold text-center'> 
-                <span>Project 5 of 5:</span>{" "}
+                <span>Project 6 of 6:</span>{" "}
                 <a href="" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Automated Desk Light</a>
             </h4>
 

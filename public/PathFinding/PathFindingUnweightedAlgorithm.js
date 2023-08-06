@@ -1,45 +1,51 @@
-function BFS(start_node, end_node, board) {
-    let queue = [start_node];
-    let visited = [];
+function BFS(board) {
+    let queue = [{ current_node: board.start, path: []}];
+    let visited = new Set([board.start]);
+    board.start.status = "visited"
 
     while (queue.length > 0) {
-        let current_node = queue.shift();
-        visited.push(current_node);
+        let { current_node, path } = queue.shift();
+        board.nodesToAnimate.push(current_node)
 
-        if (current_node.id === end_node.id) {
-            return current_node;
+        if (current_node === board.target) {
+            path.push(current_node)
+            board.AnimateFoundPath = path
+            return path;
         }
 
-        let neighbors = board.getNeighbors(current_node);
+        let neighbors = current_node.neighborsNode;
         for (let i = 0; i < neighbors.length; i++) {
-            if (neighbors[i].status === 'empty') {
-                neighbors[i].previousNode = current_node;
-                queue.push(neighbors[i]);
+            if (!visited.has(neighbors[i]) && neighbors[i].status == "unvisited" && neighbors[i].type !== "wall") {
+                visited.add(neighbors[i]);
+                neighbors[i].status = "visited"
+                queue.push({current_node: neighbors[i], path: [...path, current_node]});
             }
         }
+        // break
     }
+    return [];
 }
 
-function DFS(board, start_id, end_id){
-    let stack = [[start_id, [board.getNodesByID[start_id]]]];
+function DFS(board){
+    let stack = [{ current_node: board.start, path: []}];
     let visited = new Set();
     while (stack.length > 0) {
-        let current = stack.pop()  // pop the first element of the stack
-        let current_id = current[0];
-        let current_node = board.getNodesByID[current[0]];
-        let path = current[1];
-        board.nodesToAnimate.push(board.getNode(current_id))
+        let { current_node, path } = stack.pop(); // pop the first element of the stack
+
+        board.nodesToAnimate.push(current_node)
         
-        if (!visited.has(current_id)) {
-            if (current_id === end_id) {
+        if (!visited.has(current_node)){
+            if (current_node === board.target) {
+                current_node.status = "visited"
+                path.push(current_node)
                 board.AnimateFoundPath = path;
                 return path;
             }
-            visited.add(current_id);
-            current_node.status = "Visited";
-            board.nodes_adjacency_list[current_id].forEach(id => {
-                if (board.getNodesByID[id].status != "wall"){
-                    stack.push([id, path.concat(board.getNode(id))]);
+            visited.add(current_node);
+            current_node.status = "visited";
+            current_node.neighborsNode.forEach(node => {
+                if (node.type != "wall"){
+                    stack.push({current_node: node, path: [...path, current_node]});
                 }
             });
         }

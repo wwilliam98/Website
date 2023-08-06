@@ -13,7 +13,7 @@ function GoogleTechProject() {
 
         <div className='space-y-10 px-0 md:pd-10 max-w-6xl'>
             <h4 className='text-4xl font-semibold text-center'> 
-                <span>Project 3 of 5:</span>{" "}
+                <span>Project 4 of 6:</span>{" "}
                 <a href="https://techchallenge.withgoogle.com/" className='underline decoration-[#F7Ab0A]/50 transition-all duration-300 opacity-50 hover:opacity-100'>Google Tech Challenge</a>
             </h4>
 
