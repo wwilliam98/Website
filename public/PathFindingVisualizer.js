@@ -1,8 +1,7 @@
-//for JS use ESModules (import ....), for Node use CommonJS (require ....)
-const Node = require("/PathFindingNode.js")
-const {create_recursive_divisionMaze, create_recursive_horizontal, create_recursive_vertical, create_perimeterWall} = require("./PathFinding/createMaze.js")
-const {BFS, DFS} = require("./PathFinding/PathfindingUnweightedAlgorithm.js")
-const {Dijkstra, AStar} = require("./PathFinding/PathfindingWeightedAlgorithm.js")
+import Node from '../pathfinding/PathFindingNode.js'
+import {create_recursive_divisionMaze, create_recursive_horizontal, create_recursive_vertical, create_perimeterWall} from '../pathfinding/createMaze.js'
+import {Dijkstra, AStar} from '../pathfinding/PathfindingWeightedAlgorithm.js'
+import {BFS, DFS} from '../pathfinding/PathfindingUnweightedAlgorithm.js'
 
 // Board attributes
 function Board(height, width){
