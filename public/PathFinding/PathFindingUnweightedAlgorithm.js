@@ -79,4 +79,4 @@ function twoBFS(start_node, end_node, board) {
 
 }
 
-export {BFS, DFS, twoBFS};
+export {BFS, DFS};
