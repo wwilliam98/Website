@@ -1,7 +1,7 @@
-import Node from '../pathfinding/PathFindingNode.js'
-import {create_recursive_divisionMaze, create_recursive_horizontal, create_recursive_vertical, create_perimeterWall} from '../pathfinding/createMaze.js'
-import {Dijkstra, AStar} from '../pathfinding/PathfindingWeightedAlgorithm.js'
-import {BFS, DFS} from '../pathfinding/PathfindingUnweightedAlgorithm.js'
+import Node from './PathFindingNode.js'
+import {create_recursive_divisionMaze, create_recursive_horizontal, create_recursive_vertical, create_perimeterWall} from './createMaze.js'
+import {Dijkstra, AStar} from './PathfindingWeightedAlgorithm.js'
+import {BFS, DFS} from './PathfindingUnweightedAlgorithm.js'
 
 // Board attributes
 function Board(height, width){

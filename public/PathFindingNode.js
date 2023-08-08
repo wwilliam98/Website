@@ -12,4 +12,7 @@ function Node(id, nodetype) {
     this.heuristicDistance = null;
 };
   
-export default Node;
+export default Node
+// module.exports = {
+//     Node,
+// }
