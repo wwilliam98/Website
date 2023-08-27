@@ -959,7 +959,7 @@ window.onkeydown = (e) =>{
         document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Erase Mode On";
     }else if (initialBoard.pickedUpNode !== null && initialBoard.isButtonsActivated){
         // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Move " + initialBoard.pickedUpNode.type + " Node";
-        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + initialBoard.pickedUpNode + "Icon.svg' alt='" + initialBoard.pickedUpNode + "' style='width: 25px; height: 25px; margin: 5px'</span> Move " + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + " Node";
+        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + "Icon.svg' alt='" + initialBoard.pickedUpNode + "' style='width: 25px; height: 25px; margin: 5px'</span> Move " + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + " Node";
     }else if (initialBoard.isButtonsActivated == false){
         // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Board Animating ...";
     }else{
@@ -977,7 +977,7 @@ window.onkeyup = (e) =>{
         document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Erase On";
     }else if (initialBoard.pickedUpNode !== null && initialBoard.isButtonsActivated){
         // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Move " + initialBoard.pickedUpNode.type + " Node";
-        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + initialBoard.pickedUpNode + "Icon.svg' alt='" + initialBoard.pickedUpNode + "' style='width: 25px; height: 25px; margin: 5px'</span> Move " + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + " Node";
+        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + "Icon.svg' alt='" + initialBoard.pickedUpNode + "' style='width: 25px; height: 25px; margin: 5px'</span> Move " + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + " Node";
     }else if (initialBoard.isButtonsActivated == false){
         // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Board Animating ...";
     }else{
