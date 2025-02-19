@@ -1,5 +1,6 @@
 import React from 'react'
 import PathfindingSS from "../Images/PathfindingSS.png"
+import PathfinderGIF from "../Images/pathfinder.gif"
 
 function SudokuProject() {
   return (
@@ -13,9 +14,9 @@ function SudokuProject() {
             whileInView={{ opacity:1, y:0 }} */}
         <a href='/PathFindingVisualizer'>
         <img
-            src={PathfindingSS}
+            src={PathfinderGIF}
             alt='PathfindingSS'
-            className='w-[400px] h-[200px] sm:w-[600px] sm:h-[300px] md:w-[800px] md:h-[400px] transition-all duration-300 rounded-lg cursor-pointer filter grayscale hover:grayscale-0'
+            className='w-[400px] h-[200px] sm:w-[600px] sm:h-[300px] md:w-[800px] md:h-[400px] transition-all duration-300 rounded-lg'
             // className='max-w-7xl h-[400px]'
         />
         </a>

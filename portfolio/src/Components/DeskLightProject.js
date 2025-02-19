@@ -7,7 +7,7 @@ function LightProject() {
         <img
             src={LightProjectSS}
             alt='LightProjectSS'
-            className='w-[400px] h-[200px] sm:w-[600px] sm:h-[300px] md:w-[800px] md:h-[400px] transition-all duration-300 rounded-lg filter grayscale hover:grayscale-0'
+            className='w-[400px] h-[200px] sm:w-[600px] sm:h-[300px] md:w-[800px] md:h-[400px] rounded-lg'
             // className='max-w-7xl h-[400px]'
         />
 

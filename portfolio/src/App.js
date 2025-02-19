@@ -6,12 +6,13 @@ import WorkExperience from './Components/WorkExperience.js';
 import Skills from "./Components/Skills";
 import Projects from "./Components/Projects";
 import ContactMe from "./Components/ContactMe";
+import ChatWithAI from "./Components/ChatWithAI.js";
 // import Footer from "./Components/Footer";
 
 function App(){
     return (
         // <div className="bg-gray-50 h-screen snap-y snap-mandatory overflow-y-scroll scrollbar-hide z-0">
-        <div className="bg-gray-800 text-white h-screen snap-y snap-mandatory overflow-y-scroll overflow-x-hidden z-0">
+        <div className="bg-gray-800 text-white h-screen snap-y snap-mandatory overflow-y-scroll overflow-x-hidden z-0 no-scrollbar">
             <Header/>
             <section id="hero" className="snap-center">
                 <Cover/>
@@ -27,6 +28,9 @@ function App(){
             </section>
             <section id="projects" className="snap-center">
                 <Projects/>
+            </section>
+            <section id="chatwithai" className="snap-center">
+                <ChatWithAI/>
             </section>
             <section id="contact" className="snap-center">
                 <ContactMe/>

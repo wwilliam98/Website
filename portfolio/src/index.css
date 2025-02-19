@@ -13,6 +13,21 @@
         focus:text-[#F7AB0A]/40 hover:border-[#F7AB0A]/40
     }
 
+    .chatPrompt{
+      @apply outline-none bg-slate-400/10 p-3 sm:pr-10 w-full cursor-text flex-col rounded-3xl border border-gray-600 duration-150 text-gray-500 placeholder-gray-500 transition-all ease-in-out focus:border-[#F7AB0A]/40
+      focus:text-gray-400 hover:border-gray-900
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
     /* .wave {
         animation: wave-animation 1s linear infinite;
       }

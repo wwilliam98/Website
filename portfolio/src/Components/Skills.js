@@ -35,7 +35,7 @@ function Skills() {
           // className='top-16 uppercase tracking-[20px] text-gray-500 text-2xl font-bold'
           className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold'
         >
-          Skills
+          Technical Skills
         </motion.h3>
 
         <div>
@@ -50,26 +50,26 @@ function Skills() {
 
           {/* <h3 className='absolute top-36 uppercase tracking-[3px]'>Hover Over a Skill for currency proficiency</h3> */}
 
-          <div className='grid grid-cols-4 gap-4 p-4'>
+          <div className='grid grid-cols-4 gap-4 p-4 place-items-center'>
               <PythonSkill />
-              <PhpSkill />
               <MySQLSkill />
-              <LinuxSkill />
+              <JsSkill />
+              <HtmlSkill />
 
+              <PhpSkill />
+              <ReactSkill />
               <MongoDBSkill />
               <ExpressSkill />
-              <ReactSkill />
-              <NodejsSkill />
 
+              <TailwindSkill />
+              <NodejsSkill />
               <PandasSkill />
+              <LinuxSkill />
+
               <PerlSkill />
               <JavaSkill />
               <CPPSkill />
-
-              <JsSkill />
-              <HtmlSkill />
               <CSSSkill />
-              <TailwindSkill />
           </div>
         </div>
     </div>
