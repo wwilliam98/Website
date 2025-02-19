@@ -406,7 +406,7 @@ Board.prototype.boardEventListener = function(){
 					board.currentMouseNode = currentNode;
 					// Left mouse and control key to move special Node
 					if (currentNode.type == "start" || currentNode.type == "target" || currentNode.type == "object"){
-                        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + currentNode.type.charAt(0).toUpperCase() + currentNode.type.slice(1) + "Icon.svg' alt='" + currentNode.type.charAt(0).toUpperCase() + currentNode.type.slice(1) + "' style='width: 25px; height: 25px; margin: 5px>'</span> Move " + currentNode.type.charAt(0).toUpperCase() + currentNode.type.slice(1) + " Node";
+                        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + currentNode.type + "Icon.svg' alt='" + currentNode.type + "' style='width: 25px; height: 25px; margin: 5px>'</span> Move " + currentNode.type.charAt(0).toUpperCase() + currentNode.type.slice(1) + " Node";
 						board.pickedUpNode = currentNode.copy();
 
 						board.savedNode = null
