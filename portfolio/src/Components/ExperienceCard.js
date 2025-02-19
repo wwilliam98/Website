@@ -12,7 +12,7 @@ function ExperienceCard() {
     // OK -> Item-center, snap-center
     // <article className='snap-center flex flex-col flex-shrink-0 rounded-lg items-center space-y-7 w-[80vw] m-5 p-10 bg-[#292929] bg-clip-content shadow-[0_0_40px_gray]'>
     <article className='w-screen flex-shrink-0 snap-center flex flex-col space-y-7 items-center justify-start p-10 md:pd-20'>
-        <div className='w-screen max-w-md md:max-w-3xl flex-shrink-0 flex flex-col items-center justify-center p-10 bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] md:pd-20'>
+        <div className='w-screen max-w-sm md:max-w-3xl flex-shrink-0 flex flex-col items-center justify-center p-10 bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] md:pd-20'>
             <motion.img
                 initial={{
                     y: -100,
