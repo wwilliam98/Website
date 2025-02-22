@@ -12,7 +12,7 @@ import ChatWithAI from "./Components/ChatWithAI.js";
 function App(){
     return (
         // <div className="bg-gray-50 h-screen snap-y snap-mandatory overflow-y-scroll scrollbar-hide z-0">
-        <div className="bg-gray-800 text-white h-screen snap-y snap-mandatory overflow-y-scroll overflow-x-hidden z-0 no-scrollbar">
+        <div className="bg-gray-800 text-white h-dvh snap-y snap-mandatory overflow-y-scroll overflow-x-hidden z-0 no-scrollbar">
             <Header/>
             <section id="hero" className="snap-center">
                 <Cover/>
