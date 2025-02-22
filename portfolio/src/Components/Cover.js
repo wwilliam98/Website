@@ -39,7 +39,7 @@ function Cover() {
 	}, []);
 
 	return (
-		<div className='w-screen h-screen flex flex-col space-y-8 items-center justify-center text-center overflow-hidden'>
+		<div className='w-dvw h-dvh flex flex-col space-y-8 items-center justify-center text-center overflow-hidden'>
 			<div className='relative flex justify-center items-center'>
 				<BackgroundCircle />
 				{/* <img className='relative rounded-full h-32 w-32 mx-auto object-cover' src={CoverPic} alt="Cover Pic" /> */}

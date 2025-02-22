@@ -9,7 +9,7 @@ function DareMightyThings() {
 	const images = [DMT_Presentation, DMTSS];
 
 	return (
-		<div className='w-screen flex-shrink-0 snap-center flex flex-col space-y-10 items-center justify-start p-5 md:pd-20'>
+		<div className='w-dvw flex-shrink-0 snap-center flex flex-col space-y-10 items-center justify-start p-5 md:pd-20'>
 			<div className='overflow-x-scroll no-scrollbar w-[400px] h-[200px] sm:w-[600px] sm:h-[300px] md:w-[800px] md:h-[400px] rounded-lg'>
 			<motion.div
 					className="flex gap-4"

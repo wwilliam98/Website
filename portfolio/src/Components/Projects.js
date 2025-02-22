@@ -13,8 +13,8 @@ function Projects() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1}}
         transition={{ duration: 1.5}}
-        className='flex flex-col h-screen relative overflow-hidden text-left max-w-full justify-evenly mx-auto items-center z-0'
-        // className='flex flex-col w-full h-screen relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'
+        className='flex flex-col h-dvh relative overflow-hidden text-left max-w-full justify-evenly mx-auto items-center z-0'
+        // className='flex flex-col w-full h-dvh relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'
     >
         {/* <h3 className='top-16 uppercase tracking-[20px] text-gray-500 text-2xl'> */}
         <h3 className='top-16 p-1 mt-16 uppercase tracking-[20px] text-gray-400 text-base font-bold'>

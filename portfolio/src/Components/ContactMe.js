@@ -40,7 +40,7 @@ function ContactMe() {
     }
 
     return (
-        <div className='relative flex flex-col h-screen overflow-hidden text-center max-w-full md:text-left justify-evenly mx-auto items-center'>
+        <div className='relative flex flex-col h-dvh overflow-hidden text-center max-w-full md:text-left justify-evenly mx-auto items-center'>
             {/* <h3 className="absolute top-16 p-1 uppercase tracking-[20px] text-gray-400 text-2xl"> */}
             <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">
                 Contact Me

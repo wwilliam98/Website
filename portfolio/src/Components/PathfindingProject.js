@@ -4,7 +4,7 @@ import PathfinderGIF from "../Images/pathfinder.gif"
 
 function SudokuProject() {
   return (
-    <div className='w-screen flex-shrink-0 snap-center flex flex-col space-y-10 items-center justify-start p-5 md:pd-20'>
+    <div className='w-dvw flex-shrink-0 snap-center flex flex-col space-y-10 items-center justify-start p-5 md:pd-20'>
         {/* <motion.img
             initial={{
                 y: -300,

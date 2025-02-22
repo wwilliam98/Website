@@ -3,7 +3,7 @@ import LightProjectSS from "../Images/LightProjectSS.jpeg"
 
 function LightProject() {
   return (
-    <div className='w-screen flex-shrink-0 snap-center flex flex-col space-y-10 items-center justify-start p-5 md:pd-20'>
+    <div className='w-dvw flex-shrink-0 snap-center flex flex-col space-y-10 items-center justify-start p-5 md:pd-20'>
         <img
             src={LightProjectSS}
             alt='LightProjectSS'

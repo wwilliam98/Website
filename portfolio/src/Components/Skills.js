@@ -23,11 +23,11 @@ function Skills() {
     // initial={{ opacity: 0 }}
     // whileInView= {{ opacity: 1 }}
     // transition={{ duration: 7 }}
-    // className='flex relative flex-col text-center md:text-left xl:flex-row max-w-[2000px] xl:px-10 min-h-screen justify-center xl:space-y-0 mx-auto items-center'
+    // className='flex relative flex-col text-center md:text-left xl:flex-row max-w-[2000px] xl:px-10 min-h-dvh justify-center xl:space-y-0 mx-auto items-center'
     // >
     
-    <div className='flex relative flex-col text-center md:text-left max-w-[2000px] xl:px-10 min-h-screen justify-evenly xl:space-y-0 mx-auto items-center'>
-    {/* <div className='flex flex-col h-screen relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'> */}
+    <div className='flex relative flex-col text-center md:text-left max-w-[2000px] xl:px-10 min-h-dvh justify-evenly xl:space-y-0 mx-auto items-center'>
+    {/* <div className='flex flex-col h-dvh relative text-left overflow-hidden px-10 max-w-full items-center md:flex-col justify-evenly mx-auto'> */}
         <motion.h3
           initial={{ opacity: 0 }}
           whileInView= {{ opacity: 1 }}
