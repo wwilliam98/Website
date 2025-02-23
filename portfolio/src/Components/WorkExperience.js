@@ -55,7 +55,7 @@ function WorkExperience() {
           className="relative w-full flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory z-20 no-scrollbar"
         >
           {pages.map((PageComponent, index) => (
-            <div key={index} className="relative snap-center flex-shrink-0">
+            <div key={index} className="w-dvw flex-shrink-0 snap-center flex flex-col space-y-7 items-center justify-start p-10 md:pd-20">
               {PageComponent}
             </div>
           ))}
