@@ -8,7 +8,7 @@ import HTMLLogo from "../Images/HTMLlogo.jpeg"
 function ExperienceCard() {
   return (
         <article>
-            <div className='w-dvw max-w-sm md:max-w-3xl flex-shrink-0 flex flex-col items-center justify-center p-10 bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] md:pd-20'>
+            <div className='w-dvw max-w-md md:max-w-3xl flex-shrink-0 flex flex-col items-center justify-center p-10 bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] md:pd-20'>
                 <motion.img
                     initial={{
                         y: -100,
