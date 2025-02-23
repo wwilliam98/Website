@@ -37,7 +37,7 @@ function ExperienceCard() {
                         />
                     </div>
                     <p className='uppercase py-3 sm:py-5 text-gray-300'>Summer 2018, Summer 2019</p>
-                    <ul className='list-disc space-y-2 ml-5 text-sm sm:text-lg text-justify text-gray-400'>
+                    <ul className='list-disc space-y-2 ml-5 text-sm md:text-lg text-justify text-gray-400'>
                         <li>Collaborated with a team of developers to identify and document faults in the OpenSlot application, resulting in a 50% reduction in faults.</li>
                         <li>Participate in code reviews and provide feedback on the quality of the code.</li>
                         <li>Identified and documented problems with program function, output, and content to improve quality of product.</li>

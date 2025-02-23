@@ -56,8 +56,7 @@ function ExperienceCard() {
                     />
                 </div>
                 <p className='uppercase py-3 sm:py-5 text-gray-300'>May 2022 - Present</p>
-                <ul className='list-disc space-y-2 ml-5 text-sm sm:text-lg text-justify text-gray-400'>
-                    {/* <li>Maintained and developed website applications using PHP, HTML, and CSS, which resulted in a reduced run time and increased productivity by 80%.</li> */}
+                <ul className='list-disc space-y-2 ml-5 text-sm md:text-lg text-justify text-gray-400'>
                     <li>Led the development and implementation of multiple AI-based Computer Vision projects aimed at preventing wafer scrap, utilizing Raspberry Pi, Python, and YOLOv8, and successfully saved 60 wafer lots by automating defect detection and process control.</li>
                     <li>Developed and Maintained websites using PHP, HTML, Javascript, MySQL for Reticle Assembly Team to fracture data, enabling effective data management and analysis.</li>
                     <li>Created a system for the HR training team to streamline operator training processes, enhancing efficiency and tracking capabilities.</li>
