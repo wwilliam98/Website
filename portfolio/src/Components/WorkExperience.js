@@ -31,7 +31,7 @@ function WorkExperience() {
         whileInView= {{ opacity: 1 }}
         transition={{ duration: 1.2 }}
         // className='flex flex-col h-dvh relative overflow-hidden text-left max-w-full justify-evenly mx-auto items-center px-10'
-        className='flex flex-col min-h-dvh relative overflow-hidden text-left max-w-full justify-center mx-auto items-center z-0'
+        className='flex flex-col h-dvh flex-shrink-0 relative overflow-hidden text-left max-w-full justify-center mx-auto items-center z-0'
     >
         {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
         <h3 className="top-16 p-4 uppercase tracking-[20px] text-gray-400 text-base font-bold">
