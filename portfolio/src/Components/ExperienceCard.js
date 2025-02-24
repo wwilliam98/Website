@@ -9,7 +9,7 @@ import MysqlLogo from "../Images/MysqlLogo.png"
 
 function ExperienceCard() {
   return (
-    <article className='flex flex-shrink-0 flex-col max-w-sm md:max-w-3xl items-center justify-center bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] px-10 py-5 md:p-20'>
+    <article className='flex flex-shrink-0 flex-col max-w-xs md:max-w-3xl items-center justify-center bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] px-10 py-5 md:p-20'>
         <motion.img
             initial={{
                 y: -100,
@@ -54,15 +54,10 @@ function ExperienceCard() {
             </div>
             <p className='uppercase py-3 sm:py-5 text-gray-300'>May 2022 - Present</p>
             <ul className='list-disc space-y-2 ml-5 text-xs md:text-lg text-justify text-gray-400'>
-                {/* <li>Led the development and implementation of multiple AI-based Computer Vision projects aimed at preventing wafer scrap, utilizing Raspberry Pi, Python, and YOLOv8, and successfully saved 60 wafer lots by automating defect detection and process control.</li>
-                <li>Developed and Maintained websites using PHP, HTML, Javascript, MySQL for Reticle Assembly Team to fracture data, enabling effective data management and analysis.</li>
-                <li>Created a system for the HR training team to streamline operator training processes, enhancing efficiency and tracking capabilities.</li>
-                <li>Migrate excel files to MySQL Database using Python Pandas, which streamlined the data management process and saved the company time and resources.</li>
-                <li>Using Pandas and Matplotlib to move data from Excel files to a database and show the statistics on the website, making information more organized and accessible.</li> */}
-                <li>Led the development and implementation of multiple AI-based Computer Vision projects aimed at preventing wafer scrap, utilizing Raspberry Pi, Python, and YOLOv8, successfully saving 60 wafer lots by automating defect detection and process control.</li>
-                <li>Developed and maintained websites using PHP, HTML, JavaScript, and MySQL for the Reticle Assembly Team to fracture data, enabling effective data management and analysis.</li>
-                <li>Migrated Excel files to a MySQL database using Python Pandas, streamlining the data management process and saving the company time and resources.</li>
-                <li>Utilized Pandas and Matplotlib to transfer data from Excel files to a database and displayed statistics on the website, making information more organized and accessible.</li>
+                <li>Developed AI-driven computer vision solutions using Raspberry Pi, Python, and YOLOv8, automating defect detection and saving 60 wafer lots.</li>
+                <li>Built and maintained PHP-based websites with MySQL for the Reticle Assembly Team, enhancing data management and analysis.</li>
+                <li>Migrated Excel data to MySQL databases using Python Pandas, streamlining data management and conserving resources.</li>
+                <li>Utilized Pandas and Matplotlib to transfer Excel data to databases and visualized statistics on websites for improved accessibility.</li>
             </ul>
         </div>
     </article>

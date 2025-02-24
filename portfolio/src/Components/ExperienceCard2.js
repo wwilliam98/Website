@@ -7,7 +7,7 @@ import HTMLLogo from "../Images/HTMLlogo.jpeg"
 
 function ExperienceCard() {
   return (
-        <article className='flex flex-shrink-0 flex-col max-w-sm md:max-w-3xl items-center justify-center bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] px-10 py-5 md:p-20'>
+        <article className='flex flex-shrink-0 flex-col max-w-xs md:max-w-3xl items-center justify-center bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] px-10 py-5 md:p-20'>
             <motion.img
                 initial={{
                     y: -100,
@@ -37,11 +37,11 @@ function ExperienceCard() {
                 </div>
                 <p className='uppercase py-3 sm:py-5 text-gray-300'>Summer 2018, Summer 2019</p>
                 <ul className='list-disc space-y-2 ml-5 text-xs md:text-lg text-justify text-gray-400'>
-                    <li>Collaborated with a team of developers to identify and document faults in the OpenSlot application, resulting in a 50% reduction in faults.</li>
-                    <li>Participate in code reviews and provide feedback on the quality of the code.</li>
-                    <li>Identified and documented problems with program function, output, and content to improve quality of product.</li>
-                    <li>Designed test plans and procedures with end users which are doctors and dentists by understanding and analyzing functionality of applications to fit business needs.</li>
-                    <li>Proposed feedbacks and recommendations to software developers on usability and functionality to improve application features.</li>
+                    <li>Collaborated to identify and document faults in the OpenSlot application, reducing faults by 50%.</li>
+                    <li>Participated in code reviews, providing quality feedback.</li>
+                    <li>Identified and documented program issues to enhance product quality.</li>
+                    <li>Designed test plans with doctors and dentists, aligning application functionality with business needs.</li>
+                    <li>Offered usability and functionality recommendations to developers, improving application features.</li>
                 </ul>
             </div>
         </article>
