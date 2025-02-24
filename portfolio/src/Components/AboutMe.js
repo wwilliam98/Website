@@ -9,7 +9,7 @@ return (
         initial={{ opacity: 0 }}
         whileInView= {{ opacity: 1 }}
         transition={{ duration: 3 }}
-        className='flex flex-col relative h-dvh text-center max-w-7xl px-10 justify-evenly mx-auto items-center md:text-left md:flex-row'
+        className='flex flex-col relative h-dvh max-h-dvh text-center max-w-7xl px-10 justify-evenly mx-auto items-center md:text-left md:flex-row'
     >
         {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
         <h3 className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold md:absolute'>
@@ -25,11 +25,11 @@ return (
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }} //So it doesnt keep looping when entering view 
         src={coverImage}
-        className="flex-shrink-0 w-40 h-40 sm:w-56 sm:h-56 rounded-full object-cover border-white border-4 mb-0 bg-[#292929] shadow-[0_0_40px_gray] md:mb-0 md:rounded-lg md:w-64 md:h-95"
+        className="flex-shrink-0 w-32 h-32 sm:w-56 sm:h-56 rounded-full object-cover border-white border-4 mb-0 bg-[#292929] shadow-[0_0_40px_gray] md:mb-0 md:rounded-lg md:w-64 md:h-95"
         /> 
 
-        <div className='space-y-5 px-0 md:px-10'>
-            <h4 className='text-4xl font-semibold'>Hello Everyone!!
+        <div className='space-y-2 px-0 md:px-10'>
+            <h4 className='text-3xl font-semibold'>Hello Everyone!!
             {/* <span className='underline decoration-slate-500'>little</span> Background */}
             </h4>
             <p className='text-sm sm:text-base text-justify md:text-xl overflow-scroll no-scrollbar'>

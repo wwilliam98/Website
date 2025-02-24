@@ -7,7 +7,7 @@ import HTMLLogo from "../Images/HTMLlogo.jpeg"
 
 function ExperienceCard() {
   return (
-        <article className='max-w-sm md:max-w-3xl flex-shrink-0 flex flex-col items-center justify-center p-5 bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] md:pd-20'>
+        <article className='flex flex-shrink-0 flex-col max-w-sm md:max-w-3xl items-center justify-center bg-[#292929] rounded-2xl shadow-[0_0_10px_gray] px-10 py-5 md:p-20'>
             <motion.img
                 initial={{
                     y: -100,
@@ -16,11 +16,11 @@ function ExperienceCard() {
                 transition={{ duration: 1.2 }}
                 whileInView={{ opacity: 1, y: 0}}
                 viewport={{ once:true }}
-                className='m-5 w-24 h-24 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full object-cover object-center'
+                className='m-3 w-24 h-24 sm:w-32 sm:h-32 lg:w-32 lg:h-32 rounded-full object-cover object-center'
                 src={OpenSlotPic}
             />
 
-            <div className='max-w-2xl px-5 md:px-10'>
+            <div className='max-w-2xl'>
                 <h4 className='text-3xl sm:text-4xl font-light text-center'>OpenSlot Inc.</h4>
                 <p className='font-bold text-xl sm:text-2xl mt-1 text-center'>Quality Assurance</p>
                 <div className='flex space-x-2 my-1 justify-center'>
@@ -36,7 +36,7 @@ function ExperienceCard() {
                     />
                 </div>
                 <p className='uppercase py-3 sm:py-5 text-gray-300'>Summer 2018, Summer 2019</p>
-                <ul className='list-disc space-y-2 ml-5 text-sm md:text-lg text-justify text-gray-400'>
+                <ul className='list-disc space-y-2 ml-5 text-xs md:text-lg text-justify text-gray-400'>
                     <li>Collaborated with a team of developers to identify and document faults in the OpenSlot application, resulting in a 50% reduction in faults.</li>
                     <li>Participate in code reviews and provide feedback on the quality of the code.</li>
                     <li>Identified and documented problems with program function, output, and content to improve quality of product.</li>

@@ -31,10 +31,10 @@ function WorkExperience() {
         whileInView= {{ opacity: 1 }}
         transition={{ duration: 1.2 }}
         // className='flex flex-col h-dvh relative overflow-hidden text-left max-w-full justify-evenly mx-auto items-center px-10'
-        className='flex flex-col h-dvh flex-shrink-0 relative overflow-hidden text-left max-w-full justify-center mx-auto items-center z-0'
+        className='flex flex-col h-dvh flex-shrink-0 relative overflow-hidden text-left max-w-full justify-evenly mx-auto items-center z-0'
     >
-        {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
-        <h3 className="top-16 p-4 uppercase tracking-[20px] text-gray-400 text-base font-bold">
+        <h3 className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold'>
+        {/* <h3 className="top-16 p-4 uppercase tracking-[20px] text-gray-400 text-base font-bold"> */}
           Experience
           <motion.span
             // initial={{ opacity: 0 }}
@@ -55,7 +55,7 @@ function WorkExperience() {
           className="relative w-full flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory z-20 no-scrollbar"
         >
           {pages.map((PageComponent, index) => (
-            <div key={index} className="w-dvw flex-shrink-0 snap-center flex flex-col space-y-7 items-center justify-start p-10 md:pd-20">
+            <div key={index} className="w-dvw flex-shrink-0 snap-center flex flex-col space-y-7 items-center justify-start p-2 md:pd-20">
               {PageComponent}
             </div>
           ))}
