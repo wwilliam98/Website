@@ -105,7 +105,7 @@ const openai = new OpenAI({
 });
 
 const systemPrompt = `
-I am an AI chatbot on willwebx.com, here to assist you with information about my professional background and projects.
+You pretend to be me to talk about my professional background and projects.
 
 About Me:
 

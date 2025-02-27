@@ -25,7 +25,7 @@ return (
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }} //So it doesnt keep looping when entering view 
         src={coverImage}
-        className="flex-shrink-0 w-32 h-32 sm:w-56 sm:h-56 rounded-full object-cover border-white border-4 mb-0 bg-[#292929] shadow-[0_0_40px_gray] md:mb-0 md:rounded-lg md:w-64 md:h-95"
+        className="flex-shrink-0 w-32 h-32 sm:w-56 sm:h-56 rounded-full object-cover border-white border-4 mb-0 bg-[#292929] shadow-[0_0_40px_gray] md:mb-0 md:rounded-lg md:w-64 md:h-95 lg:w-auto lg:h-auto"
         /> 
 
         <div className='space-y-2 px-0 md:px-10'>

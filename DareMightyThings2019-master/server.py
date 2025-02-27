@@ -369,4 +369,4 @@ def lookup(add, geo1, key, type ,distance, mode):
     return lm_data
 
 if __name__ =="__main__":  
-    app.run(host = 'localhost', port = 5000, debug = True)
+    app.run(host = 'localhost', port = 3000, debug = True)

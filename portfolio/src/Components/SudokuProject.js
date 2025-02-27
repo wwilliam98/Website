@@ -1,5 +1,6 @@
 import React from 'react'
-import SudokuSS from "../Images/SudokuSS.png"
+// import SudokuSS from "../Images/SudokuSS.png"
+import SudokuGIF from "../Images/SudokuSolver.gif"
 
 function SudokuProject() {
   return (
@@ -13,8 +14,8 @@ function SudokuProject() {
             whileInView={{ opacity:1, y:0 }} */}
         <a href='/SudokuSolver'>
         <img
-            src={SudokuSS}
-            alt='SudokuSS'
+            src={SudokuGIF}
+            alt='SudokuGIF'
             className='w-[400px] h-[200px] sm:w-[600px] sm:h-[300px] md:w-[800px] md:h-[400px] duration-300 rounded-lg'
             // className='max-w-7xl h-[400px]'
         />
