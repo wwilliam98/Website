@@ -117,6 +117,7 @@ LeetCode: Active participant as "IamCookie"
 Education: B.Sc. in Computer Engineering from Illinois Institute of Technology (2021)
 Location: Singapore
 From: Jakarta
+Status: Single, Unmarried
 
 Key Projects:
 
