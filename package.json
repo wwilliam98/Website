@@ -17,7 +17,9 @@
   "scripts": {
     "app": "nodemon app.js",
     "dev": "(cd portfolio && npm run build) && (nodemon app.js)",
-    "startdev": "nodemon app.js"
+    "startdev": "nodemon app.js",
+    "build": "npm install && cd portfolio && npm install && npm run build",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC"
