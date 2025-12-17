@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import ExperienceCard from './ExperienceCard'
 import ExperienceCard2 from './ExperienceCard2'
 
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
+
 function WorkExperience() {
   const [activePage, setActivePage] = useState(0);
   const containerRef = useRef(null);
@@ -14,6 +16,25 @@ function WorkExperience() {
       const pageWidth = containerRef.current.clientWidth;
       const newActivePage = Math.round(scrollLeft / pageWidth);
       setActivePage(newActivePage);
+    }
+  };
+
+  // 2. Add Scroll Functions
+  const scrollLeft = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({
+        left: -containerRef.current.clientWidth,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollBy({
+        left: containerRef.current.clientWidth,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -45,10 +66,21 @@ function WorkExperience() {
           </motion.span>
         </h3>
 
-        {/* <div className='relative w-full flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory z-20'>
-            <ExperienceCard />
-            <ExperienceCard2 />
-        </div> */}
+        {/* 3. Add Left Button (Hidden on Mobile) */}
+        <button 
+            className="absolute left-4 top-1/2 z-30 p-2 bg-gray-500/30 rounded-full hover:bg-gray-500/50 transition-all hidden md:block"
+            onClick={scrollLeft}
+        >
+            <ChevronLeftIcon className="h-8 w-8 text-white/70" />
+        </button>
+
+        {/* 4. Add Right Button (Hidden on Mobile) */}
+        <button 
+            className="absolute right-4 top-1/2 z-30 p-2 bg-gray-500/30 rounded-full hover:bg-gray-500/50 transition-all hidden md:block"
+            onClick={scrollRight}
+        >
+            <ChevronRightIcon className="h-8 w-8 text-white/70" />
+        </button>
 
         <div
           ref={containerRef}
