@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion'
 import ExperienceCard from './ExperienceCard'
 import ExperienceCard2 from './ExperienceCard2'
+import ExperienceCard3 from './ExperienceCard3'
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
 
 function WorkExperience() {
   const [activePage, setActivePage] = useState(0);
   const containerRef = useRef(null);
-  const pages = [<ExperienceCard />, <ExperienceCard2 />];
+  const pages = [<ExperienceCard3 />, <ExperienceCard />, <ExperienceCard2 />];
 
   const handleScroll = () => {
     if (containerRef.current) {

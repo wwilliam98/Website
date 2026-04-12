@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import React, { useRef } from 'react'
+import OCRProject from "./OCRProject.js"
+import AlignmentProject from "./AlignmentProject.js"
 import PathfindingProject from "./PathfindingProject.js"
 import SudokuProject from "./SudokuProject.js"
 import DareMightyThings from './DareMightyThingsProject.js'
@@ -71,6 +73,8 @@ function Projects() {
             ref={containerRef}
             className='relative w-full flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory z-20 no-scrollbar'
         >
+            <OCRProject />
+            <AlignmentProject />
             <PathfindingProject />
             <SudokuProject />
             <DareMightyThings />

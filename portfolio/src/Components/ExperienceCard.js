@@ -52,9 +52,9 @@ function ExperienceCard() {
                     alt="Tech Used"
                 />
             </div>
-            <p className='uppercase py-3 sm:py-5 text-gray-300'>May 2022 - Present</p>
+            <p className='uppercase py-3 sm:py-5 text-gray-300'>May 2022 - April 2024</p>
             <ul className='list-disc space-y-2 ml-5 text-xs md:text-lg text-justify text-gray-400'>
-                <li>Developed AI-driven computer vision solutions using Raspberry Pi, Python, and YOLOv8, automating defect detection and saving 60 wafer lots.</li>
+                <li>Designed RESTful APIs to facilitate data integration across teams, enhancing system interoperability.</li>
                 <li>Built and maintained PHP-based websites with MySQL for the Reticle Assembly Team, enhancing data management and analysis.</li>
                 <li>Migrated Excel data to MySQL databases using Python Pandas, streamlining data management and conserving resources.</li>
                 <li>Utilized Pandas and Matplotlib to transfer Excel data to databases and visualized statistics on websites for improved accessibility.</li>

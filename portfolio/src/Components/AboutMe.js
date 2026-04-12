@@ -33,7 +33,7 @@ return (
             {/* <span className='underline decoration-slate-500'>little</span> Background */}
             </h4>
             <p className='text-sm sm:text-base text-justify md:text-xl overflow-scroll no-scrollbar'>
-            Hello Everyone!! My name is William and I'm currently a full-time Software Engineer at STMicroelectronics with 5 years of experience in Programming. I took my bachelor degree in Illinois Institute of Technology in Computer Engineering. I first discovered my passion in Programming after realizing that there are many problems that can be solved using the current advanced technology. While I'm not working, I like to go for a walk or hike and look for beautiful spots. I find that exploring nature helps me clear my mind and recharge for the next challenge.
+            Hello Everyone!! My name is William and I'm currently a full-time Software Engineer at STMicroelectronics with 5 years of experience in Programming. I took my bachelor degree in Illinois Institute of Technology in Computer Engineering. I first discovered my passion in Programming after realizing that there are many problems that can be solved using the current advanced technology. While I'm not working, I like to go for a walk or play badminton. I find playing badminton helps me clear my mind and recharge for the next challenge.
 
             {/* If you're interested in working together, please feel free to reach out to me at +1(312)788-7357 or +65 9420 0655. I'd love to hear from you and discuss how we can work together to achieve your goals. */}
             <br></br>
