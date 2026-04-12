@@ -59,7 +59,7 @@ function ChatWithAI() {
                 Ask Me Anything
             </h3>
 
-            <div ref={chatContainerRef} className="w-4/5 h-4/6 overflow-y-scroll border border-gray-600 p-3 m-3 rounded-lg space-y-2">
+            <div ref={chatContainerRef} className="w-4/5 h-4/6 overflow-y-auto hide-scrollbar border border-gray-600 p-3 m-3 rounded-lg space-y-2">
                 {messages.map((msg, index) => (
                     <div 
                         ref={messagesEndRef}

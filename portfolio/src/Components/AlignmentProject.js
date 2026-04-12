@@ -26,8 +26,8 @@ function AlignmentProject() {
             </h4>
 
             <p className='text-sm sm:text-lg text-center md:text-left'>
-                • Developed a real-time monitoring tool to verify wafer positioning during operator loading, eliminating costly drops caused by vacuum pin misalignment. <br></br>
-                • Engineered a computer vision alignment system that ensures precise wafer placement on three-point vacuum chucks, preventing improper suction and potential scrap. <br></br>
+                • Developed a real-time monitoring tool to verify wafer positioning during loading, eliminating costly drops caused by vacuum pin misalignment. <br></br>
+                • Engineered a computer vision alignment system that ensures precise wafer placement on 3 vacuum chucks, preventing improper suction and potential scrap. <br></br>
                 • Optimized the machine loading process by implementing automated alignment checks, which significantly reduced material waste and improved production yield.
             </p>
         </div>

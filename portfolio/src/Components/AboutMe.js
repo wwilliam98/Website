@@ -38,7 +38,7 @@ return (
             {/* If you're interested in working together, please feel free to reach out to me at +1(312)788-7357 or +65 9420 0655. I'd love to hear from you and discuss how we can work together to achieve your goals. */}
             <br></br>
             <br></br>
-            In my programming accomplishments, I was a top 10 finalist in the Google Tech Challenge held at their headquarters in Chicago, and I'm proud to have won 1st place the Dare Mighty Things hackathon in 2019 with my team. These experiences have been invaluable in helping me grow as a programmer and a problem solver.
+            In my programming accomplishments, <b>I was a Top 10 finalist in the Google Tech Challenge</b> held at their headquarters in Chicago, and I'm proud to have won <b>1st place at the Dare Mighty Things hackathon</b> in 2019 with my team. These experiences have been invaluable in helping me grow as a programmer and a problem solver.
 
             I'm skilled in Python, Javascript, and PHP, and I have experience working with databases such as MySQL using Pandas. My long-term goal is to become a technical lead and mentor for junior developers to help them reach their full potential.
             </p>
