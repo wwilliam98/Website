@@ -54,17 +54,17 @@ function ContactMe() {
 
             <div className='space-y-10'>
                 <div className='flex items-center space-x-5 justify-center'>
-                    <PhoneIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
+                    <PhoneIcon className='text-[#38BDF8] w-7 h-7 animate-pulse'/>
                     <p className='text-2xl'>+65 9420 0655</p>
                 </div>
 
                 <div className='flex items-center space-x-5 justify-center'>
-                    <EnvelopeIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
+                    <EnvelopeIcon className='text-[#38BDF8] w-7 h-7 animate-pulse'/>
                     <p className='text-2xl'>wwilliam1908@gmail.com</p>
                 </div>
 
                 <div className='flex items-center space-x-5 justify-center'>
-                    <MapPinIcon className='text-[#F7AB0A] w-7 h-7 animate-pulse'/>
+                    <MapPinIcon className='text-[#38BDF8] w-7 h-7 animate-pulse'/>
                     <p className='text-2xl'>Singapore, Singapore</p>
                 </div>
             </div>
@@ -77,7 +77,7 @@ function ContactMe() {
 
                 <input className='contactInput' placeholder='Subject' type='text' id='subject' name='subject' required></input>
                 <textarea className='contactInput' placeholder='Message' id='message' name='message' required></textarea>
-                <button className='bg-[#F7AB0A] py-5 px-10 rounded-md text-black font-bold'>Submit</button>
+                <button className='bg-[#38BDF8] py-5 px-10 rounded-md text-black font-bold'>Submit</button>
             </form>
 
             {alertmessage && <Alert variant={alertmessage.includes("success") ? "success" : "danger"}>{alertmessage}</Alert>}

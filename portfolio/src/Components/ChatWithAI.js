@@ -1,37 +1,39 @@
-import React, {useState, useEffect, useRef} from "react";
-import { PhoneIcon, MapPinIcon, EnvelopeIcon, PaperAirplaneIcon } from "@heroicons/react/24/solid";
-import { Cursor, useTypewriter } from 'react-simple-typewriter'
-import Alert from 'react-bootstrap/Alert';
+import React, { useState, useEffect, useRef } from "react";
+import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
+import { useTypewriter } from 'react-simple-typewriter'
 
-function ChatWithAI() {       
+function TypewriterMessage({ text, onDone }) {
+    const [typedText] = useTypewriter({
+        words: [text],
+        typeSpeed: 15,
+    });
+
+    useEffect(() => {
+        if (typedText === text) onDone();
+    }, [typedText, text, onDone]);
+
+    return <span>{typedText}</span>;
+}
+
+function ChatWithAI() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const messagesEndRef = useRef(null);
     const chatContainerRef = useRef(null);
+    const animatedRef = useRef(new Set());
 
-    const scrollToBottom = () => {
+    useEffect(() => {
         chatContainerRef.current?.scrollTo({
             top: chatContainerRef.current.scrollHeight,
-            behavior: "smooth"
+            behavior: "smooth",
         });
-        // chatContainerRef.current?.scrollTo(0, chatContainerRef.current.scrollHeight);
-        // messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    };
-
-    const TypewriterMessage = ({ text, index }) => {
-        scrollToBottom();
-        const [typedText] = useTypewriter({
-            words: [text],
-            typeSpeed: 15,
-        });
-        messages[messages.length-1].shouldAnimate = false
-        return <span>{typedText}</span>;
-    };
+    }, [messages, loading]);
 
     const sendMessage = async () => {
-        const userMessage = { role: "user", shouldAnimate: false, content: input };
-        setMessages((prev) => [...prev, userMessage]);
+        const prompt = input.trim();
+        if (!prompt || loading) return;
+
+        setMessages((prev) => [...prev, { role: "user", content: prompt }]);
         setInput("");
         setLoading(true);
 
@@ -39,14 +41,13 @@ function ChatWithAI() {
             const res = await fetch("/generate_chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt: input }),
+                body: JSON.stringify({ prompt }),
             });
 
             const data = await res.json();
-            const botMessage = { role: "assistant", shouldAnimate: true, content: data.result };
-            setMessages((prev) => [...prev, botMessage]);
+            setMessages((prev) => [...prev, { role: "assistant", animate: true, content: data.result }]);
         } catch (error) {
-            console.error("Error:", error);
+            setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong. Please try again." }]);
         }
 
         setLoading(false);
@@ -54,28 +55,52 @@ function ChatWithAI() {
 
     return (
         <div className='relative flex flex-col h-dvh overflow-hidden text-center max-w-full md:text-left justify-evenly mx-auto items-center'>
-            {/* <h3 className="absolute top-16 p-1 uppercase tracking-[20px] text-gray-400 text-2xl"> */}
-            <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">
-                Ask Me Anything
-            </h3>
+            <div className='text-center mt-6'>
+                <h3 className='text-2xl font-bold uppercase tracking-[8px] text-[#38BDF8]'>
+                    Ask Me Anything
+                </h3>
+                <div className='w-full h-[2px] bg-[#38BDF8]/60 mt-2 rounded-full' />
+            </div>
 
-            <div ref={chatContainerRef} className="w-4/5 h-4/6 overflow-y-auto hide-scrollbar border border-gray-600 p-3 m-3 rounded-lg space-y-2">
+            <div
+                ref={chatContainerRef}
+                className="w-4/5 max-w-3xl h-4/6 overflow-y-auto no-scrollbar border border-[#38BDF8]/30 bg-white/5 p-4 m-3 rounded-2xl space-y-3"
+            >
+                {messages.length === 0 && !loading && (
+                    <p className="text-gray-500 text-sm text-center pt-10">
+                        Ask me about my skills, experience, or projects — my AI twin will answer.
+                    </p>
+                )}
                 {messages.map((msg, index) => (
-                    <div 
-                        ref={messagesEndRef}
+                    <div
                         key={index}
-                        className={`flex p-3 rounded-lg max-w-fit ${msg.role === "user" ? "ml-auto bg-gray-900 text-gray-400 text-right" : "mr-auto bg-gray-400 text-gray-900 text-left"}`}>
-                        {/* {msg.content} */}
-                        {/* {msg.role !== "user" && !typedMessages.has(index)? */}
-                        {msg.role !== "user" && msg.shouldAnimate ?
-                            <TypewriterMessage text={msg.content} index={index} /> : msg.content}
+                        className={`flex p-3 rounded-2xl max-w-[80%] text-sm sm:text-base ${
+                            msg.role === "user"
+                                ? "ml-auto bg-[#38BDF8]/20 text-gray-100 text-right rounded-br-sm"
+                                : "mr-auto bg-gray-700/60 text-gray-200 text-left rounded-bl-sm"
+                        }`}
+                    >
+                        {msg.role === "assistant" && msg.animate && !animatedRef.current.has(index) ? (
+                            <TypewriterMessage
+                                text={msg.content}
+                                onDone={() => animatedRef.current.add(index)}
+                            />
+                        ) : (
+                            msg.content
+                        )}
                     </div>
                 ))}
-                {loading && <div className="text-gray-400">Thinking...</div>}
+                {loading && (
+                    <div className="mr-auto flex items-center space-x-1 p-3 rounded-2xl bg-gray-700/60 max-w-fit">
+                        <span className="w-2 h-2 rounded-full bg-[#38BDF8]/70 animate-bounce" />
+                        <span className="w-2 h-2 rounded-full bg-[#38BDF8]/70 animate-bounce [animation-delay:150ms]" />
+                        <span className="w-2 h-2 rounded-full bg-[#38BDF8]/70 animate-bounce [animation-delay:300ms]" />
+                    </div>
+                )}
             </div>
-            <div className="flex w-4/5 space-x-2">
+
+            <div className="flex w-4/5 max-w-3xl items-center space-x-2">
                 <input
-                    // id='prompt'
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                     type="text"
                     value={input}
@@ -84,11 +109,12 @@ function ChatWithAI() {
                     className='chatPrompt'
                     autoComplete="off"
                 />
-                <button 
-                    onClick={sendMessage} 
-                    className="p-2 rounded-full ml-2 md:hidden"
+                <button
+                    onClick={sendMessage}
+                    disabled={loading || !input.trim()}
+                    className="p-3 rounded-full border border-[#38BDF8]/40 hover:bg-[#38BDF8]/20 transition-all disabled:opacity-30 disabled:hover:bg-transparent"
                 >
-                    <PaperAirplaneIcon className="w-6 h-6 text-white" />
+                    <PaperAirplaneIcon className="w-5 h-5 text-[#38BDF8]" />
                 </button>
             </div>
         </div>

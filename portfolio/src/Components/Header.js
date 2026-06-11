@@ -34,7 +34,7 @@ function Header(){
 				}}
 				className="flex flex-row items-center">
 
-				<span className="rounded-full hover:bg-[#F7AB0A]/40">
+				<span className="rounded-full hover:bg-[#38BDF8]/40">
 				<SocialIcon
 					url="https://www.facebook.com/wwilliam1908"
 					fgColor="gray"
@@ -42,7 +42,7 @@ function Header(){
 				/>
 				</span>
 
-				<span className="rounded-full hover:bg-[#F7AB0A]/40">
+				<span className="rounded-full hover:bg-[#38BDF8]/40">
 				<SocialIcon
 					url="https://instagram.com/wwilliam_98"
 					fgColor="gray"
@@ -50,7 +50,7 @@ function Header(){
 				/>
 				</span>
 
-				<span className="rounded-full hover:bg-[#F7AB0A]/40">
+				<span className="rounded-full hover:bg-[#38BDF8]/40">
 				<SocialIcon
 					url="https://www.linkedin.com/in/wwilliam1908"
 					fgColor="gray"
@@ -58,7 +58,7 @@ function Header(){
 				/>
 				</span>
 
-				<span className="rounded-full hover:bg-[#F7AB0A]/40">
+				<span className="rounded-full hover:bg-[#38BDF8]/40">
 				<SocialIcon
 					url="https://github.com/wwilliam98"
 					fgColor="gray"
@@ -66,7 +66,7 @@ function Header(){
 				/>
 				</span>
 
-				<span className="rounded-full hover:bg-[#F7AB0A]/40">
+				<span className="rounded-full hover:bg-[#38BDF8]/40">
 				<SocialIcon
 					url="https://leetcode.com/IamCookie/"
 					fgColor="gray"
@@ -91,7 +91,7 @@ function Header(){
 				}}
 				className="flex flex-row items-center text-gray-300 cursor-pointer">
 
-				<span className="md:pr-3 rounded-full hover:bg-[#F7AB0A]/40">
+				<span className="md:pr-3 rounded-full hover:bg-[#38BDF8]/40">
 				<SocialIcon
 					className="cursor-pointer"
 					url="#contact"
