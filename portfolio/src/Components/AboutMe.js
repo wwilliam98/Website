@@ -11,10 +11,12 @@ return (
         transition={{ duration: 3 }}
         className='flex flex-col relative h-dvh max-h-dvh text-center max-w-7xl px-10 justify-evenly mx-auto items-center md:text-left md:flex-row'
     >
-        {/* <h3 className='absolute top-16 uppercase tracking-[20px] text-gray-400 text-2xl'> */}
-        <h3 className='top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold md:absolute'>
+        <div className='text-center md:absolute md:top-8'>
+          <h3 className='text-2xl font-bold uppercase tracking-[8px] text-[#38BDF8]'>
             About Me
-        </h3>
+          </h3>
+          <div className='w-full h-[2px] bg-[#38BDF8]/60 mt-2 rounded-full' />
+        </div>
         
         <motion.img 
         initial={{
