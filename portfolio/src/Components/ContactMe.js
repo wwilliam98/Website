@@ -1,86 +1,86 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { PhoneIcon, MapPinIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
-import Alert from 'react-bootstrap/Alert';
+import SectionHeading from './SectionHeading';
 
-function ContactMe() {       
+function ContactMe() {
     const [alertmessage, setMessage] = useState(null);
+    const [sending, setSending] = useState(false);
 
     function handleSubmit(event) {
         event.preventDefault();
-        const form = document.querySelector('form')
+        const form = event.target;
         const name = form.name.value;
         const message = form.message.value;
         const email = form.email.value;
         const subject = form.subject.value;
 
-        // console.log(window.location)
-        // window.location.href = `mailto:wwilliam1908@gmail.com?subject=${subject}&body=Hi William, \n My name is ${name}. ${message} (${email})`
-
+        setSending(true);
         fetch('/send_contactme_email', {
             method: "POST",
-            // body: form,
-            body : JSON.stringify({name, email, subject, message}),
-            headers : {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name, email, subject, message }),
+            headers: { 'Content-Type': 'application/json' },
         })
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data)
-            if (data.success) {
-                setMessage("Your message has been sent successfully!");
-            } else {
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    setMessage("Your message has been sent successfully!");
+                    form.reset();
+                } else {
+                    setMessage("Failed to send message. Please try again.");
+                }
+            })
+            .catch(() => {
                 setMessage("Failed to send message. Please try again.");
-            }
-        })
-        .catch((error) => {
-            setMessage("Failed to send message. Please try again.");
-            console.error(error);
-        });
+            })
+            .finally(() => setSending(false));
     }
 
+    const success = alertmessage?.includes("success");
+
     return (
-        <div className='relative flex flex-col h-dvh overflow-hidden text-center max-w-full md:text-left justify-evenly mx-auto items-center'>
-            {/* <h3 className="absolute top-16 p-1 uppercase tracking-[20px] text-gray-400 text-2xl"> */}
-            <h3 className="top-16 p-1 mt-10 uppercase tracking-[20px] text-gray-400 text-base font-bold">
-                Contact Me
-            </h3>
-            
-            <h4 className='text-2xl sm:text-4xl font-semibold text-center'>
-                For any questions, comments, or feedback. Feel free to contact me below.
-                <span>
-                </span>
-            </h4>
+        <div className='max-w-3xl mx-auto px-6 py-24 text-center'>
+            <SectionHeading>Contact me</SectionHeading>
 
-            <div className='space-y-10'>
-                <div className='flex items-center space-x-5 justify-center'>
-                    <PhoneIcon className='text-[#38BDF8] w-7 h-7 animate-pulse'/>
-                    <p className='text-2xl'>+65 9420 0655</p>
+            <p className='text-gray-300 mb-10'>
+                Have a question, a project, or just want to say hi? My inbox is always open.
+            </p>
+
+            <div className='flex flex-col sm:flex-row justify-center gap-6 sm:gap-10 mb-12 text-sm text-gray-300'>
+                <div className='flex items-center justify-center gap-2'>
+                    <PhoneIcon className='text-[#38BDF8] w-5 h-5' />
+                    <p>+65 9420 0655</p>
                 </div>
-
-                <div className='flex items-center space-x-5 justify-center'>
-                    <EnvelopeIcon className='text-[#38BDF8] w-7 h-7 animate-pulse'/>
-                    <p className='text-2xl'>wwilliam1908@gmail.com</p>
+                <div className='flex items-center justify-center gap-2'>
+                    <EnvelopeIcon className='text-[#38BDF8] w-5 h-5' />
+                    <a href="mailto:wwilliam1908@gmail.com" className='hover:text-[#38BDF8] transition-colors'>wwilliam1908@gmail.com</a>
                 </div>
-
-                <div className='flex items-center space-x-5 justify-center'>
-                    <MapPinIcon className='text-[#38BDF8] w-7 h-7 animate-pulse'/>
-                    <p className='text-2xl'>Singapore, Singapore</p>
+                <div className='flex items-center justify-center gap-2'>
+                    <MapPinIcon className='text-[#38BDF8] w-5 h-5' />
+                    <p>Singapore</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} id="contactme_form" className='relative flex flex-col p-10 space-y-2 max-w-full'>
-                <div className='flex flex-col space-y-2 sm:space-y-0 sm:flex-row sm:space-x-2 '>
-                    <input className='contactInput' placeholder='Name' type='text' id='name' name='name' required></input>
-                    <input className='contactInput' placeholder='Email' type='email' id='email' name='email' required></input>
+            <form onSubmit={handleSubmit} id="contactme_form" className='flex flex-col space-y-3 max-w-xl mx-auto'>
+                <div className='flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:space-x-3'>
+                    <input className='contactInput flex-1' placeholder='Name' type='text' id='name' name='name' required />
+                    <input className='contactInput flex-1' placeholder='Email' type='email' id='email' name='email' required />
                 </div>
 
-                <input className='contactInput' placeholder='Subject' type='text' id='subject' name='subject' required></input>
-                <textarea className='contactInput' placeholder='Message' id='message' name='message' required></textarea>
-                <button className='bg-[#38BDF8] py-5 px-10 rounded-md text-black font-bold'>Submit</button>
+                <input className='contactInput' placeholder='Subject' type='text' id='subject' name='subject' required />
+                <textarea className='contactInput' placeholder='Message' rows='5' id='message' name='message' required />
+                <button
+                    disabled={sending}
+                    className='bg-[#38BDF8] py-3.5 px-10 rounded-full text-gray-900 font-semibold hover:bg-[#7dd3fc] transition-colors duration-200 disabled:opacity-50'
+                >
+                    {sending ? 'Sending…' : 'Send message'}
+                </button>
             </form>
 
-            {alertmessage && <Alert variant={alertmessage.includes("success") ? "success" : "danger"}>{alertmessage}</Alert>}
+            {alertmessage && (
+                <p className={`mt-6 text-sm ${success ? 'text-green-400' : 'text-red-400'}`}>
+                    {alertmessage}
+                </p>
+            )}
         </div>
     )
 }

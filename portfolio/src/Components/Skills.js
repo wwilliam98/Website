@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import Skill from './Skill'
+import SectionHeading from './SectionHeading'
 
 import PythonLogo from "../Images/pythonlogo.jpeg"
 import MysqlLogo from "../Images/MysqlLogo.png"
@@ -18,47 +18,78 @@ import PerlLogo from "../Images/perllogo.jpeg"
 import JavaLogo from "../Images/javalogo.png"
 import CppLogo from "../Images/cpplogo.png"
 import CssLogo from "../Images/CSSlogo.png"
+import OpenCVLogo from "../Images/OpenCVlogo.png"
 
-const skills = [
-  { logo: PythonLogo,  name: 'Python',     proficiency: 100 },
-  { logo: MysqlLogo,   name: 'MySQL',      proficiency: 100 },
-  { logo: JsLogo,      name: 'JavaScript', proficiency: 100 },
-  { logo: HtmlLogo,    name: 'HTML',       proficiency: 100 },
-  { logo: ReactLogo,   name: 'React',      proficiency: 90  },
-  { logo: MongoDBLogo, name: 'MongoDB',    proficiency: 90  },
-  { logo: NodejsLogo,  name: 'Node.js',    proficiency: 90  },
-  { logo: ExpressLogo, name: 'Express',    proficiency: 90  },
-  { logo: PhpLogo,     name: 'PHP',        proficiency: 90  },
-  { logo: TailwindLogo,name: 'Tailwind',   proficiency: 90  },
-  { logo: CssLogo,     name: 'CSS',        proficiency: 80  },
-  { logo: PandasLogo,  name: 'Pandas',     proficiency: 80  },
-  { logo: LinuxLogo,   name: 'Linux',      proficiency: 85  },
-  { logo: JavaLogo,    name: 'Java',       proficiency: 70  },
-  { logo: CppLogo,     name: 'C++',        proficiency: 70  },
-  { logo: PerlLogo,    name: 'Perl',       proficiency: 70  },
+const skillGroups = [
+  {
+    category: 'Languages',
+    skills: [
+      { logo: PythonLogo, name: 'Python' },
+      { logo: JsLogo, name: 'JavaScript' },
+      { logo: JavaLogo, name: 'Java' },
+      { logo: CppLogo, name: 'C++' },
+      { logo: PhpLogo, name: 'PHP' },
+      { logo: PerlLogo, name: 'Perl' },
+    ],
+  },
+  {
+    category: 'AI & data',
+    skills: [
+      { logo: OpenCVLogo, name: 'OpenCV' },
+      { logo: PandasLogo, name: 'Pandas' },
+      { logo: MysqlLogo, name: 'MySQL' },
+      { logo: MongoDBLogo, name: 'MongoDB' },
+    ],
+  },
+  {
+    category: 'Web',
+    skills: [
+      { logo: ReactLogo, name: 'React' },
+      { logo: NodejsLogo, name: 'Node.js' },
+      { logo: ExpressLogo, name: 'Express' },
+      { logo: TailwindLogo, name: 'Tailwind' },
+      { logo: HtmlLogo, name: 'HTML' },
+      { logo: CssLogo, name: 'CSS' },
+    ],
+  },
+  {
+    category: 'Tools',
+    skills: [
+      { logo: LinuxLogo, name: 'Linux' },
+    ],
+  },
 ]
 
 function Skills() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      className='flex relative flex-col min-h-dvh justify-center items-center mx-auto px-6 max-w-5xl'
-    >
-      <div className='text-center mb-8 inline-block mx-auto'>
-        <h3 className='text-2xl font-bold uppercase tracking-[8px] text-[#38BDF8]'>
-          Technical Skills
-        </h3>
-        <div className='w-full h-[2px] bg-[#38BDF8]/60 mt-2 rounded-full' />
-      </div>
+    <div className='max-w-4xl mx-auto px-6 py-24 text-center'>
+      <SectionHeading>Technical skills</SectionHeading>
 
-      <div className='grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-8 gap-3 md:gap-4 place-items-center'>
-        {skills.map((skill) => (
-          <Skill key={skill.name} {...skill} />
+      <div className='space-y-8 text-left'>
+        {skillGroups.map((group, gi) => (
+          <motion.div
+            key={group.category}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: gi * 0.1 }}
+            viewport={{ once: true }}
+          >
+            <p className='text-sm uppercase tracking-wider text-gray-400 mb-3'>{group.category}</p>
+            <div className='flex flex-wrap gap-2.5'>
+              {group.skills.map(({ logo, name }) => (
+                <span
+                  key={name}
+                  className='flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-gray-200 hover:border-[#38BDF8]/50 hover:bg-[#38BDF8]/10 transition-colors duration-200'
+                >
+                  <img src={logo} alt="" loading="lazy" className='w-5 h-5 rounded-full object-cover' />
+                  {name}
+                </span>
+              ))}
+            </div>
+          </motion.div>
         ))}
       </div>
-    </motion.div>
+    </div>
   )
 }
 

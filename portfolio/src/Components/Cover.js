@@ -4,43 +4,61 @@ import BackgroundCircle from './BackgroundCircle'
 import CoverPic from "../Images/LinkedInPFP.png"
 
 function Cover() {
-  const [text] = useTypewriter({
-    words: ["Welcome to My Portfolio!!", "My name is William", "@STMicroelectronics"],
-    loop: true,
-    typeSpeed: 50,
-    deleteSpeed: 50,
-    delaySpeed: 2500,
-  })
+    const [text] = useTypewriter({
+        words: ["computer vision", "AI for manufacturing", "full-stack apps", "IoT systems"],
+        loop: true,
+        typeSpeed: 60,
+        deleteSpeed: 40,
+        delaySpeed: 2200,
+    })
 
-  return (
-    <div className='w-dvw h-dvh flex flex-col space-y-8 items-center justify-center text-center overflow-hidden'>
-      <div className='relative flex justify-center items-center'>
-        <BackgroundCircle />
-        <img
-          className='relative rounded-full w-[250px] h-[250px] object-cover object-center border-4 border-gray-400 shadow-[0_0_40px_gray] cursor-pointer transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-[0_0_80px_gray]'
-          src={CoverPic}
-          alt="William"
-        />
-      </div>
+    const openChat = () => {
+        window.dispatchEvent(new CustomEvent('open-chat'))
+    }
 
-      <div className='z-20'>
-        <h2 className='text-sm uppercase pb-2 tracking-[13px] text-[#38BDF8]'>
-          Software Engineer
-        </h2>
-        <h1 className='text-4xl md:text-5xl lg:text-6xl font-semibold px-10'>
-          <span>{text}</span>
-          <Cursor cursorColor='#38BDF8' />
-        </h1>
+    return (
+        <div className='relative min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-center text-center overflow-hidden px-6'>
+            <div className='relative flex justify-center items-center mb-8'>
+                <BackgroundCircle />
+                <img
+                    className='relative rounded-full w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] object-cover object-center ring-4 ring-[#38BDF8]/30 shadow-[0_0_40px_rgba(56,189,248,0.15)]'
+                    src={CoverPic}
+                    alt="William"
+                />
+            </div>
 
-        <div className='pt-5 flex flex-wrap justify-center gap-2'>
-          <a href="#about" className='coverButton'>About</a>
-          <a href="#experience" className='coverButton'>Experience</a>
-          <a href="#skills" className='coverButton'>Skills</a>
-          <a href="#projects" className='coverButton'>Projects</a>
+            <div className='z-20 max-w-2xl'>
+                <h1 className='text-4xl sm:text-5xl font-bold'>
+                    Hi, I'm William
+                </h1>
+                <h2 className='text-xl sm:text-2xl mt-3 text-gray-300'>
+                    Software engineer building{' '}
+                    <span className='text-[#38BDF8] font-semibold'>{text}</span>
+                    <Cursor cursorColor='#38BDF8' />
+                </h2>
+                <p className='mt-4 text-gray-400 text-sm sm:text-base leading-relaxed'>
+                    I build AI and computer-vision systems for semiconductor manufacturing at
+                    STMicroelectronics — including an automated wafer inspection pipeline that
+                    saves S$1M a year.
+                </p>
+
+                <div className='mt-8 flex flex-wrap justify-center gap-3'>
+                    <a
+                        href="#projects"
+                        className='px-6 py-3 rounded-full bg-[#38BDF8] text-gray-900 text-sm font-semibold hover:bg-[#7dd3fc] transition-colors duration-200'
+                    >
+                        View projects
+                    </a>
+                    <button
+                        onClick={openChat}
+                        className='px-6 py-3 rounded-full border border-[#38BDF8]/50 text-[#38BDF8] text-sm font-semibold hover:bg-[#38BDF8]/10 transition-colors duration-200'
+                    >
+                        Ask my AI twin
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  )
+    )
 }
 
 export default Cover

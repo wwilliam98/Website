@@ -1,110 +1,116 @@
-import React, {useEffect} from "react";
-import {SocialIcon} from 'react-social-icons';
-import {motion} from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { SocialIcon } from 'react-social-icons';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 
-function smoothScroll(target) {
-	document.querySelector(target).scrollIntoView({
-	  behavior: 'smooth'
-	});
-}
+const navLinks = [
+    { href: '#about', label: 'About' },
+    { href: '#experience', label: 'Experience' },
+    { href: '#skills', label: 'Skills' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#contact', label: 'Contact' },
+];
 
-function Header(){
-	useEffect(() => {
-		document.querySelector('a[href="#contact"]').addEventListener('click', function(e) {
-			e.preventDefault(); // Prevent the default behavior of the link
-			smoothScroll('#contact'); // Call the smoothScroll function with the target section ID
-		});
-	}, []);
+const socials = [
+    'https://www.linkedin.com/in/wwilliam1908',
+    'https://github.com/wwilliam98',
+    'https://leetcode.com/IamCookie/',
+];
 
-	return (
-		<header className="sticky top-0 flex p-3 items-start justify-between max-w-7xl mx-auto z-20 xl:items-center">
-			<motion.div
-				initial={{
-					x:-500,
-					opacity: 0,
-					scale: 0.5
-				}}
-				animate={{
-					x: 0,
-					opacity: 1,
-					scale: 1
-				}} 
-				transition={{
-					duration: 2
-				}}
-				className="flex flex-row items-center">
+function Header() {
+    const [activeSection, setActiveSection] = useState('');
+    const [menuOpen, setMenuOpen] = useState(false);
 
-				<span className="rounded-full hover:bg-[#38BDF8]/40">
-				<SocialIcon
-					url="https://www.facebook.com/wwilliam1908"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				</span>
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) setActiveSection('#' + entry.target.id);
+                });
+            },
+            { rootMargin: '-40% 0px -55% 0px' }
+        );
+        navLinks.forEach(({ href }) => {
+            const el = document.querySelector(href);
+            if (el) observer.observe(el);
+        });
+        return () => observer.disconnect();
+    }, []);
 
-				<span className="rounded-full hover:bg-[#38BDF8]/40">
-				<SocialIcon
-					url="https://instagram.com/wwilliam_98"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				</span>
+    return (
+        <header className="sticky top-0 z-40 bg-gray-800/80 backdrop-blur border-b border-white/10">
+            <div className="flex items-center justify-between max-w-6xl mx-auto px-4 sm:px-6 h-16">
+                <a href="#hero" className="text-lg font-bold tracking-wide">
+                    William<span className="text-[#38BDF8]">.</span>
+                </a>
 
-				<span className="rounded-full hover:bg-[#38BDF8]/40">
-				<SocialIcon
-					url="https://www.linkedin.com/in/wwilliam1908"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				</span>
+                <nav className="hidden md:flex items-center space-x-6">
+                    {navLinks.map(({ href, label }) => (
+                        <a
+                            key={href}
+                            href={href}
+                            className={`text-sm transition-colors duration-200 ${
+                                activeSection === href
+                                    ? 'text-[#38BDF8]'
+                                    : 'text-gray-300 hover:text-white'
+                            }`}
+                        >
+                            {label}
+                        </a>
+                    ))}
+                </nav>
 
-				<span className="rounded-full hover:bg-[#38BDF8]/40">
-				<SocialIcon
-					url="https://github.com/wwilliam98"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				</span>
+                <div className="hidden md:flex items-center">
+                    {socials.map((url) => (
+                        <SocialIcon
+                            key={url}
+                            url={url}
+                            fgColor="#9CA3AF"
+                            bgColor="transparent"
+                            style={{ height: 36, width: 36 }}
+                        />
+                    ))}
+                </div>
 
-				<span className="rounded-full hover:bg-[#38BDF8]/40">
-				<SocialIcon
-					url="https://leetcode.com/IamCookie/"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				</span>
-			</motion.div>
+                <button
+                    className="md:hidden p-2 text-gray-300"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label="Toggle menu"
+                    aria-expanded={menuOpen}
+                    aria-controls="mobile-nav"
+                >
+                    {menuOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
+                </button>
+            </div>
 
-			<motion.div
-				initial={{
-					x: 500,
-					opacity: 0,
-					scale: 0.5
-				}}
-				animate={{
-					x: 0,
-					opacity: 1,
-					scale: 1
-				}} 
-				transition={{
-					duration: 2
-				}}
-				className="flex flex-row items-center text-gray-300 cursor-pointer">
-
-				<span className="md:pr-3 rounded-full hover:bg-[#38BDF8]/40">
-				<SocialIcon
-					className="cursor-pointer"
-					url="#contact"
-					network="email"
-					fgColor="gray"
-					bgColor="transparent"
-				/>
-				<a href="#contact" className="uppercase hidden md:inline-flex text-sm text-gray-400">Contact Me</a>
-				</span>
-			</motion.div>
-
-		</header>
-	)
+            {menuOpen && (
+                <nav id="mobile-nav" className="md:hidden flex flex-col px-6 pb-4 space-y-3 bg-gray-800/95 border-b border-white/10">
+                    {navLinks.map(({ href, label }) => (
+                        <a
+                            key={href}
+                            href={href}
+                            onClick={() => setMenuOpen(false)}
+                            className={`text-sm ${
+                                activeSection === href ? 'text-[#38BDF8]' : 'text-gray-300'
+                            }`}
+                        >
+                            {label}
+                        </a>
+                    ))}
+                    <div className="flex -ml-2">
+                        {socials.map((url) => (
+                            <SocialIcon
+                                key={url}
+                                url={url}
+                                fgColor="#9CA3AF"
+                                bgColor="transparent"
+                                style={{ height: 36, width: 36 }}
+                            />
+                        ))}
+                    </div>
+                </nav>
+            )}
+        </header>
+    )
 }
 
 export default Header
