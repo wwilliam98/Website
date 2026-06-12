@@ -2,20 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components{
-    .coverButton{
-        @apply px-6 py-2 border border-[#38BDF8]/40 rounded-full uppercase text-xs tracking-widest text-[#38BDF8]/60 transition-all duration-300
-        hover:bg-[#38BDF8]/10 hover:border-[#38BDF8] hover:text-[#38BDF8]
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
     }
+}
 
+@layer components{
     .contactInput{
         @apply outline-none bg-slate-400/10 rounded-sm border-b px-6 py-4 border-[#242424] text-gray-500 placeholder-gray-500 transition-all focus:border-[#38BDF8]/40
         focus:text-[#38BDF8]/40 hover:border-[#38BDF8]/40
-    }
-
-    .chatPrompt{
-      @apply outline-none bg-slate-400/10 p-3 sm:pr-10 w-full cursor-text flex-col rounded-3xl border border-gray-600 duration-150 text-gray-500 placeholder-gray-500 transition-all ease-in-out focus:border-[#38BDF8]/40
-      focus:text-gray-400 hover:border-gray-900
     }
 
     .no-scrollbar::-webkit-scrollbar {
@@ -27,20 +23,4 @@
       -ms-overflow-style: none; /* IE and Edge */
       scrollbar-width: none; /* Firefox */
     }
-
-    /* .wave {
-        animation: wave-animation 1s linear infinite;
-      }
-      
-      @keyframes wave-animation {
-        0% {
-          color: transparent;
-        }
-        10% {
-          color: white;
-        }
-        20% {
-          color: transparent;
-        }
-      } */
 }
