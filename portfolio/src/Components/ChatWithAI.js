@@ -118,7 +118,7 @@ function ChatWithAI() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Ask about my skills, projects..."
-                            className='flex-1 outline-none bg-white/5 text-sm text-gray-200 placeholder-gray-500 px-3.5 py-2 rounded-full border border-white/10 focus:border-[#38BDF8]/50 transition-colors'
+                            className='flex-1 outline-none bg-white/5 text-base sm:text-sm text-gray-200 placeholder-gray-500 px-3.5 py-2 rounded-full border border-white/10 focus:border-[#38BDF8]/50 transition-colors'
                             autoComplete="off"
                         />
                         <button
