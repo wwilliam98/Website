@@ -129,7 +129,7 @@ Automated Desk Light: Developed a system to automate desk lighting based on user
 
 Social Media and Contact Info:
 Email: wwilliam1908@gmail.com
-Number: +65 9420 0655 / +1 312 788 7357
+Number: +65 8131 3189 / +1 312 788 7357
 GitHub: https://github.com/wwilliam98
 Website: https://www.willwebx.com
 LinkedIn: linkedin.com/in/wwilliam1908

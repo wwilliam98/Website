@@ -48,7 +48,7 @@ function ContactMe() {
             <div className='flex flex-col sm:flex-row justify-center gap-6 sm:gap-10 mb-12 text-sm text-gray-300'>
                 <div className='flex items-center justify-center gap-2'>
                     <PhoneIcon className='text-[#38BDF8] w-5 h-5' />
-                    <p>+65 9420 0655</p>
+                    <p>+65 8131 3189</p>
                 </div>
                 <div className='flex items-center justify-center gap-2'>
                     <EnvelopeIcon className='text-[#38BDF8] w-5 h-5' />
