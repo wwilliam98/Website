@@ -62,3 +62,4 @@ This is a two-layer app:
 
 - No test suite exists (`react-scripts test` finds 0 files); verify changes by running the app
 - Production build must stay warning-free — unused imports fail this bar
+- Mobile inputs must render at ≥16px font size on small screens (e.g. `text-base sm:text-sm`) — iOS Safari auto-zooms the viewport when focusing an input smaller than 16px. Don't fix this with `maximum-scale=1` in the viewport meta; that disables pinch-to-zoom and hurts accessibility
