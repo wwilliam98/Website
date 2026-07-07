@@ -164,4 +164,22 @@ app.post("/generate_chat", async (req, res) => {
   }
 });
 
+// Proxy to the internal Python/FastAPI pathfinding service (pathfinding-service/).
+// Forwards upstream status/body (including 422 validation errors); 503 when down.
+const PATHFINDING_SERVICE_URL = process.env.PATHFINDING_SERVICE_URL || 'http://localhost:8000';
+
+app.post('/api/pathfind', async (req, res) => {
+  try {
+    const upstream = await fetch(`${PATHFINDING_SERVICE_URL}/pathfind`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body),
+      signal: AbortSignal.timeout(5000),
+    });
+    res.status(upstream.status).json(await upstream.json());
+  } catch (error) {
+    res.status(503).json({ error: 'Pathfinding service unavailable' });
+  }
+});
+
 app.use(authRoutes);
