@@ -1,7 +1,8 @@
 import Node from './PathFindingNode.js'
 import {create_recursive_divisionMaze, create_recursive_horizontal, create_recursive_vertical, create_perimeterWall} from './createMaze.js'
-import {Dijkstra, AStar} from './PathfindingWeightedAlgorithm.js'
-import {BFS, DFS} from './PathfindingUnweightedAlgorithm.js'
+import {PathfindingApiClient, PathfindingApiError, serializeBoard} from './PathfindingApiClient.js'
+
+const apiClient = new PathfindingApiClient();
 
 // Board attributes
 function Board(height, width){
@@ -713,30 +714,29 @@ Board.prototype.toggleButtons = function() {
         // Change board size
         document.getElementById("changeBoardSizeSlider").removeAttribute("disabled");
         
-        // Run Algorithm
-        document.getElementById('VisualizeButtonli').onclick = () => {
+        // Run Algorithm — the pathfinding service computes; the board animates
+        document.getElementById('VisualizeButtonli').onclick = async () => {
             if (!board.selectedAlgorithm){
                 document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Pick An Algorithm</button>`;
-            } else{
+                return;
+            }
+            board.toggleButtons();
+            board.clearPath();
+            try {
+                const result = await apiClient.findPath(board.selectedAlgorithm, serializeBoard(board));
+                board.nodesToAnimate = result.visited_order.map(id => {
+                    const node = board.getNodesByID[id];
+                    node.status = "visited"; // what animateStatus/clearPath key off
+                    return node;
+                });
+                board.AnimateFoundPath = result.path.map(id => board.getNodesByID[id]);
+                board.animateStatus(board.nodesToAnimate);
+            } catch (error) {
+                // Re-enable FIRST: the enable branch resets the status bar,
+                // so the error message must be written after it.
                 board.toggleButtons();
-                
-                board.clearPath()
-                if (board.selectedAlgorithm === "BFS") {
-                    BFS(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }
-                else if (board.selectedAlgorithm === "DFS") {
-                    DFS(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }
-                else if (board.selectedAlgorithm === "Dijkstra") {
-                    Dijkstra(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }
-                else if (board.selectedAlgorithm === "AStar") {
-                    AStar(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }                
+                const message = error instanceof PathfindingApiError ? error.message : 'Pathfinding failed';
+                document.getElementById("show_display_status").innerHTML = `<span class="circle-icon"></span> ${message}`;
             }
         }
 
