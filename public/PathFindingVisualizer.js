@@ -1,8 +1,15 @@
 import Node from './PathFindingNode.js'
-import {create_recursive_divisionMaze, create_recursive_horizontal, create_recursive_vertical, create_perimeterWall} from './createMaze.js'
+import {create_maze} from './createMaze.js'
 import {PathfindingApiClient, PathfindingApiError, serializeBoard} from './PathfindingApiClient.js'
 
 const apiClient = new PathfindingApiClient();
+
+// Maze dropdown element id -> create_maze style
+const MAZE_DROPDOWNS = {
+    RecursiveDivisionDropdown: "balanced",
+    RecursiveDivisionHorizontalDropdown: "horizontal",
+    RecursiveDivisionVerticalDropdown: "vertical",
+};
 
 // Board attributes
 function Board(height, width){
@@ -704,31 +711,14 @@ Board.prototype.toggleButtons = function() {
         }
         
         // Create Maze Button
-        document.getElementById('RecursiveDivisionDropdown').onclick = () => {
-            board.resetBoard();
-            board.toggleButtons();
+        for (const [dropdownId, style] of Object.entries(MAZE_DROPDOWNS)) {
+            document.getElementById(dropdownId).onclick = () => {
+                board.resetBoard();
+                board.toggleButtons();
 
-            create_perimeterWall(board);
-            create_recursive_divisionMaze(board, 2, board.height - 3, 2, board.width - 3, "horizontal", false);
-            board.animate(board.animateWalls);
-        }
-
-        document.getElementById('RecursiveDivisionHorizontalDropdown').onclick = () => {
-            board.resetBoard();
-            board.toggleButtons();
-
-            create_perimeterWall(board);
-            create_recursive_horizontal(board, 2, board.height - 3, 2, board.width - 3, "horizontal", false);
-            board.animate(board.animateWalls);
-        }
-
-        document.getElementById('RecursiveDivisionVerticalDropdown').onclick = () => {
-            board.resetBoard();
-            board.toggleButtons();
-
-            create_perimeterWall(board);
-            create_recursive_vertical(board, 2, board.height - 3, 2, board.width - 3, "vertical", false);
-            board.animate(board.animateWalls);
+                create_maze(board, style);
+                board.animate(board.animateWalls);
+            }
         }
         // Create Maze Button End
 
@@ -810,8 +800,9 @@ Board.prototype.toggleButtons = function() {
         // document.getElementById('AnimationSpeedVeryFastDropdown').onclick = null
 
         // Off Maze
-        document.getElementById('RecursiveDivisionHorizontalDropdown').onclick = null
-        document.getElementById('RecursiveDivisionHorizontalDropdown').onclick = null
+        for (const dropdownId of Object.keys(MAZE_DROPDOWNS)) {
+            document.getElementById(dropdownId).onclick = null
+        }
         
         // Off Algo selection
         document.getElementById('BFSDropdown').onclick = null
