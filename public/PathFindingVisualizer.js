@@ -18,8 +18,6 @@ function Board(height, width){
 
     // For Algorithm
 	this.isButtonsActivated = null;
-	this.neighborsNode = {}; // {id: set of neighbors}
-	this.nodes_visited = {}
 
 	// For Event listeners
 	this.keyDown = {}; // Detect Pressed Key on Keyboard
@@ -466,54 +464,6 @@ Board.prototype.boardEventListener = function(){
 };
 ////////////////////////////////////---------EVENT LISTENER ENDS---------////////////////////////////////////
 
-// Connect Nodes
-Board.prototype.connectNodes = function(){
-	let board = this
-	let directions = [[0,1],[1,0],[0,-1],[-1,0]];
-	let visited = new Set();
-	let queue = [];
-	let nodeNeighbors = new Set();
-
-	queue.push('0-0');
-	visited.add('0-0');
-	board.neighborsNode['0-0'] = [];
-
-	while (queue){
-		let current = queue.shift();
-        let current_node = board.getNodesByID[current]
-		current = current.split("-");
-		let x = parseInt(current[0]);
-		let y = parseInt(current[1]);
-		nodeNeighbors = new Set();
-
-		for (let direction=0; direction < directions.length; direction++){
-			let dx = directions[direction][0];
-			let dy = directions[direction][1];
-			let nx = x;
-			let ny = y;
-
-			if (0 <= nx + dx && nx + dx < board.height && 0 <= ny + dy && ny + dy < board.width){
-				nx += dx;
-				ny += dy;
-				
-				nodeNeighbors.add(board.getNodefromBoard(`${nx}-${ny}`));
-
-				if (!visited.has(`${nx}-${ny}`)){
-					queue.push(`${nx}-${ny}`);
-					visited.add(`${nx}-${ny}`);
-				}
-			}
-		}
-		board.neighborsNode[`${current[0]}-${current[1]}`] = Array.from(nodeNeighbors);
-        current_node.neighborsNode = board.neighborsNode[`${current[0]}-${current[1]}`] // Insert neighbor to node object
-
-		if (x === board.height - 1 && y === board.width - 1){
-			break;
-		}
-	}
-}
-// Connect Nodes End
-
 // Animation
 Board.prototype.animate = function(nodesToAnimate){ //visitedNodes is an array of nodes
 	let board = this;
@@ -627,15 +577,6 @@ Board.prototype.resetBoard = function(){
         // Reset the Node status
 		currentNode.status = "unvisited";
 		currentNode.weight = 1;
-        
-		currentNode.previousNode = null;
-		currentNode.path = null;
-
-		currentNode.direction = null;
-		currentNode.storedDirection = null;
-		currentNode.distance = Infinity;
-		currentNode.totalDistance = Infinity;
-		currentNode.heuristicDistance = null;
 	});
 
     // Reset the board status
@@ -890,8 +831,7 @@ Board.prototype.toggleButtons = function() {
 
 
 Board.prototype.initialise = function(){
-	this.createGrid(); 
-	this.connectNodes();
+	this.createGrid();
 	this.boardEventListener();
     this.nextPreviousTutorial();
 };
@@ -908,8 +848,6 @@ Board.prototype.resizeboard = function(height, width){
 
     // For Algorithm
 	this.isButtonsActivated = true; //Turn on button
-	this.neighborsNode = {}; // {id: set of neighbors}
-	this.nodes_visited = {}
 
 	// For Event listeners
 	this.keyDown = {}; // Detect Pressed Key on Keyboard
@@ -930,7 +868,6 @@ Board.prototype.resizeboard = function(height, width){
 	this.speed = 1;
 
     this.createGrid();
-	this.connectNodes();
 	this.boardEventListener();
 }
 
