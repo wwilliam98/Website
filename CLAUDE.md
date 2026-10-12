@@ -45,6 +45,13 @@ npm run service
 npm run service:test    # pytest
 ```
 
+### Deployment
+There is no CI/CD: merging to `main` does not deploy, and the only automated PR check
+is GitGuardian (secret scanning). Production needs two long-running processes, each
+kept alive by a process manager (e.g. pm2 or systemd): `npm start` (Express, public)
+and the pathfinding service (localhost only — never expose :8000). Run the service
+without `--reload` in production; `npm run service` includes it for development.
+
 ## Architecture
 
 This is a multi-service app:
@@ -58,6 +65,7 @@ This is a multi-service app:
 - `/generate_chat` — proxies to OpenAI `gpt-4o-mini` with a hardcoded system prompt that impersonates the owner for the portfolio chat feature; returns `{result}` on success, `{error}` with HTTP 500 on failure. The system prompt contains contact info (phone, email) — keep it in sync with `ContactMe.js`
 - `/send_contactme_email` — sends contact form submissions via Gmail SMTP (nodemailer); returns `{success}` or `{error}`
 - `/api/pathfind` — POST proxy to the FastAPI service (`PATHFINDING_SERVICE_URL`, default `http://localhost:8000`) via native fetch with 5s timeout; passes upstream status/body through (including 422 validation errors), returns 503 `{error}` when the service is down
+- `POST /solve` (logged-in; increments the user's `solvedSudoku` count) and `POST /guest_solve` — Sudoku solving via the backtracking `SolveBoard()` in `authController.js`. Both reject input that fails `isValidBoardShape()` (9×9 integers 0–9) with a 400 before solving, because `SolveBoard` indexes cells without bounds checks; the frontend caller is `public/script.js`
 - Legacy routes: `/SudokuSolver` (auth-protected, EJS), `/PathFindingVisualizer` (EJS), `/oldPortfolio` (EJS)
 - `/dare-mighty-things` route is broken (references an undefined `request`) — known, leave unless asked
 
@@ -94,3 +102,21 @@ This is a multi-service app:
 - Express 4 doesn't catch errors thrown in `async` handlers or callbacks, and Node 20 exits on an unhandled rejection — every failure path in a handler must send a response, or one bad request takes the whole server down
 - Production build must stay warning-free — unused imports fail this bar
 - Mobile inputs must render at ≥16px font size on small screens (e.g. `text-base sm:text-sm`) — iOS Safari auto-zooms the viewport when focusing an input smaller than 16px. Don't fix this with `maximum-scale=1` in the viewport meta; that disables pinch-to-zoom and hurts accessibility
+- Testing the visualizer in a browser: drive the app's real handlers rather than synthetic DOM events. Hold a key with `window.onkeydown({keyCode})` (W=87 wall, 1–5=49–53 weights, R=82 erase), paint a cell with `cell.onmousedown({preventDefault(){}, target: cell})` then `cell.onmouseup({})`, and drag start/target with mousedown on it → `onmouseenter({target})` on the destination → `onmouseup`. A run is finished when `#show_display_status` stops reading "Board Animating ..."; a full-board BFS/Dijkstra animation takes ~10s, so split long test sequences across calls
+
+## Dependency audits
+
+- Backend: `npm audit fix` resolves most findings; `jsonwebtoken` needs a major upgrade to v9
+- `portfolio/`: nearly all findings are Create React App build tooling (webpack, jest, babel, dev server), not code shipped to visitors. **Never run `npm audit fix --force` there** — it installs `react-scripts@0.0.0` and breaks the build. The real fix is migrating off CRA (deprecated), e.g. to Vite
+- `pathfinding-service/requirements.txt` is unpinned, so installs float to the latest versions; check with `pip-audit`
+
+## Known open issues (from the October 2026 security audit)
+
+Fixed since the audit: unauthenticated requests crashing the server via the Sudoku endpoints. Still open:
+- No rate limiting on `/generate_chat` (anyone can spend the OpenAI budget), `/send_contactme_email`, or `/login`
+- Contact-form fields are interpolated into the notification email's HTML unescaped (`app.js`)
+- Login's `findOne({email})` accepts MongoDB query operators — coerce `email` to a string
+- The JWT cookie lacks `secure` and `sameSite`; logout is a GET; no security headers (e.g. helmet)
+- A deliberately hard Sudoku can keep the backtracking solver busy and stall other requests (no step/time cap)
+- `PathFindingVisualizerMain.ejs` loads outdated jQuery 3.2.1 and Bootstrap 3.3.7/4.0.0 (known XSS CVEs) from CDNs, and 2 of its 5 CDN tags lack SRI hashes; `public/.DS_Store` is publicly served
+- Pressing a key while dragging the start/target node throws in the console (`window.onkeydown` calls `.charAt` on a node object)
