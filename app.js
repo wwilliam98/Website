@@ -1,11 +1,18 @@
 const path = require('path');
 const express = require ('express');
 const app = express();
+// Behind a reverse proxy/load balancer, set TRUST_PROXY to the number of proxy
+// hops so rate limits see the visitor's IP. Leave unset otherwise: trusting
+// X-Forwarded-For without a proxy lets clients spoof their IP past the limits.
+if (process.env.TRUST_PROXY) {
+  app.set('trust proxy', Number(process.env.TRUST_PROXY));
+}
 const mongoose = require("mongoose");
 const config = require('./config');
 const authRoutes = require ('./routes/authRoutes');
 const cookieParser = require ('cookie-parser');
 const {requireAuth, checkUser} = require ('./midleware/authMiddleware');
+const {chatLimiters, contactLimiters} = require('./midleware/rateLimiters');
 const jwt = require ('jsonwebtoken');
 const User = require ('./models/user');
 const nodemailer = require('nodemailer');
@@ -55,7 +62,7 @@ app.get('/dare-mighty-things', function(req, res){
   request('http://localhost:5000/')
 });
 
-app.post('/send_contactme_email', function(req, res){
+app.post('/send_contactme_email', contactLimiters, function(req, res){
   const { name, email, subject, message } = req.body;
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -146,7 +153,7 @@ Appropriate Behavior: Avoid personal opinions; do not offer medical, legal, or f
 Goal: To be a helpful, friendly assistant, ensuring all interactions are useful, respectful, and relevant to your request.
 `;
 
-app.post("/generate_chat", async (req, res) => {
+app.post("/generate_chat", chatLimiters, async (req, res) => {
   try {
       const { prompt } = req.body;
 

@@ -20,11 +20,13 @@ function ContactMe() {
             body: JSON.stringify({ name, email, subject, message }),
             headers: { 'Content-Type': 'application/json' },
         })
-            .then((response) => response.json())
-            .then((data) => {
+            .then(async (response) => ({ status: response.status, data: await response.json() }))
+            .then(({ status, data }) => {
                 if (data.success) {
                     setMessage("Your message has been sent successfully!");
                     form.reset();
+                } else if (status === 429 && data.error) {
+                    setMessage(data.error);
                 } else {
                     setMessage("Failed to send message. Please try again.");
                 }
