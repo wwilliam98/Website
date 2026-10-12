@@ -11,6 +11,15 @@ const createToken = (id) => {
     });
 }
 
+// SolveBoard indexes board[0..8][0..8] without checks, so anything else throws.
+function isValidBoardShape(board){
+  return Array.isArray(board) && board.length === 9 && board.every(row =>
+    Array.isArray(row) && row.length === 9 && row.every(cell =>
+      Number.isInteger(cell) && cell >= 0 && cell <= 9));
+}
+
+const INVALID_BOARD = { error: 'Board must be a 9x9 grid of integers 0-9' };
+
 function SolveBoard(input){
   //Solve the Board
   var Board = new Object();
@@ -220,22 +229,40 @@ module.exports.logout_get = async (req, res) =>{
 
 module.exports.regular_solve_post = async(req, res) =>{
     var input_board = req.body;
+    if (!isValidBoardShape(input_board)) {
+        return res.status(400).json(INVALID_BOARD);
+    }
     var data = SolveBoard(input_board);
     res.send(data);
 }
 
+// Express 4 doesn't catch errors thrown in async callbacks, and Node exits on
+// an unhandled rejection — every failure path here must send a response.
 module.exports.solve_post = async (req, res) =>{
   var input = req.body;
+  if (!isValidBoardShape(input)) {
+    return res.status(400).json(INVALID_BOARD);
+  }
   const token = req.cookies.jwt;
   jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
-    const user = await User.findById(decodedToken.id);
-    const prevCount = user.solvedSudoku;
-    const newCount = prevCount + 1;
-    console.log(newCount);
-    await User.findByIdAndUpdate({_id: user.id}, {solvedSudoku: newCount});
+    if (err) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+    try {
+      const user = await User.findById(decodedToken.id);
+      if (!user) {
+        return res.status(401).json({ error: 'Not logged in' });
+      }
+      const prevCount = user.solvedSudoku;
+      const newCount = prevCount + 1;
+      await User.findByIdAndUpdate({_id: user.id}, {solvedSudoku: newCount});
 
-    var data = SolveBoard(input);
-    res.send([data, newCount]);
+      var data = SolveBoard(input);
+      res.send([data, newCount]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to solve board' });
+    }
   });
 }
 
