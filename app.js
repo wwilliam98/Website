@@ -24,7 +24,7 @@ var connectionString = config.db.mongoKey;
 var JWT_SECRET = config.db.JWT_SECRET;
 var openai_key = config.openai.key;
 
-mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(connectionString)
     .then((result) => console.log("connected to port 3000"), app.listen(3000))
     .catch((err) => console.log(err));
 
@@ -146,12 +146,19 @@ Appropriate Behavior: Avoid personal opinions; do not offer medical, legal, or f
 Goal: To be a helpful, friendly assistant, ensuring all interactions are useful, respectful, and relevant to your request.
 `;
 
+const MAX_PROMPT_LENGTH = 1000;
+
 app.post("/generate_chat", async (req, res) => {
   try {
       const { prompt } = req.body;
+      // Cap input and output size so one request can't run up a large OpenAI bill.
+      if (typeof prompt !== 'string' || !prompt.trim() || prompt.length > MAX_PROMPT_LENGTH) {
+          return res.status(400).json({ error: `Message must be 1-${MAX_PROMPT_LENGTH} characters` });
+      }
 
       const response = await openai.chat.completions.create({
           model: "gpt-4o-mini",
+          max_tokens: 500,
           messages: [
             { role: "system", content: `${systemPrompt}` },
             { role: "user", store: true, content: prompt }],
