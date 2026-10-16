@@ -1,11 +1,18 @@
 const path = require('path');
 const express = require ('express');
 const app = express();
+// Behind a reverse proxy/load balancer, set TRUST_PROXY to the number of proxy
+// hops so rate limits see the visitor's IP. Leave unset otherwise: trusting
+// X-Forwarded-For without a proxy lets clients spoof their IP past the limits.
+if (process.env.TRUST_PROXY) {
+  app.set('trust proxy', Number(process.env.TRUST_PROXY));
+}
 const mongoose = require("mongoose");
 const config = require('./config');
 const authRoutes = require ('./routes/authRoutes');
 const cookieParser = require ('cookie-parser');
 const {requireAuth, checkUser} = require ('./midleware/authMiddleware');
+const {chatLimiters, contactLimiters} = require('./midleware/rateLimiters');
 const jwt = require ('jsonwebtoken');
 const User = require ('./models/user');
 const nodemailer = require('nodemailer');
@@ -38,8 +45,17 @@ app.get('/', function(req, res){
 app.get('/SudokuSolver', requireAuth, function(req, res){
   const token = req.cookies.jwt;
   jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
-    const user = await User.findById(decodedToken.id);
-    res.render('index', {count: user.solvedSudoku});
+    // Async callback: an uncaught throw exits Node, so every path must respond.
+    try {
+      const user = await User.findById(decodedToken.id);
+      if (!user) {
+        return res.redirect('/login');
+      }
+      res.render('index', {count: user.solvedSudoku});
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Something went wrong');
+    }
   })
 });
 
@@ -55,7 +71,7 @@ app.get('/dare-mighty-things', function(req, res){
   request('http://localhost:5000/')
 });
 
-app.post('/send_contactme_email', function(req, res){
+app.post('/send_contactme_email', contactLimiters, function(req, res){
   const { name, email, subject, message } = req.body;
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -148,7 +164,7 @@ Goal: To be a helpful, friendly assistant, ensuring all interactions are useful,
 
 const MAX_PROMPT_LENGTH = 1000;
 
-app.post("/generate_chat", async (req, res) => {
+app.post("/generate_chat", chatLimiters, async (req, res) => {
   try {
       const { prompt } = req.body;
       // Cap input and output size so one request can't run up a large OpenAI bill.
