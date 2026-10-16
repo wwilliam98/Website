@@ -1,7 +1,15 @@
 import Node from './PathFindingNode.js'
-import {create_recursive_divisionMaze, create_recursive_horizontal, create_recursive_vertical, create_perimeterWall} from './createMaze.js'
-import {Dijkstra, AStar} from './PathfindingWeightedAlgorithm.js'
-import {BFS, DFS} from './PathfindingUnweightedAlgorithm.js'
+import {create_maze} from './createMaze.js'
+import {PathfindingApiClient, PathfindingApiError, serializeBoard} from './PathfindingApiClient.js'
+
+const apiClient = new PathfindingApiClient();
+
+// Maze dropdown element id -> create_maze style
+const MAZE_DROPDOWNS = {
+    RecursiveDivisionDropdown: "balanced",
+    RecursiveDivisionHorizontalDropdown: "horizontal",
+    RecursiveDivisionVerticalDropdown: "vertical",
+};
 
 // Board attributes
 function Board(height, width){
@@ -17,8 +25,6 @@ function Board(height, width){
 
     // For Algorithm
 	this.isButtonsActivated = null;
-	this.neighborsNode = {}; // {id: set of neighbors}
-	this.nodes_visited = {}
 
 	// For Event listeners
 	this.keyDown = {}; // Detect Pressed Key on Keyboard
@@ -465,54 +471,6 @@ Board.prototype.boardEventListener = function(){
 };
 ////////////////////////////////////---------EVENT LISTENER ENDS---------////////////////////////////////////
 
-// Connect Nodes
-Board.prototype.connectNodes = function(){
-	let board = this
-	let directions = [[0,1],[1,0],[0,-1],[-1,0]];
-	let visited = new Set();
-	let queue = [];
-	let nodeNeighbors = new Set();
-
-	queue.push('0-0');
-	visited.add('0-0');
-	board.neighborsNode['0-0'] = [];
-
-	while (queue){
-		let current = queue.shift();
-        let current_node = board.getNodesByID[current]
-		current = current.split("-");
-		let x = parseInt(current[0]);
-		let y = parseInt(current[1]);
-		nodeNeighbors = new Set();
-
-		for (let direction=0; direction < directions.length; direction++){
-			let dx = directions[direction][0];
-			let dy = directions[direction][1];
-			let nx = x;
-			let ny = y;
-
-			if (0 <= nx + dx && nx + dx < board.height && 0 <= ny + dy && ny + dy < board.width){
-				nx += dx;
-				ny += dy;
-				
-				nodeNeighbors.add(board.getNodefromBoard(`${nx}-${ny}`));
-
-				if (!visited.has(`${nx}-${ny}`)){
-					queue.push(`${nx}-${ny}`);
-					visited.add(`${nx}-${ny}`);
-				}
-			}
-		}
-		board.neighborsNode[`${current[0]}-${current[1]}`] = Array.from(nodeNeighbors);
-        current_node.neighborsNode = board.neighborsNode[`${current[0]}-${current[1]}`] // Insert neighbor to node object
-
-		if (x === board.height - 1 && y === board.width - 1){
-			break;
-		}
-	}
-}
-// Connect Nodes End
-
 // Animation
 Board.prototype.animate = function(nodesToAnimate){ //visitedNodes is an array of nodes
 	let board = this;
@@ -626,15 +584,6 @@ Board.prototype.resetBoard = function(){
         // Reset the Node status
 		currentNode.status = "unvisited";
 		currentNode.weight = 1;
-        
-		currentNode.previousNode = null;
-		currentNode.path = null;
-
-		currentNode.direction = null;
-		currentNode.storedDirection = null;
-		currentNode.distance = Infinity;
-		currentNode.totalDistance = Infinity;
-		currentNode.heuristicDistance = null;
 	});
 
     // Reset the board status
@@ -713,30 +662,29 @@ Board.prototype.toggleButtons = function() {
         // Change board size
         document.getElementById("changeBoardSizeSlider").removeAttribute("disabled");
         
-        // Run Algorithm
-        document.getElementById('VisualizeButtonli').onclick = () => {
+        // Run Algorithm — the pathfinding service computes; the board animates
+        document.getElementById('VisualizeButtonli').onclick = async () => {
             if (!board.selectedAlgorithm){
                 document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Pick An Algorithm</button>`;
-            } else{
+                return;
+            }
+            board.toggleButtons();
+            board.clearPath();
+            try {
+                const result = await apiClient.findPath(board.selectedAlgorithm, serializeBoard(board));
+                board.nodesToAnimate = result.visited_order.map(id => {
+                    const node = board.getNodesByID[id];
+                    node.status = "visited"; // what animateStatus/clearPath key off
+                    return node;
+                });
+                board.AnimateFoundPath = result.path.map(id => board.getNodesByID[id]);
+                board.animateStatus(board.nodesToAnimate);
+            } catch (error) {
+                // Re-enable FIRST: the enable branch resets the status bar,
+                // so the error message must be written after it.
                 board.toggleButtons();
-                
-                board.clearPath()
-                if (board.selectedAlgorithm === "BFS") {
-                    BFS(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }
-                else if (board.selectedAlgorithm === "DFS") {
-                    DFS(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }
-                else if (board.selectedAlgorithm === "Dijkstra") {
-                    Dijkstra(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }
-                else if (board.selectedAlgorithm === "AStar") {
-                    AStar(board);
-                    board.animateStatus(board.nodesToAnimate)
-                }                
+                const message = error instanceof PathfindingApiError ? error.message : 'Pathfinding failed';
+                document.getElementById("show_display_status").innerHTML = `<span class="circle-icon"></span> ${message}`;
             }
         }
 
@@ -763,31 +711,14 @@ Board.prototype.toggleButtons = function() {
         }
         
         // Create Maze Button
-        document.getElementById('RecursiveDivisionDropdown').onclick = () => {
-            board.resetBoard();
-            board.toggleButtons();
+        for (const [dropdownId, style] of Object.entries(MAZE_DROPDOWNS)) {
+            document.getElementById(dropdownId).onclick = () => {
+                board.resetBoard();
+                board.toggleButtons();
 
-            create_perimeterWall(board);
-            create_recursive_divisionMaze(board, 2, board.height - 3, 2, board.width - 3, "horizontal", false);
-            board.animate(board.animateWalls);
-        }
-
-        document.getElementById('RecursiveDivisionHorizontalDropdown').onclick = () => {
-            board.resetBoard();
-            board.toggleButtons();
-
-            create_perimeterWall(board);
-            create_recursive_horizontal(board, 2, board.height - 3, 2, board.width - 3, "horizontal", false);
-            board.animate(board.animateWalls);
-        }
-
-        document.getElementById('RecursiveDivisionVerticalDropdown').onclick = () => {
-            board.resetBoard();
-            board.toggleButtons();
-
-            create_perimeterWall(board);
-            create_recursive_vertical(board, 2, board.height - 3, 2, board.width - 3, "vertical", false);
-            board.animate(board.animateWalls);
+                create_maze(board, style);
+                board.animate(board.animateWalls);
+            }
         }
         // Create Maze Button End
 
@@ -869,8 +800,9 @@ Board.prototype.toggleButtons = function() {
         // document.getElementById('AnimationSpeedVeryFastDropdown').onclick = null
 
         // Off Maze
-        document.getElementById('RecursiveDivisionHorizontalDropdown').onclick = null
-        document.getElementById('RecursiveDivisionHorizontalDropdown').onclick = null
+        for (const dropdownId of Object.keys(MAZE_DROPDOWNS)) {
+            document.getElementById(dropdownId).onclick = null
+        }
         
         // Off Algo selection
         document.getElementById('BFSDropdown').onclick = null
@@ -890,8 +822,7 @@ Board.prototype.toggleButtons = function() {
 
 
 Board.prototype.initialise = function(){
-	this.createGrid(); 
-	this.connectNodes();
+	this.createGrid();
 	this.boardEventListener();
     this.nextPreviousTutorial();
 };
@@ -908,8 +839,6 @@ Board.prototype.resizeboard = function(height, width){
 
     // For Algorithm
 	this.isButtonsActivated = true; //Turn on button
-	this.neighborsNode = {}; // {id: set of neighbors}
-	this.nodes_visited = {}
 
 	// For Event listeners
 	this.keyDown = {}; // Detect Pressed Key on Keyboard
@@ -930,7 +859,6 @@ Board.prototype.resizeboard = function(height, width){
 	this.speed = 1;
 
     this.createGrid();
-	this.connectNodes();
 	this.boardEventListener();
 }
 
