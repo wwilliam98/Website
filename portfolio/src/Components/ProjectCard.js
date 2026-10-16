@@ -55,14 +55,16 @@ function Media({ image, poster, title, link, featured }) {
   )
 }
 
-function ProjectCard({ title, image, poster, metric, description, summary, link, tags, featured, delay = 0 }) {
+function ProjectCard({ id, title, image, poster, metric, description, summary, link, tags, featured, delay = 0 }) {
+  // id="project-<id>" is the anchor the chat assistant links to; :target highlights the card on arrival
   return (
     <motion.div
+      id={`project-${id}`}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
-      className='flex flex-col rounded-2xl bg-white/5 border border-white/10 overflow-hidden hover:border-[#38BDF8]/40 transition-colors duration-300'
+      className='scroll-mt-24 flex flex-col rounded-2xl bg-white/5 border border-white/10 overflow-hidden hover:border-[#38BDF8]/40 target:border-[#38BDF8] target:ring-2 target:ring-[#38BDF8]/40 transition-colors duration-300'
     >
       <Media image={image} poster={poster} title={title} link={link} featured={featured} />
 

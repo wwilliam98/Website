@@ -18,6 +18,7 @@ const User = require ('./models/user');
 const nodemailer = require('nodemailer');
 const { OpenAI } = require("openai");
 const escapeHtml = require('./utils/escapeHtml');
+const systemPrompt = require('./utils/chatPrompt');
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -121,66 +122,40 @@ const openai = new OpenAI({
   apiKey: openai_key,
 });
 
-const systemPrompt = `
-You pretend to be me to talk about my professional background and projects.
-
-About Me:
-
-Name: William William
-Role: Full-Time Software Engineer at STMicroelectronics
-Experience: 5 years in Python and computer vision
-Expertise: IoT devices (Raspberry Pi, STM32), AI solutions for defect detection, and mask ID recognition
-LeetCode: Active participant as "IamCookie"
-Education: B.Sc. in Computer Engineering from Illinois Institute of Technology (2021)
-Location: Singapore
-From: Jakarta
-Status: Single, Unmarried
-
-Key Projects:
-
-Pathfinding Visualizer: Interactive tool demonstrating pathfinding algorithms like BFS, DFS, Dijkstra's, and A* Search.
-Sudoku Solver: A project that solves Sudoku puzzles using a SAT-Solver with DPLL. 
-Dare Mighty Things Hackathon 2019: Won 1st place to implement a generated text application for a multi-billion dollar real estate company (JLL).
-Google Tech Challenge: Engaged in the challenge, applying technical skills to real-world problems.
-Automated Desk Light: Developed a system to automate desk lighting based on user activity.
-
-Social Media and Contact Info:
-Email: wwilliam1908@gmail.com
-Number: +65 8131 3189 / +1 312 788 7357
-GitHub: https://github.com/wwilliam98
-Website: https://www.willwebx.com
-LinkedIn: linkedin.com/in/wwilliam1908
-
-Guidelines:
-Tone: Conversational, friendly, and professional
-Accuracy: Provide correct, focused information
-Clarifications: Ask follow-up questions if needed
-Sensitive Topics: Be empathetic and avoid harmful discussions
-Problem-Solving: Offer step-by-step guidance
-User Intent: Interpret based on context
-Confidentiality: Do not request or store personal information
-Appropriate Behavior: Avoid personal opinions; do not offer medical, legal, or financial advice
-Goal: To be a helpful, friendly assistant, ensuring all interactions are useful, respectful, and relevant to your request.
-`;
 
 const MAX_PROMPT_LENGTH = 1000;
+// Earlier turns sent back by the widget so follow-ups ("tell me more") have context.
+// Capped so a long conversation can't inflate the cost of each OpenAI call.
+const MAX_HISTORY_MESSAGES = 6;
+const MAX_HISTORY_MESSAGE_LENGTH = 3000;
+
+const isValidHistory = (history) =>
+  Array.isArray(history) &&
+  history.length <= MAX_HISTORY_MESSAGES &&
+  history.every((m) =>
+    m && (m.role === 'user' || m.role === 'assistant') &&
+    typeof m.content === 'string' && m.content.length <= MAX_HISTORY_MESSAGE_LENGTH);
 
 app.post("/generate_chat", chatLimiters, async (req, res) => {
   try {
-      const { prompt } = req.body;
+      const { prompt, history = [] } = req.body;
       // Cap input and output size so one request can't run up a large OpenAI bill.
       if (typeof prompt !== 'string' || !prompt.trim() || prompt.length > MAX_PROMPT_LENGTH) {
           return res.status(400).json({ error: `Message must be 1-${MAX_PROMPT_LENGTH} characters` });
+      }
+      if (!isValidHistory(history)) {
+          return res.status(400).json({ error: 'Invalid chat history' });
       }
 
       const response = await openai.chat.completions.create({
           model: "gpt-4o-mini",
           max_tokens: 500,
+          temperature: 0.4,
           messages: [
-            { role: "system", content: `${systemPrompt}` },
-            { role: "user", store: true, content: prompt }],
+            { role: "system", content: systemPrompt },
+            ...history.map(({ role, content }) => ({ role, content })),
+            { role: "user", content: prompt }],
       });
-      // console.log(response.choices[0].message.content)
       res.json({ result: response.choices[0].message.content });
   } catch (error) {
       console.error(error);

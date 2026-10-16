@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { SocialIcon } from 'react-social-icons';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import content from '../data/content.json';
 
 const navLinks = [
     { href: '#about', label: 'About' },
@@ -10,11 +11,9 @@ const navLinks = [
     { href: '#contact', label: 'Contact' },
 ];
 
-const socials = [
-    'https://www.linkedin.com/in/wwilliam1908',
-    'https://github.com/wwilliam98',
-    'https://leetcode.com/IamCookie/',
-];
+const socials = content.links
+    .filter(({ id }) => ['linkedin', 'github', 'leetcode'].includes(id))
+    .map(({ url }) => url);
 
 function Header() {
     const [activeSection, setActiveSection] = useState('');

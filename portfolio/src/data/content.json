@@ -1,0 +1,141 @@
+{
+  "profile": {
+    "name": "William",
+    "role": "Software Engineer II at STMicroelectronics",
+    "location": "Singapore",
+    "hometown": "Jakarta, Indonesia",
+    "education": "B.Sc. in Computer Engineering, Illinois Institute of Technology (2021)",
+    "summary": "Software engineer with 5 years of programming experience, building AI and computer-vision systems for semiconductor manufacturing at STMicroelectronics, including an automated wafer inspection pipeline that saves S$1M a year.",
+    "highlights": [
+      "Top 10 finalist in the Google Tech Challenge at Google's Chicago headquarters",
+      "1st place at the Dare Mighty Things hackathon (2019)",
+      "Leads a 100-person AI community at STMicroelectronics"
+    ],
+    "interests": "Walks and badminton",
+    "goal": "Become a technical lead and mentor junior developers"
+  },
+  "links": [
+    { "id": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/in/wwilliam1908" },
+    { "id": "github", "label": "GitHub", "url": "https://github.com/wwilliam98" },
+    { "id": "leetcode", "label": "LeetCode", "url": "https://leetcode.com/IamCookie/" },
+    { "id": "email", "label": "Email", "url": "mailto:wwilliam1908@gmail.com" },
+    { "id": "contact", "label": "Contact form", "url": "#contact" }
+  ],
+  "experiences": [
+    {
+      "logo": "st",
+      "company": "STMicroelectronics",
+      "title": "Software Engineer II",
+      "period": "May 2024 – Present",
+      "tags": ["Python", "OpenCV", "YOLO", "LSTM"],
+      "bullets": [
+        "Designed and deployed AI applications for cross-functional teams using CNN architectures.",
+        "Built AI-driven computer vision solutions with Raspberry Pi, Python, and YOLO, automating defect detection.",
+        "Developed LSTM predictive models for Epitaxy gas flow planning, improving process efficiency and scheduling accuracy.",
+        "Lead a 100-person AI community, running quarterly training on Python, ML, and computer vision."
+      ]
+    },
+    {
+      "logo": "st",
+      "company": "STMicroelectronics",
+      "title": "Software Engineer",
+      "period": "May 2022 – April 2024",
+      "tags": ["Python", "PHP", "JavaScript", "Perl", "MySQL"],
+      "bullets": [
+        "Designed RESTful APIs to integrate data across teams, improving system interoperability.",
+        "Built and maintained PHP/MySQL websites for the Reticle Assembly Team.",
+        "Migrated Excel data to MySQL with Python Pandas, streamlining data management.",
+        "Visualized production statistics on internal websites using Pandas and Matplotlib."
+      ]
+    },
+    {
+      "logo": "openslot",
+      "company": "OpenSlot Inc.",
+      "title": "Quality Assurance",
+      "period": "Summer 2018 & 2019",
+      "tags": ["JavaScript", "HTML", "Testing"],
+      "bullets": [
+        "Identified and documented application faults, reducing defects by 50%.",
+        "Designed test plans with doctors and dentists to align functionality with business needs.",
+        "Provided usability and functionality recommendations that improved application features."
+      ]
+    }
+  ],
+  "skillGroups": [
+    { "category": "Languages", "skills": ["Python", "JavaScript", "Java", "C++", "PHP", "Perl"] },
+    { "category": "AI & data", "skills": ["OpenCV", "Pandas", "MySQL", "MongoDB"] },
+    { "category": "Web", "skills": ["React", "Node.js", "Express", "Tailwind", "HTML", "CSS"] },
+    { "category": "Tools", "skills": ["Linux"] }
+  ],
+  "featuredProjects": [
+    {
+      "id": "ocr",
+      "title": "Optical Character Recognition",
+      "metric": "S$1M/yr saved · −90% manufacturing scrap",
+      "tags": ["Python", "OpenCV", "OCR"],
+      "description": [
+        "Architected a Python-based wafer ID detection pipeline replacing legacy manual verification, eliminating human error and vendor reliance.",
+        "Automated wafer ID verification eliminated production mismatches.",
+        "Engineered precise data extraction for industrial files, improving document quality control."
+      ]
+    },
+    {
+      "id": "wafer-alignment",
+      "title": "Wafer Alignment",
+      "metric": "Real-time computer-vision monitoring",
+      "tags": ["Python", "OpenCV"],
+      "description": [
+        "Real-time monitoring verifies wafer positioning during loading, eliminating costly drops from vacuum pin misalignment.",
+        "CV alignment system ensures precise placement on 3 vacuum chucks, preventing scrap.",
+        "Automated alignment checks reduced material waste and improved production yield."
+      ]
+    },
+    {
+      "id": "pathfinding-visualizer",
+      "title": "Pathfinding Visualizer",
+      "metric": "Live demo — try it yourself",
+      "link": "/PathFindingVisualizer",
+      "tags": ["JavaScript", "Dijkstra", "A*"],
+      "description": [
+        "Interactive web app visualizing shortest paths between two nodes.",
+        "Implements Dijkstra, A*, BFS, and DFS with OOP JavaScript and jQuery.",
+        "Deployed on AWS EC2."
+      ]
+    }
+  ],
+  "moreProjects": [
+    {
+      "id": "sudoku-solver",
+      "title": "Sudoku Solver",
+      "link": "/SudokuSolver",
+      "summary": "Full-stack app with login that solves sudoku via a backtracking algorithm. Node.js, MongoDB, AWS EC2.",
+      "tags": ["Node.js", "MongoDB"]
+    },
+    {
+      "id": "dare-mighty-things",
+      "title": "Dare Mighty Things 2019",
+      "summary": "1st place hackathon win — property description text generation for JLL using Flask and Google Cloud.",
+      "tags": ["Python", "Flask", "GCP"]
+    },
+    {
+      "id": "google-tech-challenge",
+      "title": "Google Tech Challenge",
+      "link": "https://techchallenge.withgoogle.com/",
+      "summary": "Top 10 finalist — led a team of 5 through coding challenges and riddles at Google Chicago.",
+      "tags": ["Algorithms", "Teamwork"]
+    },
+    {
+      "id": "old-portfolio",
+      "title": "Old Portfolio",
+      "link": "/oldPortfolio",
+      "summary": "Interactive canvas portfolio — walk a character around and interact with objects. Collision detection included.",
+      "tags": ["JavaScript", "Canvas"]
+    },
+    {
+      "id": "desk-light",
+      "title": "Automated Desk Light",
+      "summary": "iOS-controlled desk light. Raspberry Pi 4 client with Firebase real-time sync and a Swift mobile UI.",
+      "tags": ["Raspberry Pi", "Swift", "Firebase"]
+    }
+  ]
+}
