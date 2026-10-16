@@ -53,11 +53,15 @@ function ChatWithAI() {
 
             const data = await res.json();
             if (!res.ok || !data.result) {
-                throw new Error(data.error || `Request failed with status ${res.status}`);
+                const error = new Error(data.error || `Request failed with status ${res.status}`);
+                // Rate-limit messages tell the visitor how long to wait; other errors stay generic
+                error.showToUser = res.status === 429 && Boolean(data.error);
+                throw error;
             }
             setMessages((prev) => [...prev, { role: "assistant", animate: true, content: data.result }]);
         } catch (error) {
-            setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong. Please try again." }]);
+            const content = error.showToUser ? error.message : "Sorry, something went wrong. Please try again.";
+            setMessages((prev) => [...prev, { role: "assistant", content }]);
         }
 
         setLoading(false);
@@ -117,6 +121,7 @@ function ChatWithAI() {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
+                            maxLength={1000}
                             placeholder="Ask about my skills, projects..."
                             className='flex-1 outline-none bg-white/5 text-base sm:text-sm text-gray-200 placeholder-gray-500 px-3.5 py-2 rounded-full border border-white/10 focus:border-[#38BDF8]/50 transition-colors'
                             autoComplete="off"

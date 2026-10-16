@@ -32,9 +32,15 @@ const checkUser = (req, res, next) =>{
                 res.locals.email = null;
                 next();
             } else {
-                console.log(decodedToken);
-                let user = await User.findById(decodedToken.id);
-                res.locals.email  = user.email; 
+                // Async callback: a throw here is an unhandled rejection, which exits Node.
+                // A deleted user or a Mongo error must not take down every GET.
+                try {
+                    let user = await User.findById(decodedToken.id);
+                    res.locals.email = user ? user.email : null;
+                } catch (error) {
+                    console.error(error);
+                    res.locals.email = null;
+                }
                 next();
             }
         });
