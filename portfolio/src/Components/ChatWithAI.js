@@ -53,11 +53,15 @@ function ChatWithAI() {
 
             const data = await res.json();
             if (!res.ok || !data.result) {
-                throw new Error(data.error || `Request failed with status ${res.status}`);
+                const error = new Error(data.error || `Request failed with status ${res.status}`);
+                // Rate-limit messages tell the visitor how long to wait; other errors stay generic
+                error.showToUser = res.status === 429 && Boolean(data.error);
+                throw error;
             }
             setMessages((prev) => [...prev, { role: "assistant", animate: true, content: data.result }]);
         } catch (error) {
-            setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong. Please try again." }]);
+            const content = error.showToUser ? error.message : "Sorry, something went wrong. Please try again.";
+            setMessages((prev) => [...prev, { role: "assistant", content }]);
         }
 
         setLoading(false);

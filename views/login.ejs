@@ -18,6 +18,8 @@
         e.preventDefault();
         const email = form.email.value;
         const password = form.password.value;
+        const passwordError = document.querySelector('.password.error');
+        passwordError.textContent = '';
 
         try {
             const res = await fetch ('/login',{
@@ -29,6 +31,8 @@
             console.log (data);
             if (data.user) {
                 location.assign ('/SudokuSolver');
+            } else if (res.status === 429 && data.error) {
+                passwordError.textContent = data.error;
             }
         } catch (err){
             console.log (err);

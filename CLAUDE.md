@@ -38,9 +38,15 @@ This is a two-layer app:
 - MongoDB via Mongoose; auth uses JWT stored in cookies
 - `routes/authRoutes.js` → `controllers/authController.js` → `models/user.js`
 - `midleware/authMiddleware.js` provides `requireAuth` / `checkUser` guards
-- `/generate_chat` — proxies to OpenAI `gpt-4o-mini` with a hardcoded system prompt that impersonates the owner for the portfolio chat feature; returns `{result}` on success, `{error}` with HTTP 500 on failure
-- `/send_contactme_email` — sends contact form submissions via Gmail SMTP (nodemailer); returns `{success}` or `{error}`
+- `/generate_chat` — proxies to OpenAI `gpt-4o-mini` with a hardcoded system prompt that impersonates the owner for the portfolio chat feature; returns `{result}` on success, `{error}` with HTTP 500 on failure, `{error}` with HTTP 429 when rate-limited
+- `/send_contactme_email` — sends contact form submissions via Gmail SMTP (nodemailer); returns `{success}`, `{error}`, or `{error}` with HTTP 429 when rate-limited
 - Legacy routes: `/SudokuSolver` (auth-protected, EJS), `/PathFindingVisualizer` (EJS), `/oldPortfolio` (EJS)
+- Rate limits (`express-rate-limit`, in-memory) all live in `midleware/rateLimiters.js`; blocked requests get `429` + JSON `{error}`:
+  - `POST /generate_chat`: 20 per IP / 15 min, 500 site-wide / day (each message is a paid OpenAI call)
+  - `POST /send_contactme_email`: 5 per IP / hour, 100 site-wide / day (Gmail SMTP caps daily sends)
+  - `POST /login`: 10 **failed** attempts per IP / 15 min (successful logins don't count)
+  - Counters reset on restart and aren't shared between processes
+- `TRUST_PROXY` env var: set it to the number of proxy hops when running behind nginx or a load balancer, otherwise every visitor shares the proxy's IP and one limit. Leave it unset with no proxy, or visitors can spoof `X-Forwarded-For` past the limits. An `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR` log warning means a proxy is in front
 
 **Frontend** — React (`portfolio/src/`)
 - Single-page portfolio with normal scrolling; sections composed in `App.js`: Hero (Cover), About, Experience, Skills, Projects, Contact — plus `ChatWithAI`, a floating chat widget rendered outside the sections
@@ -62,4 +68,5 @@ This is a two-layer app:
 
 - No test suite exists (`react-scripts test` finds 0 files); verify changes by running the app
 - Production build must stay warning-free — unused imports fail this bar
+- Contact rate-limit messages must never contain the word "success": `ContactMe.js` colors its alert green when the message includes it, so a 429 message with that word would look like a sent email
 - Mobile inputs must render at ≥16px font size on small screens (e.g. `text-base sm:text-sm`) — iOS Safari auto-zooms the viewport when focusing an input smaller than 16px. Don't fix this with `maximum-scale=1` in the viewport meta; that disables pinch-to-zoom and hurts accessibility
