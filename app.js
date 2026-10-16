@@ -17,6 +17,7 @@ const jwt = require ('jsonwebtoken');
 const User = require ('./models/user');
 const nodemailer = require('nodemailer');
 const { OpenAI } = require("openai");
+const escapeHtml = require('./utils/escapeHtml');
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -88,9 +89,9 @@ app.post('/send_contactme_email', contactLimiters, function(req, res){
     to: 'wwilliam1908@gmail.com',
     subject: subject,
     html: `
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Message:</strong> ${message}</p>
+      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+      <p><strong>Message:</strong> ${escapeHtml(message)}</p>
       `
     };
 
