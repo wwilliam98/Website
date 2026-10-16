@@ -113,17 +113,16 @@ This is a multi-service app:
 
 ## Dependency audits
 
-- Backend: `npm audit fix` resolves most findings; `jsonwebtoken` needs a major upgrade to v9
+- Backend: clean as of October 2026 (`npm audit` reports 0 after the package upgrades, including `jsonwebtoken` v9); re-run it before releases
 - `portfolio/`: nearly all findings are Create React App build tooling (webpack, jest, babel, dev server), not code shipped to visitors. **Never run `npm audit fix --force` there** — it installs `react-scripts@0.0.0` and breaks the build. The real fix is migrating off CRA (deprecated), e.g. to Vite
 - `pathfinding-service/requirements.txt` is unpinned, so installs float to the latest versions; check with `pip-audit`
 
 ## Known open issues (from the October 2026 security audit)
 
-Fixed since the audit: unauthenticated requests crashing the server via the Sudoku endpoints. Still open:
-- No rate limiting on `/generate_chat` (anyone can spend the OpenAI budget), `/send_contactme_email`, or `/login`
+Fixed since the audit: unauthenticated requests crashing the server via the Sudoku endpoints, a stale login cookie crashing `checkUser`, vulnerable backend packages, and missing rate limits on chat, contact and login. Still open:
 - Contact-form fields are interpolated into the notification email's HTML unescaped (`app.js`)
 - Login's `findOne({email})` accepts MongoDB query operators — coerce `email` to a string
 - The JWT cookie lacks `secure` and `sameSite`; logout is a GET; no security headers (e.g. helmet)
 - A deliberately hard Sudoku can keep the backtracking solver busy and stall other requests (no step/time cap)
-- `PathFindingVisualizerMain.ejs` loads outdated jQuery 3.2.1 and Bootstrap 3.3.7/4.0.0 (known XSS CVEs) from CDNs, and 2 of its 5 CDN tags lack SRI hashes; `public/.DS_Store` is publicly served
+- `PathFindingVisualizerMain.ejs` loads outdated jQuery 3.2.1 and Bootstrap 3.3.7/4.0.0 (known XSS CVEs) from CDNs, and 2 of its 5 CDN tags lack SRI hashes
 - Pressing a key while dragging the start/target node throws in the console (`window.onkeydown` calls `.charAt` on a node object)
