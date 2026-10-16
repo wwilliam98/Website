@@ -38,8 +38,17 @@ app.get('/', function(req, res){
 app.get('/SudokuSolver', requireAuth, function(req, res){
   const token = req.cookies.jwt;
   jwt.verify(token, JWT_SECRET, async(err, decodedToken) =>{
-    const user = await User.findById(decodedToken.id);
-    res.render('index', {count: user.solvedSudoku});
+    // Async callback: an uncaught throw exits Node, so every path must respond.
+    try {
+      const user = await User.findById(decodedToken.id);
+      if (!user) {
+        return res.redirect('/login');
+      }
+      res.render('index', {count: user.solvedSudoku});
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Something went wrong');
+    }
   })
 });
 
