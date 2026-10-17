@@ -19,6 +19,7 @@ const nodemailer = require('nodemailer');
 const { OpenAI } = require("openai");
 const escapeHtml = require('./utils/escapeHtml');
 const systemPrompt = require('./utils/chatPrompt');
+const { pathfind, ValidationError: PathfindingValidationError } = require('./pathfinding');
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -163,21 +164,17 @@ app.post("/generate_chat", chatLimiters, async (req, res) => {
   }
 });
 
-// Proxy to the internal Python/FastAPI pathfinding service (pathfinding-service/).
-// Forwards upstream status/body (including 422 validation errors); 503 when down.
-const PATHFINDING_SERVICE_URL = process.env.PATHFINDING_SERVICE_URL || 'http://localhost:8000';
-
-app.post('/api/pathfind', async (req, res) => {
+// Pathfinding for /PathFindingVisualizer runs in-process (pathfinding/).
+// 422 {error} on invalid input, matching the old service's status code.
+app.post('/api/pathfind', (req, res) => {
   try {
-    const upstream = await fetch(`${PATHFINDING_SERVICE_URL}/pathfind`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body),
-      signal: AbortSignal.timeout(5000),
-    });
-    res.status(upstream.status).json(await upstream.json());
+    res.json(pathfind(req.body));
   } catch (error) {
-    res.status(503).json({ error: 'Pathfinding service unavailable' });
+    if (error instanceof PathfindingValidationError) {
+      return res.status(422).json({ error: error.message });
+    }
+    console.error(error);
+    res.status(500).json({ error: 'Pathfinding failed' });
   }
 });
 

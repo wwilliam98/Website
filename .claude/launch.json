@@ -15,13 +15,6 @@
       "runtimeArgs": ["app.js"],
       "port": 3000,
       "autoPort": false
-    },
-    {
-      "name": "pathfinding-service",
-      "runtimeExecutable": "pathfinding-service/.venv/bin/uvicorn",
-      "runtimeArgs": ["app.main:app", "--app-dir", "pathfinding-service", "--port", "8000"],
-      "port": 8000,
-      "autoPort": false
     }
   ]
 }

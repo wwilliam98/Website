@@ -1,5 +1,5 @@
 // Maze generation stays client-side: it only marks wall cells for the board
-// to animate. The pathfinding service sees them on the next Visualize.
+// to animate. The server sees them on the next Visualize.
 
 const longerSide = (rowSpan, colSpan) => rowSpan > colSpan ? "horizontal" : "vertical";
 
