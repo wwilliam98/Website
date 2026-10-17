@@ -662,7 +662,7 @@ Board.prototype.toggleButtons = function() {
         // Change board size
         document.getElementById("changeBoardSizeSlider").removeAttribute("disabled");
         
-        // Run Algorithm — the pathfinding service computes; the board animates
+        // Run Algorithm — the server computes; the board animates
         document.getElementById('VisualizeButtonli').onclick = async () => {
             if (!board.selectedAlgorithm){
                 document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Pick An Algorithm</button>`;
