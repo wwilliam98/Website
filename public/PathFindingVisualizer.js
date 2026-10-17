@@ -1,70 +1,39 @@
 import Node from './PathFindingNode.js'
 import {create_maze} from './createMaze.js'
 import {PathfindingApiClient, PathfindingApiError, serializeBoard} from './PathfindingApiClient.js'
+import {ALGORITHMS, DEFAULT_ALGORITHM, GUARANTEE_LABELS, findAlgorithm} from './pathfindingAlgorithms.js'
 
 const apiClient = new PathfindingApiClient();
 
-// Maze dropdown element id -> create_maze style
-const MAZE_DROPDOWNS = {
-    RecursiveDivisionDropdown: "balanced",
-    RecursiveDivisionHorizontalDropdown: "horizontal",
-    RecursiveDivisionVerticalDropdown: "vertical",
-};
+// Held key (keyCode) -> brush. A held key overrides the brush picked in the panel.
+const KEY_TOOLS = {87: "wall", 82: "erase", 49: 2, 50: 4, 51: 6, 52: 8, 53: 10};
 
-// Algorithm name (as the server knows it; dropdown id is `${name}Dropdown`)
-// -> Visualize button label and "About Algorithm" text
-const ALGORITHMS = {
-    BFS: {
-        button: "BFS",
-        title: "Breadth First Search (Unweighted)",
-        description: "A search algorithm that traverse from the root node and explore its neighboring node. Guarantee shortest path on unweighted graph but doesn't Guarantee shortest path on weighted graph.",
+const TUTORIAL_STEPS = [
+    {
+        title: "Welcome to Pathfinding Visualizer",
+        body: "Watch search algorithms find their way from the start node to the target. Four quick tips follow; close this any time.",
+        image: "images/FinishFlag.gif",
     },
-    DFS: {
-        button: "DFS",
-        title: "Depth First Search (Unweighted)",
-        description: "A search algorithm that traverse from the root node to the deepest branch before backtracking. Doesn't Guarantee shortest path.",
+    {
+        title: "Pick an algorithm",
+        body: "Weighted algorithms such as Dijkstra and A* count the cost of every cell; unweighted ones such as BFS and DFS ignore it. The side panel says whether the algorithm you picked guarantees the shortest path.",
     },
-    GreedyBestFirst: {
-        button: "Greedy",
-        title: "Greedy Best-First Search (Unweighted)",
-        description: "Always moves to whichever cell looks closest to the target, ignoring how far it has already come. Usually very fast, but doesn't guarantee the shortest path.",
+    {
+        title: "Draw obstacles",
+        body: "Click and drag on the grid to paint walls. Choose another brush in the Draw panel to paint weights or erase, or hold W, 1 to 5, or R. Drag the start or the target to move it.",
     },
-    JumpPoint: {
-        button: "JPS",
-        title: "Jump Point Search (Unweighted)",
-        description: "A* that skips along straight open runs and only stops where the route could turn, so it checks far fewer cells. Guarantees the shortest path on unweighted grids; ignores weights.",
+    {
+        title: "Visualize",
+        body: "Press Visualize to watch the search. The toolbar changes the speed, generates a maze, and clears the board. The Last run card shows how many cells were explored and what the path cost.",
     },
-    IterativeDeepening: {
-        button: "IDDFS",
-        title: "Iterative Deepening DFS (Unweighted)",
-        description: "Runs depth-first search with a depth limit of 1, 2, 3, ... until the target is in reach, so each new layer appears one step at a time. Guarantees the fewest steps; ignores weights.",
-    },
-    Dijkstra: {
-        button: "Dijkstra",
-        title: "Dijkstra Algorithm (Weighted)",
-        description: "A search algorithm that prioritize the least weight distance to search for shortest path. Guarantee shortest path.",
-    },
-    AStar: {
-        button: "A*",
-        title: "A-Star Algorithm (Weighted)",
-        description: "An informed search algorithm that uses heuristics method to search for shortest path. Guarantee shortest path.",
-    },
-    WeightedAStar: {
-        button: "Weighted A*",
-        title: "Weighted A* (Weighted)",
-        description: "A* that trusts its distance estimate more. Turn up the greed to search fewer cells, at the cost of a path up to that many times longer than the best one.",
-    },
-    Bidirectional: {
-        button: "Bidirectional",
-        title: "Bidirectional Dijkstra (Weighted)",
-        description: "Runs Dijkstra from the start and from the target at the same time until the two searches meet. Guarantee shortest path.",
-    },
-    BellmanFord: {
-        button: "Bellman-Ford",
-        title: "Bellman-Ford (Weighted)",
-        description: "Sweeps the whole grid again and again, improving every cell's distance until nothing changes. Slower than Dijkstra, but also handles negative weights in general graphs. Guarantee shortest path.",
-    },
-};
+];
+const TUTORIAL_SEEN_KEY = "pf-tutorial-seen";
+
+const $ = (id) => document.getElementById(id);
+
+function setStatus(text) {
+    $("show_display_status").textContent = text;
+}
 
 // Board attributes
 function Board(height, width){
@@ -90,213 +59,36 @@ function Board(height, width){
 	this.savedNode = null
 	this.previouslySwitchNode = null;
 
+	// Drawing
+	this.brush = "wall"; // brush picked in the panel
+	this.dragTool = null; // brush for the current drag
+
 	// Things to be animated
 	this.animateWalls = [];
 	this.nodesToAnimate = [];
 	this.AnimateFoundPath = [];
-	
-	this.selectedAlgorithm = null;
+	this.pendingResult = null; // shown once the run's animation ends
+
+	this.selectedAlgorithm = DEFAULT_ALGORITHM;
 	this.greed = 2; // Weighted A* only
-	this.buttonsOn = false;
 	this.speed = 1;
 };
 
 // Board Setup ###############################################################################################################################
-let counter = 1;
-Board.prototype.nextPreviousTutorial = function(){
-    let board = this
-    board.isButtonsActivated = false;
-
-    document.getElementById("skipButton").onclick = () => {
-        document.getElementById("tutorial").style.display = "none";
-        board.toggleButtons()
-    }
-
-    if (document.getElementById("nextButton")) {
-        document.getElementById("nextButton").onclick = () => {
-          if (counter < 5) counter++;
-          nextPreviousClick();
-          board.nextPreviousTutorial();
-        }
-    }
-    
-    document.getElementById("previousButton").onclick = () => {
-        if (counter > 1) counter--;
-        nextPreviousClick();
-        board.nextPreviousTutorial()
-    }
-    
-    function nextPreviousClick() {
-        if (counter === 1) {
-            document.getElementById("tutorial").innerHTML = `<div id="tutorialCounter" style="position:absolute; right:2%; top:2%">1/5</div>
-                                                            <h1>Welcome to Pathfinding Visualizer!</h1>
-                                                            <h3>This tutorial will walk you through all of the features of this application.</h3>
-                                                            <h4>If you want to dive right in, feel free to press the "Skip Tutorial" button below. Otherwise, press "Next"!</h4>
-                                                            <img id="mainTutorialImage" src="images/FinishFlag.gif">
-                                                            <button id="nextButton" class="btn btn-default navbar-btn" type="button">Next</button>
-                                                            <button id="previousButton" class="btn btn-default navbar-btn" type="button">Previous</button>
-                                                            <button id="skipButton" class="btn btn-default navbar-btn" type="button">Skip Tutorial</button>`;
-        }
-
-        if (counter === 2) {
-            document.getElementById("tutorial").innerHTML = `<div id="tutorialCounter" style="position:absolute; right:2%; top:2%">2/5</div>
-                                                            <h1><u>Adding Objects</u></h1>
-                                                            <h2>First, let's get familiar with the board status!!</h2>
-                                                            <br><h4><li>To Create a Maze, Select from one of the option from "Create Maze" drop-down menu. </h4>
-                                                            <br><h4><li>To add a Wall, Click and Drag on the grid while holding the W button. </h4>
-                                                            <br><h4><li>To add a weight, Click on the grid while pressing 1, 2, 3, 4, or 5, and the weight will adjust accordingly. </h4>
-                                                            <br><h4><li>To remove any Object. Click and drag on the grid while holding the R button.</h4>
-                                                            <br>
-                                                            <div id="KeyDisplayDiv" style="display: flex; flex-direction: row;">
-                                                                <div id="WKeyDisplay" class="KeyDisplay"> <h3>Wall (W)</h3> </div>
-                                                                <div id="AllWeightDisplay" class="KeyDisplay"> <h3>Weight (1/2/3/4/5)</h3> </div>
-                                                                <div id="RKeyDisplay" class="KeyDisplay"> <h3>Erase (R)</h3> </div>
-                                                            </div>
-                                                            <br>
-                                                            <h4>If you want to skip the tutorial, you can always press the "Skip Tutorial" button below. Otherwise, press "Next"</h4>
-                                                            <br>
-                                                            <button id="nextButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Next</button>
-                                                            <button id="previousButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Previous</button>
-                                                            <button id="skipButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Skip Tutorial</button>`;
-        }
-
-        if (counter === 3) {
-            document.getElementById("tutorial").innerHTML = `<div id="tutorialCounter" style="position:absolute; right:2%; top:2%;">3/5</div>
-                                                            <h1><u>Navbar & Functions</u></h1>
-                                                            <h2>Use the Navbar to Select Animation Speed, Select Algorithm, Visualize, and More!! </h2>
-                                                            <br>
-                                                            <h4>There are many functions that you can select from the navigation bar!! You use the navigation bar to Select Animation Speed, Create Maze, Clear Walls, Clear weight, Clear Path and Reset Board. To replay this tutorial, click on "Show Tutorial" on the top right of the navigation bar.</h4>
-
-                                                            <img src='/images/pathFindingNavbar.png' style='max-width:calc(100% - 20px); max-height:100%; width:auto;height:auto; margin-top:50px; margin-bottom:50px'>
-
-                                                            <h4>If you want to skip the tutorial, you can always press the "Skip Tutorial" button below. Otherwise, press "Next"</h4>
-                                                            <br>
-                                                            <button id="nextButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Next</button>
-                                                            <button id="previousButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Previous</button>
-                                                            <button id="skipButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Skip Tutorial</button>`;
-        }
-
-        if (counter === 4) {
-            document.getElementById("tutorial").innerHTML = `<div id="tutorialCounter" style="position:absolute; right:2%; top:2%;">4/5</div>
-                                                            <h1><u>Mini Board Status</u></h1>
-                                                            <h2>Use the Mini Board Status to Adjust Board Size, Check Board Status, and See the definition of the algorithm selected</h2>
-                                                            <img src='/images/boardStatus.png' style='max-width:calc(100% - 20px); max-height:50%; width:auto;height:auto; margin-top:10px; margin-bottom:10px'>
-
-                                                            <h4>If you want to skip the tutorial, you can always press the "Skip Tutorial" button below. Otherwise, press "Next"</h4>
-
-                                                            <button id="nextButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Next</button>
-                                                            <button id="previousButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Previous</button>
-                                                            <button id="skipButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Skip Tutorial</button>`;
-        }
-
-        if (counter === 5) {
-            document.getElementById("tutorial").innerHTML = `<div id="tutorialCounter" style="position:absolute; right:2%; top:2%">5/5</div>
-                                                            <h1><u>Have Fun!</u></h1>
-                                                            <h2>I hope you have fun exploring and playing around the board! If you want to find the source code of this project, you can find it on my github <a href='https://github.com/wwilliam98/Website/public'>@www.github.com/wwilliam98/Website/public</a>  </h2>
-                                                            <br>
-
-                                                            <h2>If you want to know more about me, check out my social media as well as my other projects that I have listed down below.</h2>
-                                                            <span><h3><li><a href='https://www.linkedin.com/in/wwilliam1908'>Linked In</a></h3>
-                                                            <h3><li><a href='https://github.com/wwilliam98'>Github</a></h3>
-                                                            <h3><li><a href='https://leetcode.com/IamCookie/'>Leetcode</a></h3>
-                                                            <h3><li><a href='./'>Portfolio</a></h3>
-                                                            <h3><li><a href='./SudokuSolver'>Sudoku Solver</a></h3></span>
-
-                                                            <button id="finishButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Finish</button>
-                                                            <button id="previousButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Previous</button>
-                                                            <button id="skipButton" class="btn btn-default navbar-btn tutorial-btn" type="button">Skip Tutorial</button>`
-            
-            document.getElementById("finishButton").onclick = () => {
-                document.getElementById("tutorial").style.display = "none";
-                board.toggleButtons()
-            }
-        }
-    }
-
-    window.addEventListener("keydown", function(e){
-        var all_weight_display = document.getElementById("AllWeightDisplay")
-        if (e.key == "w"){
-            document.getElementById("WKeyDisplay").style.background = "#d3d3d3";
-        }
-        if (e.key == "r"){
-            document.getElementById("RKeyDisplay").style.background = "#d3d3d3";
-        }
-        if (e.key == "1"){
-            document.getElementById("Weight1Display").style.background = "#d3d3d3";
-            if (all_weight_display){
-                all_weight_display.style.background = "#d3d3d3";
-            }
-        }
-        else if (e.key == "2"){
-            document.getElementById("Weight2Display").style.background = "#d3d3d3";
-            if (all_weight_display){
-                all_weight_display.style.background = "#d3d3d3";
-            }
-        }
-        else if (e.key == "3"){
-            document.getElementById("Weight3Display").style.background = "#d3d3d3";
-            if (all_weight_display){
-                all_weight_display.style.background = "#d3d3d3";
-            }
-        }
-        else if (e.key == "4"){
-            document.getElementById("Weight4Display").style.background = "#d3d3d3";
-            if (all_weight_display){
-                all_weight_display.style.background = "#d3d3d3";
-            }
-        }
-        else if (e.key == "5"){
-            document.getElementById("Weight5Display").style.background = "#d3d3d3";
-            if (all_weight_display){
-                all_weight_display.style.background = "#d3d3d3";
-            }
-        }
-    });
-    
-    window.addEventListener("keyup", function(e){
-        var all_weight_display = document.getElementById("AllWeightDisplay")
-        if (e.key == "w"){
-            document.getElementById("WKeyDisplay").style.background = "white";
-        }
-        if (e.key == "r"){
-            document.getElementById("RKeyDisplay").style.background = "white";
-        }
-        if (e.key == "1"){
-            document.getElementById("Weight1Display").style.background = "white";
-            if (all_weight_display){
-                all_weight_display.style.background = "white";
-            }
-        }
-        else if (e.key == "2"){
-            document.getElementById("Weight2Display").style.background = "white";
-            if (all_weight_display){
-                all_weight_display.style.background = "white";
-            }
-        }
-        else if (e.key == "3"){
-            document.getElementById("Weight3Display").style.background = "white";
-            if (all_weight_display){
-                all_weight_display.style.background = "white";
-            }
-        }
-        else if (e.key == "4"){
-            document.getElementById("Weight4Display").style.background = "white";
-            if (all_weight_display){
-                all_weight_display.style.background = "white";
-            }
-        }
-        else if (e.key == "5"){
-            document.getElementById("Weight5Display").style.background = "white";
-            if (all_weight_display){
-                all_weight_display.style.background = "white";
-            }
-        }
-    })
+// Default start/target ids. Columns are kept odd: recursive-division mazes
+// put their walls on even columns, so an even column can wall the node in.
+Board.prototype.defaultEnds = function(){
+    const odd = (col) => col % 2 ? col : col - 1;
+    const row = Math.floor(this.height / 2);
+    return {
+        start: `${row}-${odd(Math.floor(this.width / 4))}`,
+        target: `${row}-${odd(Math.floor(3 * this.width / 4))}`,
+    };
 }
-
 
 Board.prototype.createGrid = function(){
     let board = this
+    let ends = board.defaultEnds();
 	let tableHTML = "";
 	for (let r = 0; r < board.height; r++){
 		let currentArrayRow = [];
@@ -304,10 +96,10 @@ Board.prototype.createGrid = function(){
 
 		for (let c = 0; c < board.width; c++){
 			let newNodeId = `${r}-${c}`, nodeType, newNode;
-			if (r === Math.floor(board.height / 2) && c === Math.floor(board.width / 4)) {
+			if (newNodeId === ends.start) {
 				nodeType = "start";
 				// board.start = `${newNodeId}`;
-			} else if (r === Math.floor(board.height / 2) && c === Math.floor(3 * board.width / 4)) {
+			} else if (newNodeId === ends.target) {
 				nodeType = "target";
 				// board.target = `${newNodeId}`;
 			} else {
@@ -316,9 +108,9 @@ Board.prototype.createGrid = function(){
 
 			// Create new node for the div
 			newNode = new Node(newNodeId, nodeType); //ID, weight, type, status, previousNode, Path
-            if (r === Math.floor(board.height / 2) && c === Math.floor(board.width / 4)) {
+            if (newNodeId === ends.start) {
 				board.start = newNode;
-			} else if (r === Math.floor(board.height / 2) && c === Math.floor(3 * board.width / 4)) {
+			} else if (newNodeId === ends.target) {
 				board.target = newNode;
             }
 
@@ -442,9 +234,9 @@ Board.prototype.MoveSpecialNode = function(newLocationNode) {
 		}
 		this.previouslySwitchNode = newLocationNode;
 
-        if (board.pickedUpNode == "start"){
+        if (board.pickedUpNode.type == "start"){
             board.start = newLocationNode
-        }else if (board.pickedUpNode == "target"){
+        }else if (board.pickedUpNode.type == "target"){
             board.target = newLocationNode
         }
 	} 
@@ -460,32 +252,23 @@ Board.prototype.boardEventListener = function(){
 			let currentNode = board.getNodefromBoard(currentId);
 			let currentTableElement = document.getElementById(currentId);
 			
-			// Just set to wall when initial click is a wall and vice versa
 			currentTableElement.onmousedown = (e) => {
                 e.preventDefault()
 				if (board.isButtonsActivated){
 					board.mouseDown = true
 					board.currentMouseNode = currentNode;
-					// Left mouse and control key to move special Node
-					if (currentNode.type == "start" || currentNode.type == "target" || currentNode.type == "object"){
-                        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + currentNode.type + "Icon.svg' alt='" + currentNode.type + "' style='width: 25px; height: 25px; margin: 5px>'</span> Move " + currentNode.type.charAt(0).toUpperCase() + currentNode.type.slice(1) + " Node";
+					board.lastEnteredElement = e.target;
+					if (currentNode.type == "start" || currentNode.type == "target"){
+                        setStatus(`Moving the ${currentNode.type} node`);
 						board.pickedUpNode = currentNode.copy();
-
 						board.savedNode = null
-					}else if (board.keyDown["87"] == true){ // If "W" is pressed, create wall
-						board.changeNormalNodeToWall(currentNode);
-					}else if (board.keyDown["49"] == true){ // If "1" is pressed, create wall
-						board.changeNormalNodeToWeight(currentNode, 2);
-					}else if (board.keyDown["50"] == true){ // If "2" is pressed, create wall
-						board.changeNormalNodeToWeight(currentNode, 4);
-					}else if (board.keyDown["51"] == true){ // If "3" is pressed, create wall
-						board.changeNormalNodeToWeight(currentNode, 6);
-					}else if (board.keyDown["52"] == true){ // If "4" is pressed, create wall
-						board.changeNormalNodeToWeight(currentNode, 8);
-					}else if (board.keyDown["53"] == true){ // If "5" is pressed, create wall
-						board.changeNormalNodeToWeight(currentNode, 10);
-					}else if (board.keyDown["82"] == true){ // If "R" is pressed, turn it back to normal node
-						board.clearNode(currentNode);
+					}else{
+						// Starting a drag on a cell that already has this brush erases instead
+						let tool = board.activeTool();
+						let alreadyPainted = (tool === "wall" && currentNode.type === "wall") ||
+							(typeof tool === "number" && currentNode.type === "weight" && currentNode.weight === tool);
+						board.dragTool = alreadyPainted ? "erase" : tool;
+						board.paint(currentNode, board.dragTool);
 					}
 				}
 			};
@@ -497,29 +280,15 @@ Board.prototype.boardEventListener = function(){
 
 					if (board.mouseDown && board.pickedUpNode !== null){
 						board.MoveSpecialNode(currentNode)
-					}else if (board.mouseDown && board.keyDown["87"] == true){
-						board.changeNormalNodeToWall(currentNode);
-					}else if (board.mouseDown && board.keyDown["82"] == true){
-						board.clearNode(currentNode)
+					}else if (board.mouseDown && board.dragTool !== null){
+						board.paint(currentNode, board.dragTool);
 					}
 				}
 			}
 
-			// Save the start/target/object to the board
-			currentTableElement.onmouseup = (e) =>{
-				if (board.isButtonsActivated){
-					board.mouseDown = false;
-					if (board.pickedUpNode && board.pickedUpNode.type == "start"){
-						board.start = currentNode;
-					}else if(board.pickedUpNode && board.pickedUpNode.type === "target"){
-						board.target = currentNode;
-					}else if(board.pickedUpNode && board.pickedUpNode.type === "object"){
-						board.object = currentNode;
-					}
-                    document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> No Status";
-				}
-				board.pickedUpNode = null;
-				board.currentMouseNode = null;
+			// MoveSpecialNode already tracked where the start/target landed
+			currentTableElement.onmouseup = () =>{
+				board.endDrag();
 			};
 
 		}
@@ -616,10 +385,7 @@ Board.prototype.animatePath = function(nodesToAnimate){ //visitedNodes is an arr
 // Animation
 
 Board.prototype.resetBoard = function(){
-	let height = this.height;
-	let width = this.width;
-	let start = Math.floor(height / 2).toString() + "-" + Math.floor(width / 4).toString();
-	let target = Math.floor(height / 2).toString() + "-" + Math.floor(3 * width / 4).toString();
+	let {start, target} = this.defaultEnds();
 
 	Object.keys(this.getNodesByID).forEach(id => {
 		let currentNode = this.getNodesByID[id];
@@ -709,153 +475,62 @@ Board.prototype.clearWeight = function(){
 };
 
 ////////////////////////////////////////////////////////////// Toggle Button //////////////////////////////////////////////////////////////////////////
+// Locks the controls while the board animates and unlocks them after.
+// The enable branch resets the status, so write messages after calling it.
 Board.prototype.toggleButtons = function() {
 	let board = this;
+    board.isButtonsActivated = !board.isButtonsActivated;
+    const enabled = board.isButtonsActivated;
 
-    if (!board.isButtonsActivated){
-        board.isButtonsActivated = true;
+    document.querySelectorAll(".pf-control").forEach(control => { control.disabled = !enabled; });
+    document.body.classList.toggle("pf-busy", !enabled);
 
-        // Change board size
-        document.getElementById("changeBoardSizeSlider").removeAttribute("disabled");
-        
-        // Run Algorithm — the server computes; the board animates
-        document.getElementById('VisualizeButtonli').onclick = async () => {
-            if (!board.selectedAlgorithm){
-                document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Pick An Algorithm</button>`;
-                return;
-            }
-            board.toggleButtons();
-            board.clearPath();
-            try {
-                const result = await apiClient.findPath(board.selectedAlgorithm, serializeBoard(board), { greed: board.greed });
-                board.nodesToAnimate = result.visited_order.map(id => {
-                    const node = board.getNodesByID[id];
-                    node.status = "visited"; // what animateStatus/clearPath key off
-                    return node;
-                });
-                board.AnimateFoundPath = result.path.map(id => board.getNodesByID[id]);
-                board.animateStatus(board.nodesToAnimate);
-            } catch (error) {
-                // Re-enable FIRST: the enable branch resets the status bar,
-                // so the error message must be written after it.
-                board.toggleButtons();
-                const message = error instanceof PathfindingApiError ? error.message : 'Pathfinding failed';
-                document.getElementById("show_display_status").innerHTML = `<span class="circle-icon"></span> ${message}`;
-            }
+    if (enabled){
+        setStatus("Ready");
+        if (board.pendingResult){
+            showResult(board.pendingResult);
+            board.pendingResult = null;
         }
-
-        // Select Animation Speed Button
-        document.getElementById('AnimationSpeedVerySlowDropdown').onclick = () => {
-            document.getElementById('SelectAnimationDropdown').innerHTML = `<li id='SelectAnimationDropdown' class="dropdown-toggle" data-toggle="dropdown" >Speed: Very Slow<span class="caret"></span></a>`;
-            board.speed = 40;
-        }
-        document.getElementById('AnimationSpeedSlowDropdown').onclick = () => {
-            document.getElementById('SelectAnimationDropdown').innerHTML = `<li id='SelectAnimationDropdown' class="dropdown-toggle" data-toggle="dropdown" >Speed: Slow<span class="caret"></span></a>`;
-            board.speed = 30;
-        }
-        document.getElementById('AnimationSpeedNormalDropdown').onclick = () => {
-            document.getElementById('SelectAnimationDropdown').innerHTML = `<li id='SelectAnimationDropdown' class="dropdown-toggle" data-toggle="dropdown" >Speed: Normal<span class="caret"></span></a>`;
-            board.speed = 20;
-        }
-        document.getElementById('AnimationSpeedFastDropdown').onclick = () => {
-            document.getElementById('SelectAnimationDropdown').innerHTML = `<li id='SelectAnimationDropdown' class="dropdown-toggle" data-toggle="dropdown" >Speed: Fast<span class="caret"></span></a>`;
-            board.speed = 10;
-        }
-        document.getElementById('AnimationSpeedVeryFastDropdown').onclick = () => {
-            document.getElementById('SelectAnimationDropdown').innerHTML = `<li id='SelectAnimationDropdown' class="dropdown-toggle" data-toggle="dropdown" >Speed: Very Fast<span class="caret"></span></a>`;
-            board.speed = 1;
-        }
-        
-        // Create Maze Button
-        for (const [dropdownId, style] of Object.entries(MAZE_DROPDOWNS)) {
-            document.getElementById(dropdownId).onclick = () => {
-                board.resetBoard();
-                board.toggleButtons();
-
-                create_maze(board, style);
-                board.animate(board.animateWalls);
-            }
-        }
-        // Create Maze Button End
-
-        // Select Algorithm Button
-        for (const [name, algorithm] of Object.entries(ALGORITHMS)) {
-            document.getElementById(`${name}Dropdown`).onclick = () => {
-                document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Visualize ${algorithm.button}</button>`;
-                board.selectedAlgorithm = name;
-                document.getElementById('algo_def').innerHTML = `<h3 id='algo_def' style="text-align: center;">
-                                                            ${algorithm.title}:</h3>
-                                                            <h3>${algorithm.description}</h3>
-                                                            `;
-                document.getElementById('greedControl').style.display = name === 'WeightedAStar' ? 'block' : 'none';
-            }
-        }
-
-        // Clear Board and clear path
-        document.getElementById('startButtonClearBoard').onclick = () => {
-            board.resetBoard();
-        }
-
-        document.getElementById('startButtonClearWalls').onclick = () => {
-            board.clearWalls();
-        }
-
-        document.getElementById('startButtonClearWeights').onclick = () => {
-            board.clearWeight();
-        }
-
-        document.getElementById('startButtonClearPath').onclick = () => {
-            board.clearPath();
-        }
-
-        document.getElementById('helpButton').onclick = () => {
-            document.getElementById("tutorial").style.display = "block";
-            board.toggleButtons()
-            document.getElementById("VisualizeButton").style.backgroundColor = "";
-            document.getElementById('show_display_status').innerHTML = `<span class="circle-icon"></span> No Status`;
-        }
-
-        // Add Styling Back
-        document.getElementById("VisualizeButton").style.backgroundColor = "";
-        document.getElementById('show_display_status').innerHTML = `<span class="circle-icon"></span> No Status`;
-
-    } else{ // When the animation is not running.
-        board.isButtonsActivated = false
-        document.getElementById("changeBoardSizeSlider").setAttribute("disabled", "true")
-        document.getElementById('VisualizeButtonli').onclick = null;
-
-        // Off Speed Selection
-        // document.getElementById('AnimationSpeedVerySlowDropdown').onclick = null
-        // document.getElementById('AnimationSpeedSlowDropdown').onclick = null
-        // document.getElementById('AnimationSpeedNormalDropdown').onclick = null
-        // document.getElementById('AnimationSpeedFastDropdown').onclick = null
-        // document.getElementById('AnimationSpeedVeryFastDropdown').onclick = null
-
-        // Off Maze
-        for (const dropdownId of Object.keys(MAZE_DROPDOWNS)) {
-            document.getElementById(dropdownId).onclick = null
-        }
-        
-        // Off Algo selection
-        for (const name of Object.keys(ALGORITHMS)) {
-            document.getElementById(`${name}Dropdown`).onclick = null
-        }
-
-        // Off reset and clear
-        document.getElementById('startButtonClearBoard').onclick = null
-        document.getElementById('startButtonClearPath').onclick = null
-
-        document.getElementById('VisualizeButton').style.backgroundColor = "red"
-        document.getElementById('show_display_status').innerHTML = `<span class="circle-icon"></span> Board Animating ...`;
+    } else {
+        setStatus("Board Animating ...");
     }
 }
 ////////////////////////////////////////////////////////////// Toggle Button Done //////////////////////////////////////////////////////////////////////////
 
+// The brush a click or drag paints with right now
+Board.prototype.activeTool = function(){
+    for (const [keyCode, tool] of Object.entries(KEY_TOOLS)){
+        if (this.keyDown[keyCode]) return tool;
+    }
+    return this.brush;
+}
+
+Board.prototype.paint = function(currentNode, tool){
+    if (tool === "wall"){
+        this.changeNormalNodeToWall(currentNode);
+    } else if (tool === "erase"){
+        this.clearNode(currentNode);
+    } else {
+        this.changeNormalNodeToWeight(currentNode, tool);
+    }
+}
+
+// Ends a drag, including one released outside the grid
+Board.prototype.endDrag = function(){
+    if (this.pickedUpNode !== null && this.isButtonsActivated){
+        setStatus("Ready");
+    }
+    this.mouseDown = false;
+    this.dragTool = null;
+    this.pickedUpNode = null;
+    this.currentMouseNode = null;
+}
 
 Board.prototype.initialise = function(){
 	this.createGrid();
 	this.boardEventListener();
-    this.nextPreviousTutorial();
+    this.isButtonsActivated = false;
+    this.toggleButtons();
 };
 
 Board.prototype.resizeboard = function(height, width){
@@ -884,68 +559,243 @@ Board.prototype.resizeboard = function(height, width){
 	this.animateWalls = [];
 	this.nodesToAnimate = [];
 	this.AnimateFoundPath = [];
-	
-	this.selectedAlgorithm = null;
-	this.greed = 2; // Weighted A* only
-	this.buttonsOn = false;
-	this.speed = 1;
 
     this.createGrid();
 	this.boardEventListener();
 }
 
-// let height = Math.floor(($(document).height()) / 28);
-// let width = Math.floor($(document).width() / 25);
+/////////////////////////////////////////////////////////////// Page Controls ///////////////////////////////////////////////////////////////
 
-// let initialBoard = new Board(5, 7);
-// let initialBoard = new Board(11, 21);
-// let initialBoard = new Board(21, 31);
-let initialBoard = new Board(33, 63);
+// Sizes cells so the whole board fits beside the panel (desktop) or across the screen (phone)
+function fitBoard(board){
+    const wrap = $("boardWrap");
+    const width = Number(board.width), height = Number(board.height);
+    let cell = Math.floor(wrap.clientWidth / width);
+    if (window.innerWidth > 900){
+        const availableHeight = window.innerHeight - wrap.getBoundingClientRect().top - window.scrollY - 16;
+        cell = Math.min(cell, Math.floor(availableHeight / height));
+    }
+    cell = Math.max(6, Math.min(cell, 32));
+    document.documentElement.style.setProperty("--cell", `${cell}px`);
+}
+
+function showAlgorithm(board){
+    const algorithm = findAlgorithm(board.selectedAlgorithm);
+    $("algoName").textContent = algorithm.label;
+    $("algo_def").textContent = algorithm.description;
+    $("VisualizeButton").textContent = `Visualize ${algorithm.short}`;
+
+    const tags = $("algoTags");
+    tags.replaceChildren();
+    const addTag = (text, good) => {
+        const tag = document.createElement("span");
+        tag.className = good ? "pf-tag pf-tag-good" : "pf-tag";
+        tag.textContent = text;
+        tags.appendChild(tag);
+    };
+    addTag(algorithm.usesWeights ? "Uses weights" : "Ignores weights", algorithm.usesWeights);
+    addTag(GUARANTEE_LABELS[algorithm.guarantee] || "Path may not be shortest", algorithm.guarantee !== null);
+    $("greedControl").hidden = !algorithm.hasGreed;
+}
+
+function showResult({algorithm, found, stats}){
+    $("resultsCard").hidden = false;
+    $("resultsAlgo").textContent = `· ${algorithm.short}`;
+    const outcome = $("resultsOutcome");
+    outcome.textContent = found ? "Reached the target" : "No path to the target";
+    outcome.classList.toggle("pf-fail", !found);
+    $("statVisited").textContent = stats.visited_count;
+    $("statSteps").textContent = found ? Math.max(0, stats.path_length - 1) : "–";
+    $("statCost").textContent = found ? stats.path_cost : "–";
+    setStatus(found ? "Path found" : "Target unreachable");
+}
+
+function showBrush(board){
+    const tool = String(board.activeTool());
+    document.querySelectorAll(".pf-brush").forEach(button => {
+        button.setAttribute("aria-checked", String(button.dataset.tool === tool));
+    });
+}
+
+function bindControls(board){
+    const algorithmSelect = $("algorithmSelect");
+    for (const group of [...new Set(ALGORITHMS.map(algorithm => algorithm.group))]){
+        const optgroup = document.createElement("optgroup");
+        optgroup.label = group;
+        for (const algorithm of ALGORITHMS.filter(a => a.group === group)){
+            optgroup.appendChild(new Option(algorithm.label, algorithm.name));
+        }
+        algorithmSelect.appendChild(optgroup);
+    }
+    algorithmSelect.value = board.selectedAlgorithm;
+    algorithmSelect.onchange = () => {
+        board.selectedAlgorithm = algorithmSelect.value;
+        showAlgorithm(board);
+    };
+    showAlgorithm(board);
+
+    // Run Algorithm — the server computes; the board animates
+    $("VisualizeButton").onclick = async () => {
+        if (!board.isButtonsActivated) return;
+        const algorithm = findAlgorithm(board.selectedAlgorithm);
+        board.toggleButtons();
+        board.clearPath();
+        try {
+            const result = await apiClient.findPath(algorithm.name, serializeBoard(board), {greed: board.greed});
+            board.nodesToAnimate = result.visited_order.map(id => {
+                const node = board.getNodesByID[id];
+                node.status = "visited"; // what animateStatus/clearPath key off
+                return node;
+            });
+            board.AnimateFoundPath = result.path.map(id => board.getNodesByID[id]);
+            board.pendingResult = {algorithm, found: result.found, stats: result.stats};
+            board.animateStatus(board.nodesToAnimate);
+        } catch (error) {
+            // Re-enable FIRST: the enable branch resets the status bar,
+            // so the error message must be written after it.
+            board.toggleButtons();
+            setStatus(error instanceof PathfindingApiError ? error.message : "Pathfinding failed");
+        }
+    };
+
+    const greedSlider = $("greedSlider");
+    greedSlider.oninput = () => {
+        board.greed = Number(greedSlider.value);
+        $("greedValue").textContent = `${board.greed}×`;
+    };
+
+    const speedSelect = $("speedSelect");
+    board.speed = Number(speedSelect.value);
+    speedSelect.onchange = () => { board.speed = Number(speedSelect.value); };
+
+    const mazeSelect = $("mazeSelect");
+    mazeSelect.onchange = () => {
+        const style = mazeSelect.value;
+        mazeSelect.value = "";
+        if (!style || !board.isButtonsActivated) return;
+        board.resetBoard();
+        board.toggleButtons();
+        create_maze(board, style);
+        board.animate(board.animateWalls);
+    };
+
+    const slider = $("changeBoardSizeSlider");
+    const showSize = () => { $("boardSizeLabel").textContent = `${slider.value} × ${slider.value * 2}`; };
+    showSize();
+    slider.oninput = () => {
+        board.resizeboard(slider.value, slider.value * 2);
+        showSize();
+        fitBoard(board);
+    };
+
+    $("startButtonClearBoard").onclick = () => board.resetBoard();
+    $("startButtonClearWalls").onclick = () => board.clearWalls();
+    $("startButtonClearWeights").onclick = () => board.clearWeight();
+    $("startButtonClearPath").onclick = () => board.clearPath();
+
+    document.querySelectorAll(".pf-brush").forEach(button => {
+        button.onclick = () => {
+            const tool = button.dataset.tool;
+            board.brush = tool === "wall" || tool === "erase" ? tool : Number(tool);
+            showBrush(board);
+        };
+    });
+    showBrush(board);
+
+    window.addEventListener("resize", () => fitBoard(board));
+    document.addEventListener("mouseup", () => board.endDrag());
+}
+
+// Touch: translate finger movement into the same handlers the mouse uses
+function bindTouch(board){
+    const table = $("board");
+    let lastCell = null;
+    const cellAt = (touch) => {
+        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        return element && element.tagName === "TD" && table.contains(element) ? element : null;
+    };
+    table.addEventListener("touchstart", (e) => {
+        const cell = cellAt(e.touches[0]);
+        if (!cell) return;
+        e.preventDefault();
+        lastCell = cell;
+        cell.onmousedown({preventDefault(){}, target: cell});
+    }, {passive: false});
+    table.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        const cell = cellAt(e.touches[0]);
+        if (cell && cell !== lastCell){
+            lastCell = cell;
+            cell.onmouseenter({target: cell});
+        }
+    }, {passive: false});
+    table.addEventListener("touchend", () => {
+        if (lastCell) lastCell.onmouseup({});
+        lastCell = null;
+        board.endDrag();
+    });
+}
+
+function bindTutorial(){
+    let step = 0;
+    const modal = $("tutorial");
+    const render = () => {
+        const current = TUTORIAL_STEPS[step];
+        $("tutorialCounter").textContent = `${step + 1} / ${TUTORIAL_STEPS.length}`;
+        $("tutorialTitle").textContent = current.title;
+        $("tutorialBody").textContent = current.body;
+        $("mainTutorialImage").hidden = !current.image;
+        $("previousButton").hidden = step === 0;
+        $("nextButton").textContent = step === TUTORIAL_STEPS.length - 1 ? "Start" : "Next";
+    };
+    const open = () => {
+        step = 0;
+        render();
+        modal.hidden = false;
+        $("nextButton").focus();
+    };
+    const close = () => {
+        modal.hidden = true;
+        try { localStorage.setItem(TUTORIAL_SEEN_KEY, "1"); } catch (e) { /* storage blocked */ }
+    };
+
+    $("nextButton").onclick = () => {
+        if (step === TUTORIAL_STEPS.length - 1) return close();
+        step++;
+        render();
+    };
+    $("previousButton").onclick = () => { step = Math.max(0, step - 1); render(); };
+    $("skipButton").onclick = close;
+    modal.onclick = (e) => { if (e.target === modal) close(); };
+    document.addEventListener("keydown", (e) => {
+        if (!modal.hidden && e.key === "Escape") close();
+    });
+    $("helpButton").onclick = open;
+
+    let seen = false;
+    try { seen = localStorage.getItem(TUTORIAL_SEEN_KEY) === "1"; } catch (e) { /* storage blocked */ }
+    if (!seen) open();
+}
+
+// Phones get a smaller board so cells stay big enough to tap
+if (window.innerWidth <= 600){
+    $("changeBoardSizeSlider").value = 13;
+}
+const initialSize = Number($("changeBoardSizeSlider").value);
+let initialBoard = new Board(initialSize, initialSize * 2);
 initialBoard.initialise();
+bindControls(initialBoard);
+bindTouch(initialBoard);
+bindTutorial();
+fitBoard(initialBoard);
 
-document.getElementById("greedSlider").oninput = () => {
-    initialBoard.greed = Number(document.getElementById("greedSlider").value);
-    document.getElementById("greedValue").textContent = initialBoard.greed;
-}
-
-document.getElementById("changeBoardSizeSlider").oninput = () => {
-    let val = document.getElementById("changeBoardSizeSlider").value    
-    initialBoard.resizeboard(val, val*2);
-}
-
-// Show Status
+// Show the brush a held key selects
 window.onkeydown = (e) =>{
 	initialBoard.keyDown[e.keyCode] = true;
-    if (initialBoard.keyDown["87"] == true && initialBoard.isButtonsActivated && initialBoard.pickedUpNode == null){
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Draw Wall On";
-    }else if ((initialBoard.keyDown["49"] == true || initialBoard.keyDown["50"] == true || initialBoard.keyDown["51"] == true || initialBoard.keyDown["52"] == true || initialBoard.keyDown["53"] == true) && initialBoard.isButtonsActivated && initialBoard.pickedUpNode == null){
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Draw Weight On";
-    }else if (initialBoard.keyDown["82"] == true && initialBoard.isButtonsActivated && initialBoard.pickedUpNode == null){
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Erase Mode On";
-    }else if (initialBoard.pickedUpNode !== null && initialBoard.isButtonsActivated){
-        // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Move " + initialBoard.pickedUpNode.type + " Node";
-        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + "Icon.svg' alt='" + initialBoard.pickedUpNode + "' style='width: 25px; height: 25px; margin: 5px'</span> Move " + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + " Node";
-    }else if (initialBoard.isButtonsActivated == false){
-        // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Board Animating ...";
-    }else{
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> No Status";
-    }
+    showBrush(initialBoard);
 }
 
 window.onkeyup = (e) =>{
 	initialBoard.keyDown[e.keyCode] = false;
-    if (initialBoard.keyDown["87"] == true && initialBoard.isButtonsActivated && initialBoard.pickedUpNode == null){
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Draw Wall On";
-    }else if ((initialBoard.keyDown["49"] == true || initialBoard.keyDown["50"] == true || initialBoard.keyDown["51"] == true || initialBoard.keyDown["52"] == true || initialBoard.keyDown["53"] == true) && initialBoard.isButtonsActivated && initialBoard.pickedUpNode == null){
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Draw Weight On";
-    }else if (initialBoard.keyDown["82"] == true && initialBoard.isButtonsActivated && initialBoard.pickedUpNode == null){
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Erase On";
-    }else if (initialBoard.pickedUpNode !== null && initialBoard.isButtonsActivated){
-        // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Move " + initialBoard.pickedUpNode.type + " Node";
-        document.getElementById("show_display_status").innerHTML = "<span style='display: flex; justify-content: center; align-items:center'><img src='/images/pathFinding" + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + "Icon.svg' alt='" + initialBoard.pickedUpNode + "' style='width: 25px; height: 25px; margin: 5px'</span> Move " + initialBoard.pickedUpNode.charAt(0).toUpperCase() + initialBoard.pickedUpNode.slice(1) + " Node";
-    }else if (initialBoard.isButtonsActivated == false){
-        // document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> Board Animating ...";
-    }else{
-        document.getElementById("show_display_status").innerHTML = "<span class='circle-icon'></span> No Status";
-    }
+    showBrush(initialBoard);
 }

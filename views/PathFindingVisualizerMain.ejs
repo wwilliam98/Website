@@ -1,128 +1,135 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <link rel="icon" href="/images/pathFindingTargetIcon.jpeg" type="image/icon">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/images/pathFindingTargetIcon.jpeg" type="image/icon">
         <link rel="stylesheet" type="text/css" href="PathFinding.css"/>
         <title>Pathfinding Visualizer</title>
     </head>
 
     <body>
-        <div id='navbarDiv'>
-            <nav class="navbar navbar-inverse">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a id="refreshButton" class="navbar-brand" href="/">Pathfinding Visualizer</a>
+        <header class="pf-header">
+            <a class="pf-brand" href="/">
+                <img src="/images/pathFindingTargetIcon.svg" alt="" class="pf-brand-icon">
+                Pathfinding Visualizer
+            </a>
+            <div class="pf-header-links">
+                <a href="/" class="pf-link">Portfolio</a>
+                <button id="helpButton" class="pf-icon-btn" type="button" aria-label="Show tutorial" title="Show tutorial">?</button>
+            </div>
+        </header>
+
+        <div class="pf-toolbar" role="toolbar" aria-label="Visualizer controls">
+            <div class="pf-toolbar-group">
+                <label class="pf-field">
+                    <span class="pf-field-label">Algorithm</span>
+                    <select id="algorithmSelect" class="pf-select pf-control"></select>
+                </label>
+                <button id="VisualizeButton" class="pf-btn pf-btn-primary pf-control" type="button">Visualize</button>
+            </div>
+
+            <div class="pf-toolbar-group">
+                <label class="pf-field">
+                    <span class="pf-field-label">Speed</span>
+                    <select id="speedSelect" class="pf-select">
+                        <option value="40">Very slow</option>
+                        <option value="30">Slow</option>
+                        <option value="20">Normal</option>
+                        <option value="10">Fast</option>
+                        <option value="1" selected>Very fast</option>
+                    </select>
+                </label>
+                <label class="pf-field">
+                    <span class="pf-field-label">Maze</span>
+                    <select id="mazeSelect" class="pf-select pf-control">
+                        <option value="" selected>Generate...</option>
+                        <option value="balanced">Recursive division</option>
+                        <option value="horizontal">Horizontal skew</option>
+                        <option value="vertical">Vertical skew</option>
+                    </select>
+                </label>
+                <label class="pf-field">
+                    <span class="pf-field-label">Board size <span id="boardSizeLabel"></span></span>
+                    <input id="changeBoardSizeSlider" type="range" min="11" max="35" value="33" class="pf-slider pf-control">
+                </label>
+            </div>
+
+            <div class="pf-toolbar-group pf-btn-row">
+                <button id="startButtonClearPath" class="pf-btn pf-control" type="button">Clear path</button>
+                <button id="startButtonClearWalls" class="pf-btn pf-control" type="button">Clear walls</button>
+                <button id="startButtonClearWeights" class="pf-btn pf-control" type="button">Clear weights</button>
+                <button id="startButtonClearBoard" class="pf-btn pf-control" type="button">Reset</button>
+            </div>
+        </div>
+
+        <main class="pf-main">
+            <section id="boardWrap" class="pf-board-wrap">
+                <table id="board" aria-label="Pathfinding grid"></table>
+            </section>
+
+            <aside class="pf-panel">
+                <section class="pf-card">
+                    <h2 id="algoName" class="pf-card-title"></h2>
+                    <div id="algoTags" class="pf-tags"></div>
+                    <p id="algo_def" class="pf-card-text"></p>
+                    <label id="greedControl" class="pf-field pf-greed" hidden>
+                        <span class="pf-field-label">Greed <span id="greedValue">2×</span></span>
+                        <input id="greedSlider" type="range" min="1" max="5" step="0.5" value="2" class="pf-slider pf-control">
+                    </label>
+                </section>
+
+                <section class="pf-card">
+                    <h2 class="pf-card-title">Draw</h2>
+                    <div id="brushPicker" class="pf-brushes" role="radiogroup" aria-label="Brush">
+                        <button type="button" class="pf-brush pf-brush-wide pf-control" data-tool="wall" role="radio"><span class="pf-swatch wall"></span>Wall <kbd>W</kbd></button>
+                        <button type="button" class="pf-brush pf-brush-wide pf-control" data-tool="erase" role="radio"><span class="pf-swatch normal"></span>Erase <kbd>R</kbd></button>
+                        <button type="button" class="pf-brush pf-control" data-tool="2" role="radio" title="Weight 2 (key 1)" aria-label="Weight 2"><span class="pf-swatch weight2"></span>2</button>
+                        <button type="button" class="pf-brush pf-control" data-tool="4" role="radio" title="Weight 4 (key 2)" aria-label="Weight 4"><span class="pf-swatch weight4"></span>4</button>
+                        <button type="button" class="pf-brush pf-control" data-tool="6" role="radio" title="Weight 6 (key 3)" aria-label="Weight 6"><span class="pf-swatch weight6"></span>6</button>
+                        <button type="button" class="pf-brush pf-control" data-tool="8" role="radio" title="Weight 8 (key 4)" aria-label="Weight 8"><span class="pf-swatch weight8"></span>8</button>
+                        <button type="button" class="pf-brush pf-control" data-tool="10" role="radio" title="Weight 10 (key 5)" aria-label="Weight 10"><span class="pf-swatch weight10"></span>10</button>
                     </div>
+                    <p class="pf-hint">Click and drag on the grid to paint. Drag the start or target to move it. Weights are the cost of stepping onto a cell; keys 1 to 5 pick them too.</p>
+                    <p id="show_display_status" class="pf-status" role="status" aria-live="polite">Ready</p>
+                </section>
 
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown">
-                            <a id='SelectAnimationDropdown' class="dropdown-toggle" data-toggle="dropdown" href="#">Select Animation Speed<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li id='AnimationSpeedVerySlowDropdown'><a href="#">Very Slow</a></li>
-                                <li id='AnimationSpeedSlowDropdown'><a href="#">Slow</a></li>
-                                <li id='AnimationSpeedNormalDropdown'><a href="#">Normal</a></li>
-                                <li id='AnimationSpeedFastDropdown'><a href="#">Fast</a></li>
-                                <li id='AnimationSpeedVeryFastDropdown'><a href="#">Very Fast</a></li>
-                            </ul>
-                        </li>
+                <section id="resultsCard" class="pf-card" hidden>
+                    <h2 class="pf-card-title">Last run <span id="resultsAlgo" class="pf-muted"></span></h2>
+                    <p id="resultsOutcome" class="pf-outcome"></p>
+                    <dl class="pf-stats">
+                        <div><dt>Cells explored</dt><dd id="statVisited"></dd></div>
+                        <div><dt>Path steps</dt><dd id="statSteps"></dd></div>
+                        <div><dt>Path cost</dt><dd id="statCost"></dd></div>
+                    </dl>
+                </section>
 
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Create Maze<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li id='RecursiveDivisionDropdown'><a href="#">Recursive Division</a></li>
-                                <li id='RecursiveDivisionHorizontalDropdown'><a href="#">Recursive Division (Horizontal Skew)</a></li>
-                                <li id='RecursiveDivisionVerticalDropdown'><a href="#">Recursive Division (Vertical Skew)</a></li>
-                            </ul>
-                        </li>
-                        
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Algorithms <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <div class="dropdown-divider"><u>Unweighted Algorithm</u></div>
-                                <li id='BFSDropdown'><a href="#">Breadth-first Search</a></li>
-                                <li id='DFSDropdown'><a href="#">Depth-first Search</a></li>
-                                <li id='GreedyBestFirstDropdown'><a href="#">Greedy Best-first Search</a></li>
-                                <li id='JumpPointDropdown'><a href="#">Jump Point Search</a></li>
-                                <li id='IterativeDeepeningDropdown'><a href="#">Iterative Deepening DFS</a></li>
-                                <div class="dropdown-divider">------------------------------</div>
-                                <div class="dropdown-divider"><u>Weighted Algorithm</u></div>
-                                <li id='DijkstraDropdown'><a href="#" disabled>Dijkstra's Algorithm</a></li>
-                                <li id='AStarDropdown'><a href="#" disabled>A* Search</a></li>
-                                <li id='WeightedAStarDropdown'><a href="#">Weighted A* Search</a></li>
-                                <li id='BidirectionalDropdown'><a href="#">Bidirectional Dijkstra</a></li>
-                                <li id='BellmanFordDropdown'><a href="#">Bellman-Ford</a></li>
-                            </ul>
-                        </li>
-
-                        <li id='VisualizeButtonli'>
-                            <button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Visualize!</button>
-                        </li>
-                        
-                        <li class="dropdown" id='startButtonClearBoard'><a href="#">Reset Board</a></li>
-                        <li class="dropdown" id='startButtonClearWalls'><a href="#">Clear Walls</a></li>
-                        <li class="dropdown" id='startButtonClearWeights'><a href="#">Clear Weight</a></li>
-                        <li class="dropdown" id='startButtonClearPath'><a href="#">Clear Path</a></li>
+                <section class="pf-card">
+                    <h2 class="pf-card-title">Legend</h2>
+                    <ul class="pf-legend">
+                        <li><span class="pf-swatch start"></span>Start</li>
+                        <li><span class="pf-swatch target"></span>Target</li>
+                        <li><span class="pf-swatch wall"></span>Wall</li>
+                        <li><span class="pf-swatch weight6"></span>Weight</li>
+                        <li><span class="pf-swatch pf-swatch-visited"></span>Explored</li>
+                        <li><span class="pf-swatch pf-swatch-path"></span>Path</li>
                     </ul>
+                </section>
+            </aside>
+        </main>
 
-                    <ul class="nav navbar-nav" style="margin-left: auto;">
-                        <li class="dropdown" id='helpButton'><a href="#">Show Tutorial</a></li>
-                    </ul>
+        <div id="tutorial" class="pf-modal" hidden>
+            <div class="pf-modal-card" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+                <div class="pf-modal-top">
+                    <span id="tutorialCounter" class="pf-muted"></span>
+                    <button id="skipButton" class="pf-icon-btn pf-icon-btn-light" type="button" aria-label="Close tutorial">&times;</button>
                 </div>
-            </nav>
-        </div>
-        <div id="tutorial">
-            <div id="tutorialCounter" style="position:absolute; right:2%; top:2%">1/5</div>
-            <h1>Welcome to Pathfinding Visualizer!</h1>
-            <h3>This tutorial will walk you through all of the features of this application.</h3>
-            <h4>If you want to dive right in, feel free to press the "Skip Tutorial" button below. Otherwise, press "Next"!</h4>
-            <img id="mainTutorialImage" src="images/FinishFlag.gif">
-            <button id="nextButton" class="btn btn-default navbar-btn" type="button">Next</button>
-            <button id="previousButton" class="btn btn-default navbar-btn" type="button">Previous</button>
-            <button id="skipButton" class="btn btn-default navbar-btn" type="button">Skip Tutorial</button>
-        </div>
-        <div style="display: flex">
-            <table id = "board" style="height: 90vh; flex: 8; flex-basis: 0;"></table>
-            <div style="border: 5px solid rgb(31 41 55); flex: 2; flex-basis: 0;">
-                <div style="padding: 20;">
-                    <div>
-                        <u><h1 style="text-align: center;">Change Board Size</h1></u>
-                        <input id="changeBoardSizeSlider" type="range" min="11" max="35" value="35" class="slider" disabled>
-                    </div>
-                    <br>
-                    <div>
-                        <u><h1 style="text-align: center;">Board Status</h1></u>
-                        <div id="KeyDisplayDiv" style="display: flex; flex-direction: row;">
-                            <div id="Weight1Display" class="WeightDisplay"> <h3><span style='display: flex; justify-content: center; align-items:center'><img src='/images/weight2.png' style='width: 40px; height: 40px; margin: 5px'> </span>1</h3> </div>
-                            <div id="Weight2Display" class="WeightDisplay"> <h3><span style='display: flex; justify-content: center; align-items:center'><img src='/images/weight4.png' style='width: 40px; height: 40px; margin: 5px'> </span>2</h3> </div>
-                            <div id="Weight3Display" class="WeightDisplay"> <h3><span style='display: flex; justify-content: center; align-items:center'><img src='/images/weight6.png' style='width: 40px; height: 40px; margin: 5px'> </span>3</h3> </div>
-                            <div id="Weight4Display" class="WeightDisplay"> <h3><span style='display: flex; justify-content: center; align-items:center'><img src='/images/weight8.png' style='width: 40px; height: 40px; margin: 5px'> </span>4</h3> </div>
-                            <div id="Weight5Display" class="WeightDisplay"> <h3><span style='display: flex; justify-content: center; align-items:center'><img src='/images/weight10.png' style='width: 40px; height: 40px; margin: 5px'> </span>5</h3> </div>
-                        </div>
-                        <div id="KeyDisplayDiv" style="display: flex; flex-direction: row;">
-                            <div id="WKeyDisplay" class="KeyDisplay"> <h3>Wall(W)</h3> </div>
-                            <div id="RKeyDisplay" class="KeyDisplay"> <h3>Erase(R)</h3> </div>
-                        </div>
-                        <div>
-                            <h2 id="show_display_status" style="text-align: center;"><span class="circle-icon"></span> No Status</h2>
-                        </div>
-                    </div>
-                    <br>
-                    <div id="about_algorithm_div">
-                        <u><h1 style="text-align: center;">About Algorithm</h1></u>
-                        <h3 id='algo_def' style="text-align: center;">Select an Algorithm to see the definition</h3>
-                        <div id="greedControl" style="display: none;">
-                            <h3 style="text-align: center;">Greed: <span id="greedValue">2</span></h3>
-                            <input id="greedSlider" type="range" min="1" max="5" step="0.5" value="2" class="slider">
-                        </div>
-                    </div>
-
+                <h2 id="tutorialTitle"></h2>
+                <p id="tutorialBody"></p>
+                <img id="mainTutorialImage" src="images/FinishFlag.gif" alt="">
+                <div class="pf-modal-actions">
+                    <button id="previousButton" class="pf-btn" type="button">Back</button>
+                    <button id="nextButton" class="pf-btn pf-btn-primary" type="button">Next</button>
                 </div>
             </div>
         </div>
