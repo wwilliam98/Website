@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { PaperAirplaneIcon, ChatBubbleLeftRightIcon, XMarkIcon, ArrowPathIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
+import { PaperAirplaneIcon, ChatBubbleLeftRightIcon, XMarkIcon, ArrowPathIcon, ArrowTopRightOnSquareIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
 import content from "../data/content.json";
 import AvatarPic from "../Images/LinkedInPFP.png";
 
@@ -27,7 +27,9 @@ const isInternal = (href) => href.startsWith("#") || href.startsWith("/");
 
 function loadMessages() {
     try {
-        return JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || [];
+        const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || [];
+        // A send interrupted by a reload never finished, so offer the button again
+        return saved.map((m) => (m.action?.status === "sending" ? { ...m, action: { ...m.action, status: "pending" } } : m));
     } catch {
         return [];
     }
@@ -129,6 +131,34 @@ function LinkChips({ text, onNavigate }) {
     );
 }
 
+// Shown when the assistant offers to email the résumé; nothing is sent until the visitor confirms
+function ResumeConfirm({ action, onConfirm, onCancel }) {
+    if (action.status === "sent") return <p className="mt-2.5 text-xs text-gray-400">Résumé sent to {action.email}</p>;
+    if (action.status === "cancelled") return <p className="mt-2.5 text-xs text-gray-400">Not sent</p>;
+
+    const sending = action.status === "sending";
+    return (
+        <div className="flex flex-wrap gap-1.5 mt-2.5">
+            <button
+                onClick={onConfirm}
+                disabled={sending}
+                className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-[#38BDF8] text-gray-900 font-semibold hover:bg-[#7dd3fc] transition-colors disabled:opacity-50"
+            >
+                <EnvelopeIcon className="w-3.5 h-3.5" />
+                {sending ? "Sending…" : `Send to ${action.email}`}
+            </button>
+            {!sending && (
+                <button
+                    onClick={onCancel}
+                    className="text-xs px-3 py-1.5 rounded-full border border-white/15 text-gray-300 hover:bg-white/5 transition-colors"
+                >
+                    Cancel
+                </button>
+            )}
+        </div>
+    );
+}
+
 function ChatWithAI() {
     const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState(loadMessages);
@@ -164,6 +194,32 @@ function ChatWithAI() {
         if (href.startsWith("#") && window.innerWidth < 640) setOpen(false);
     };
 
+    const setAction = (index, status) =>
+        setMessages((prev) => prev.map((m, i) => (i === index ? { ...m, action: { ...m.action, status } } : m)));
+
+    const sendResume = async (index, email) => {
+        setAction(index, "sending");
+        try {
+            const res = await fetch("/send_resume", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.result) {
+                const error = new Error(data.error);
+                error.showToUser = Boolean(data.error);
+                throw error;
+            }
+            setAction(index, "sent");
+            setMessages((prev) => [...prev, { role: "assistant", content: data.result }]);
+        } catch (error) {
+            setAction(index, "pending");
+            const content = error.showToUser ? error.message : "Sorry, I couldn't send the email. Please try again later.";
+            setMessages((prev) => [...prev, { role: "assistant", error: true, content }]);
+        }
+    };
+
     const sendMessage = async (text = input) => {
         const prompt = text.trim();
         if (!prompt || loading) return;
@@ -191,7 +247,8 @@ function ChatWithAI() {
                 error.showToUser = res.status === 429 && Boolean(data.error);
                 throw error;
             }
-            setMessages((prev) => [...prev, { role: "assistant", content: data.result }]);
+            const action = data.action?.type === "send_resume" ? { ...data.action, status: "pending" } : undefined;
+            setMessages((prev) => [...prev, { role: "assistant", content: data.result, ...(action && { action }) }]);
         } catch (error) {
             const content = error.showToUser ? error.message : "Sorry, something went wrong. Please try again.";
             setMessages((prev) => [...prev, { role: "assistant", error: true, content }]);
@@ -258,6 +315,13 @@ function ChatWithAI() {
                                     <>
                                         <MarkdownMessage text={msg.content} onNavigate={handleNavigate} />
                                         <LinkChips text={msg.content} onNavigate={handleNavigate} />
+                                        {msg.action?.type === "send_resume" && (
+                                            <ResumeConfirm
+                                                action={msg.action}
+                                                onConfirm={() => sendResume(index, msg.action.email)}
+                                                onCancel={() => setAction(index, "cancelled")}
+                                            />
+                                        )}
                                     </>
                                 ) : (
                                     msg.content

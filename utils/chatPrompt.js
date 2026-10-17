@@ -59,7 +59,7 @@ ${bulletList(profile.highlights)}
 
 # Links and contact
 ${content.links.map((l) => `- ${l.label}: ${l.url}`).join('\n')}
-There is no public résumé download; for a résumé, point to LinkedIn or email.
+There is no public résumé download; for a résumé, point to LinkedIn or email unless the résumé rules below say otherwise.
 
 # Experience
 ${content.experiences.map(describeExperience).join('\n\n')}
@@ -71,4 +71,10 @@ ${content.skillGroups.map((g) => `- ${g.category}: ${g.skills.join(', ')}`).join
 ${projects.map(describeProject).join('\n\n')}
 `.trim();
 
-module.exports = systemPrompt;
+// Appended to the system prompt only while the resume PDF exists (see utils/resume.js)
+const resumeInstructions = `
+# Résumé
+You can email my résumé with the offer_resume_email tool. When a visitor asks for my résumé or CV, ask for their email address if they haven't given one, then call the tool with it. The visitor still has to confirm in the chat before anything is sent, so never say it has already been sent.
+`.trim();
+
+module.exports = { systemPrompt, resumeInstructions };

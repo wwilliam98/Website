@@ -8,11 +8,12 @@ const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-function limiter({ windowMs, limit, message, global = false, skipSuccessfulRequests = false }) {
+function limiter({ windowMs, limit, message, global = false, skipSuccessfulRequests = false, skipFailedRequests = false }) {
   return rateLimit({
     windowMs,
     limit,
     skipSuccessfulRequests,
+    skipFailedRequests,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
     message: { error: message },
@@ -43,4 +44,23 @@ const contactLimiters = [
 const loginLimiter = limiter({ windowMs: 15 * MINUTE, limit: 10, skipSuccessfulRequests: true,
   message: 'Too many failed login attempts. Please try again in 15 minutes.' });
 
-module.exports = { chatLimiters, contactLimiters, loginLimiter };
+// Each send emails the resume through the same Gmail account; the per-address
+// limit stops one inbox from being flooded from many IPs. Only actual sends count,
+// so a typo'd address doesn't use up a visitor's quota
+const resumeLimiters = [
+  limiter({ windowMs: HOUR, limit: 3, skipFailedRequests: true,
+    message: "You've requested my résumé a few times already. Please try again in an hour." }),
+  rateLimit({
+    windowMs: DAY,
+    limit: 1,
+    skipFailedRequests: true,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    keyGenerator: (req) => String(req.body?.email || '').trim().toLowerCase(),
+    message: { error: 'My résumé was already sent to that address today. Please check your inbox and spam folder.' },
+  }),
+  limiter({ windowMs: DAY, limit: 50, global: true, skipFailedRequests: true,
+    message: "I can't send more résumés today. Please reach me on LinkedIn instead." }),
+];
+
+module.exports = { chatLimiters, contactLimiters, loginLimiter, resumeLimiters };
