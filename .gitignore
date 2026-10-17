@@ -3,7 +3,6 @@ package-lock.json
 node_modules/
 dist/
 build/
-pathfinding-service/.venv/
 __pycache__/
 .pytest_cache/
 # Resume PDF the chat assistant emails (see utils/resume.js)

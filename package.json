@@ -23,8 +23,7 @@
     "startdev": "nodemon app.js",
     "build": "npm install && cd portfolio && npm install && npm run build",
     "start": "node app.js",
-    "service": "pathfinding-service/.venv/bin/uvicorn app.main:app --app-dir pathfinding-service --port 8000 --reload",
-    "service:test": "cd pathfinding-service && .venv/bin/python -m pytest tests/"
+    "test": "node --test pathfinding/test/algorithms.test.js pathfinding/test/api.test.js"
   },
   "author": "",
   "license": "ISC"

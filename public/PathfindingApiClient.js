@@ -1,5 +1,5 @@
-// Client for the pathfinding API (Express proxy -> Python/FastAPI service).
-// The service owns the algorithms; this file owns serialization and transport.
+// Client for the pathfinding API (POST /api/pathfind on the Express server).
+// The server owns the algorithms; this file owns serialization and transport.
 
 export class PathfindingApiError extends Error {
     constructor(message, status) {
@@ -28,7 +28,7 @@ export class PathfindingApiClient {
         }
         if (!response.ok) {
             const body = await response.json().catch(() => ({}));
-            throw new PathfindingApiError(body.error || 'Pathfinding service error', response.status);
+            throw new PathfindingApiError(body.error || 'Pathfinding failed', response.status);
         }
         return response.json();
     }

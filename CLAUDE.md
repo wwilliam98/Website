@@ -26,35 +26,21 @@ npm run build      # Build to portfolio/build/
 Both the Express backend and the React dev server default to port 3000 — run the
 frontend dev server with `PORT=3001 npm run dev` if the backend is up, or rely on
 CRA's port prompt. `.claude/launch.json` defines launch configs for browser-preview
-tooling: `portfolio` (React dev server, `autoPort`), `backend` (Express on :3000) and
-`pathfinding-service` (uvicorn on :8000).
+tooling: `portfolio` (React dev server, `autoPort`) and `backend` (Express on :3000).
 
-### Pathfinding service (pathfinding-service/)
-Python/FastAPI microservice that computes all paths for `/PathFindingVisualizer`.
-It must be running for Visualize to work; otherwise the page shows
-"Pathfinding service unavailable".
+### Tests
 ```bash
-# One-time setup
-python3 -m venv pathfinding-service/.venv
-pathfinding-service/.venv/bin/pip install -r pathfinding-service/requirements.txt
-
-# Run (internal service on :8000)
-npm run service
-
-# Tests
-npm run service:test    # pytest
+npm test    # pathfinding algorithms + request validation (node:test, no dependencies)
 ```
 
 ### Deployment
 There is no CI/CD: merging to `main` does not deploy, and the only automated PR check
-is GitGuardian (secret scanning). Production needs two long-running processes, each
-kept alive by a process manager (e.g. pm2 or systemd): `npm start` (Express, public)
-and the pathfinding service (localhost only — never expose :8000). Run the service
-without `--reload` in production; `npm run service` includes it for development.
+is GitGuardian (secret scanning). Production is one long-running process, `npm start`
+(Express), kept alive by a process manager (e.g. pm2 or systemd).
 
 ## Architecture
 
-This is a multi-service app:
+This is a single-process app:
 
 **Backend** — Express + Node.js (`app.js`, root, port 3000, Node v20)
 - Serves the React build as a static SPA at `/*`
@@ -65,7 +51,7 @@ This is a multi-service app:
 - `/generate_chat` — proxies to OpenAI `gpt-4o-mini`. Body `{prompt, history?}`: `prompt` 1–1000 chars; `history` is up to 6 earlier `{role: user|assistant, content}` turns (≤3000 chars each) so follow-ups have context, else 400. The system prompt is built in `utils/chatPrompt.js` from `portfolio/src/data/content.json` (the same data the site renders) and restricts the bot to William's professional background, forbids invented facts/URLs, and asks for plain Markdown with project links as `#project-<id>` anchors. When `private/resume.pdf` exists (gitignored, override with `RESUME_PATH`; see `utils/resume.js`) the call also offers an `offer_resume_email` tool; a tool call never sends mail, it returns `{result, action: {type: 'send_resume', email}}` and the widget shows a confirm button. Returns `{result}` on success, `{error}` with HTTP 500 on failure, `{error}` with HTTP 429 when rate-limited
 - `/send_resume` — emails the resume PDF to `{email}` after the visitor confirms in the chat widget. Fixed body text with no visitor input (so it can't relay spam), reply-to the owner. 400 on a bad address, 404 when the PDF is missing, `{result}` on success. Shares `createTransporter()` (Gmail SMTP) with the contact form
 - `/send_contactme_email` — sends contact form submissions via Gmail SMTP (nodemailer); returns `{success}`, `{error}`, or `{error}` with HTTP 429 when rate-limited
-- `/api/pathfind` — POST proxy to the FastAPI service (`PATHFINDING_SERVICE_URL`, default `http://localhost:8000`) via native fetch with 5s timeout; passes upstream status/body through (including 422 validation errors), returns 503 `{error}` when the service is down
+- `/api/pathfind` — POST; runs the pathfinding algorithms in-process via `pathfinding/` (see below). Returns `{found, visited_order, path, stats}`, or 422 `{error}` on invalid input
 - `POST /solve` (logged-in; increments the user's `solvedSudoku` count) and `POST /guest_solve` — Sudoku solving via the backtracking `SolveBoard()` in `authController.js`. Both reject input that fails `isValidBoardShape()` (9×9 integers 0–9) with a 400 before solving, because `SolveBoard` indexes cells without bounds checks; the frontend caller is `public/script.js`
 - Legacy routes: `/SudokuSolver` (auth-protected, EJS), `/PathFindingVisualizer` (EJS), `/oldPortfolio` (EJS)
 - `/dare-mighty-things` route is broken (references an undefined `request`) — known, leave unless asked
@@ -89,17 +75,18 @@ This is a multi-service app:
 - Smooth scrolling is gated behind `prefers-reduced-motion` in `index.css`
 - React dev server proxies API calls to `http://localhost:3000` (see `portfolio/package.json` `proxy`)
 
-**Pathfinding visualizer** — the browser owns the grid UI and animation; the Python service owns the algorithms
-- Flow: `public/PathFindingVisualizer.js` → `serializeBoard()` in `public/PathfindingApiClient.js` → `POST /api/pathfind` `{algorithm, grid: {height, width, start, target, walls, weights}}` → Express proxy → FastAPI → `{found, visited_order, path, stats}` → the board animates `visited_order` then `path`. Node ids are the DOM cell ids (`"row-col"`) end-to-end; algorithm names are the dropdown strings `BFS | DFS | Dijkstra | AStar`
+**Pathfinding visualizer** — the browser owns the grid UI and animation; `pathfinding/` on the server owns the algorithms
+- Flow: `public/PathFindingVisualizer.js` → `serializeBoard()` in `public/PathfindingApiClient.js` → `POST /api/pathfind` `{algorithm, grid: {height, width, start, target, walls, weights}}` → `pathfind()` in `pathfinding/index.js` → `{found, visited_order, path, stats}` → the board animates `visited_order` then `path`. Node ids are the DOM cell ids (`"row-col"`) end-to-end; algorithm names are the dropdown strings `BFS | DFS | Dijkstra | AStar`
 - `PathFindingVisualizer.js`: prototype-based `Board` managing a 33×63 grid table, wall/weight drawing (keys W / 1–5 → weights 2–10 / R), drag of start/target, recursive-setTimeout animation, and `toggleButtons()`, which locks/unlocks all UI. Its enable branch resets the status bar, so error messages must be written *after* unlocking. The resize slider stores board dims as strings — `serializeBoard()` coerces them
 - `PathFindingNode.js`: render state only (`id`, `type`, `weight`, `status`); there is no client-side graph
 - `createMaze.js`: maze generation stays client-side. `create_maze(board, style)` with styles `balanced | horizontal | vertical`; `ORIENTATION_RULES` reproduces three original hand-written variants exactly (the asymmetry is intentional). Walls must be pushed in row-major order — that is the animation order
 
-**Pathfinding service** — Python/FastAPI (`pathfinding-service/`, internal :8000, binds localhost only)
-- `app/algorithms/base.py`: `PathfindingAlgorithm` ABC; subclasses with a class-level `name` auto-register via `__init_subclass__`, and `get_algorithm(name)` dispatches. Adding an algorithm = one subclass file in `app/algorithms/` (imported in its `__init__.py`) plus a dropdown entry in the EJS view and handler in `toggleButtons()`
-- `app/domain/grid.py`: `Grid.DIRECTIONS` (right, down, left, up) must stay in this order — it determines BFS/DFS exploration order and therefore the animation; a determinism test guards it
-- Dijkstra/A* use `heapq` and settle nodes at pop (the old JS marked visited at enqueue, which was wrong on weighted grids). `visited_order` is settle order; `path` is `[start..target]` inclusive or `[]`; `path_cost` excludes the start cell
-- `app/schemas.py`: Pydantic validation (dims 2–200, ids in bounds, weights 2–10, start ≠ target, no wall/weight overlap) → 422 on bad input
+**Pathfinding algorithms** — plain Node, no dependencies (`pathfinding/`, required by `app.js`)
+- `algorithms/PathfindingAlgorithm.js`: abstract base class; subclasses set `static algorithmName` and call `PathfindingAlgorithm.register()`, and `getAlgorithm(name)` dispatches. Adding an algorithm = one subclass file in `algorithms/` (required in `algorithms/index.js`) plus a dropdown entry in the EJS view and handler in `toggleButtons()`
+- `domain/Grid.js`: `Grid.DIRECTIONS` (right, down, left, up) must stay in this order — it determines BFS/DFS exploration order and therefore the animation; a determinism test guards it. `Position` objects compare by reference in JS, so algorithms key their Maps/Sets on `pos.id`
+- Dijkstra/A* use `domain/MinHeap.js` (insertion-order tiebreak for deterministic animation) and settle nodes at pop (the original browser code marked visited at enqueue, which was wrong on weighted grids). `visited_order` is settle order; `path` is `[start..target]` inclusive or `[]`; `path_cost` excludes the start cell
+- `validation.js`: request validation (dims 2–100 integers, ids in bounds, weights 2–10, start ≠ target, no wall/weight overlap) → `ValidationError` → 422
+- Runs synchronously on the event loop: ~4ms for the UI's largest board (35×70), ~30ms at the 100×100 cap. The cap bounds how long one crafted request can stall the server — keep it low
 
 **Other**
 - `views/` — EJS templates for the legacy routes
@@ -107,7 +94,7 @@ This is a multi-service app:
 
 ## Notes
 
-- The React frontend and the vanilla-JS visualizer have no test suites (`react-scripts test` finds 0 files); verify changes by running the app. The pathfinding service has pytest coverage (algorithm correctness incl. a weighted regression case, API validation) — run `npm run service:test`
+- The React frontend and the vanilla-JS visualizer UI have no test suites (`react-scripts test` finds 0 files); verify changes by running the app. `pathfinding/` has `node:test` coverage (algorithm correctness incl. a weighted regression case, request validation) — run `npm test`
 - Express 4 doesn't catch errors thrown in `async` handlers or callbacks, and Node 20 exits on an unhandled rejection — every failure path in a handler must send a response, or one bad request takes the whole server down
 - Production build must stay warning-free — unused imports fail this bar
 - Contact rate-limit messages must never contain the word "success": `ContactMe.js` colors its alert green when the message includes it, so a 429 message with that word would look like a sent email
@@ -118,7 +105,6 @@ This is a multi-service app:
 
 - Backend: clean as of October 2026 (`npm audit` reports 0 after the package upgrades, including `jsonwebtoken` v9); re-run it before releases
 - `portfolio/`: nearly all findings are Create React App build tooling (webpack, jest, babel, dev server), not code shipped to visitors. **Never run `npm audit fix --force` there** — it installs `react-scripts@0.0.0` and breaks the build. The real fix is migrating off CRA (deprecated), e.g. to Vite
-- `pathfinding-service/requirements.txt` is unpinned, so installs float to the latest versions; check with `pip-audit`
 
 ## Known open issues (from the October 2026 security audit)
 
