@@ -2,6 +2,7 @@
 // format as the browser UI's DOM cell ids, and algorithm names match the UI
 // dropdown strings exactly, so the browser needs no translation.
 const { PathfindingAlgorithm } = require('./algorithms');
+const { ValidationError } = require('./errors');
 
 const ID_RE = /^\d+-\d+$/;
 const MIN_DIM = 2;
@@ -10,21 +11,17 @@ const MIN_DIM = 2;
 const MAX_DIM = 100;
 const MIN_WEIGHT = 2;
 const MAX_WEIGHT = 10;
+const MIN_GREED = 1;
+const MAX_GREED = 5;
 
-class ValidationError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'ValidationError';
-  }
-}
 
 const isPlainObject = (value) =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
 
-// Returns the normalized {algorithm, grid} or throws ValidationError.
+// Returns the normalized {algorithm, grid, options} or throws ValidationError.
 function validatePathfindRequest(body) {
   if (!isPlainObject(body)) throw new ValidationError('request body must be a JSON object');
-  const { algorithm, grid } = body;
+  const { algorithm, grid, options = {} } = body;
 
   if (!PathfindingAlgorithm.names.includes(algorithm)) {
     throw new ValidationError(
@@ -71,7 +68,14 @@ function validatePathfindRequest(body) {
     }
   }
 
-  return { algorithm, grid: { height, width, start, target, walls, weights } };
+  if (!isPlainObject(options)) throw new ValidationError('options must be an object');
+  const { greed } = options;
+  if (greed !== undefined &&
+      (typeof greed !== 'number' || !(greed >= MIN_GREED && greed <= MAX_GREED))) {
+    throw new ValidationError(`greed must be a number ${MIN_GREED}-${MAX_GREED}`);
+  }
+
+  return { algorithm, grid: { height, width, start, target, walls, weights }, options: { greed } };
 }
 
 module.exports = { validatePathfindRequest, ValidationError };

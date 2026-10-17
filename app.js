@@ -20,7 +20,7 @@ const { OpenAI } = require("openai");
 const escapeHtml = require('./utils/escapeHtml');
 const { systemPrompt, resumeInstructions } = require('./utils/chatPrompt');
 const { RESUME_PATH, resumeAvailable, isValidEmail } = require('./utils/resume');
-const { pathfind, ValidationError: PathfindingValidationError } = require('./pathfinding');
+const { pathfind, PathfindingError } = require('./pathfinding');
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -230,12 +230,12 @@ app.post('/send_resume', resumeLimiters, async (req, res) => {
 });
 
 // Pathfinding for /PathFindingVisualizer runs in-process (pathfinding/).
-// 422 {error} on invalid input, matching the old service's status code.
+// 422 {error} on invalid input or a search too large to run here.
 app.post('/api/pathfind', (req, res) => {
   try {
     res.json(pathfind(req.body));
   } catch (error) {
-    if (error instanceof PathfindingValidationError) {
+    if (error instanceof PathfindingError) {
       return res.status(422).json({ error: error.message });
     }
     console.error(error);

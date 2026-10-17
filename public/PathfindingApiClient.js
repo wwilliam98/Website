@@ -15,13 +15,14 @@ export class PathfindingApiClient {
     }
 
     // Returns {found, visited_order, path, stats}; throws PathfindingApiError.
-    async findPath(algorithm, gridPayload) {
+    // options: per-algorithm tuning, e.g. {greed} for Weighted A*.
+    async findPath(algorithm, gridPayload, options = {}) {
         let response;
         try {
             response = await fetch(`${this.baseUrl}/api/pathfind`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ algorithm, grid: gridPayload }),
+                body: JSON.stringify({ algorithm, grid: gridPayload, options }),
             });
         } catch (networkError) {
             throw new PathfindingApiError('Could not reach the server', 0);
