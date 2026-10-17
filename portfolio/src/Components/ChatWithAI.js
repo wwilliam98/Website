@@ -8,6 +8,7 @@ const STARTER_QUESTIONS = [
     "What do you work on at STMicroelectronics?",
     "What projects have you built?",
     "What are your strongest skills?",
+    "Can you email me your resume?",
     "How can I contact you?",
 ];
 
