@@ -15,17 +15,19 @@ class PathfindingAlgorithm {
     REGISTRY.set(subclass.algorithmName, subclass);
   }
 
-  static get(name) {
+  static get(name, options = {}) {
     const Subclass = REGISTRY.get(name);
     if (!Subclass) throw new Error(`unknown algorithm: '${name}'`);
-    return new Subclass();
+    return new Subclass(options);
   }
 
   static get names() {
     return [...REGISTRY.keys()];
   }
 
-  constructor() {
+  // options: per-algorithm tuning from the request (e.g. Weighted A*'s greed).
+  constructor(options = {}) {
+    this.options = options;
     if (new.target === PathfindingAlgorithm) {
       throw new TypeError('PathfindingAlgorithm is abstract');
     }
@@ -51,6 +53,11 @@ class PathfindingAlgorithm {
     const visitedIds = visitedOrder.map((pos) => pos.id);
     if (!found) return { visitedOrder: visitedIds, path: [], found: false, pathCost: null };
     const path = PathfindingAlgorithm._reconstruct(cameFrom, grid.start, grid.target);
+    return this._resultFromPath(grid, visitedIds, path);
+  }
+
+  // For algorithms that build the full [start..target] path themselves.
+  _resultFromPath(grid, visitedIds, path) {
     // Cost of entering each node along the path; start itself is free.
     const pathCost = path.slice(1).reduce((sum, pos) => sum + grid.weight(pos), 0);
     return { visitedOrder: visitedIds, path: path.map((pos) => pos.id), found: true, pathCost };

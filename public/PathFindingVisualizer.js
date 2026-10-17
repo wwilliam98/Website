@@ -11,6 +11,61 @@ const MAZE_DROPDOWNS = {
     RecursiveDivisionVerticalDropdown: "vertical",
 };
 
+// Algorithm name (as the server knows it; dropdown id is `${name}Dropdown`)
+// -> Visualize button label and "About Algorithm" text
+const ALGORITHMS = {
+    BFS: {
+        button: "BFS",
+        title: "Breadth First Search (Unweighted)",
+        description: "A search algorithm that traverse from the root node and explore its neighboring node. Guarantee shortest path on unweighted graph but doesn't Guarantee shortest path on weighted graph.",
+    },
+    DFS: {
+        button: "DFS",
+        title: "Depth First Search (Unweighted)",
+        description: "A search algorithm that traverse from the root node to the deepest branch before backtracking. Doesn't Guarantee shortest path.",
+    },
+    GreedyBestFirst: {
+        button: "Greedy",
+        title: "Greedy Best-First Search (Unweighted)",
+        description: "Always moves to whichever cell looks closest to the target, ignoring how far it has already come. Usually very fast, but doesn't guarantee the shortest path.",
+    },
+    JumpPoint: {
+        button: "JPS",
+        title: "Jump Point Search (Unweighted)",
+        description: "A* that skips along straight open runs and only stops where the route could turn, so it checks far fewer cells. Guarantees the shortest path on unweighted grids; ignores weights.",
+    },
+    IterativeDeepening: {
+        button: "IDDFS",
+        title: "Iterative Deepening DFS (Unweighted)",
+        description: "Runs depth-first search with a depth limit of 1, 2, 3, ... until the target is in reach, so each new layer appears one step at a time. Guarantees the fewest steps; ignores weights.",
+    },
+    Dijkstra: {
+        button: "Dijkstra",
+        title: "Dijkstra Algorithm (Weighted)",
+        description: "A search algorithm that prioritize the least weight distance to search for shortest path. Guarantee shortest path.",
+    },
+    AStar: {
+        button: "A*",
+        title: "A-Star Algorithm (Weighted)",
+        description: "An informed search algorithm that uses heuristics method to search for shortest path. Guarantee shortest path.",
+    },
+    WeightedAStar: {
+        button: "Weighted A*",
+        title: "Weighted A* (Weighted)",
+        description: "A* that trusts its distance estimate more. Turn up the greed to search fewer cells, at the cost of a path up to that many times longer than the best one.",
+    },
+    Bidirectional: {
+        button: "Bidirectional",
+        title: "Bidirectional Dijkstra (Weighted)",
+        description: "Runs Dijkstra from the start and from the target at the same time until the two searches meet. Guarantee shortest path.",
+    },
+    BellmanFord: {
+        button: "Bellman-Ford",
+        title: "Bellman-Ford (Weighted)",
+        description: "Sweeps the whole grid again and again, improving every cell's distance until nothing changes. Slower than Dijkstra, but also handles negative weights in general graphs. Guarantee shortest path.",
+    },
+};
+
 // Board attributes
 function Board(height, width){
 	// Board Setup
@@ -41,6 +96,7 @@ function Board(height, width){
 	this.AnimateFoundPath = [];
 	
 	this.selectedAlgorithm = null;
+	this.greed = 2; // Weighted A* only
 	this.buttonsOn = false;
 	this.speed = 1;
 };
@@ -671,7 +727,7 @@ Board.prototype.toggleButtons = function() {
             board.toggleButtons();
             board.clearPath();
             try {
-                const result = await apiClient.findPath(board.selectedAlgorithm, serializeBoard(board));
+                const result = await apiClient.findPath(board.selectedAlgorithm, serializeBoard(board), { greed: board.greed });
                 board.nodesToAnimate = result.visited_order.map(id => {
                     const node = board.getNodesByID[id];
                     node.status = "visited"; // what animateStatus/clearPath key off
@@ -723,40 +779,16 @@ Board.prototype.toggleButtons = function() {
         // Create Maze Button End
 
         // Select Algorithm Button
-        document.getElementById('BFSDropdown').onclick = () => {
-            document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Visualize BFS</button>`;
-            board.selectedAlgorithm = "BFS";
-            document.getElementById('algo_def').innerHTML = `<h3 id='algo_def' style="text-align: center;">
-                                                            Breadth First Search (Unweighted):</h3>
-                                                            <h3>A search algorithm that traverse from the root node and explore its neighboring node. Guarantee shortest path on unweighted graph but doesn't Guarantee shortest path on weighted graph.</h3>
+        for (const [name, algorithm] of Object.entries(ALGORITHMS)) {
+            document.getElementById(`${name}Dropdown`).onclick = () => {
+                document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Visualize ${algorithm.button}</button>`;
+                board.selectedAlgorithm = name;
+                document.getElementById('algo_def').innerHTML = `<h3 id='algo_def' style="text-align: center;">
+                                                            ${algorithm.title}:</h3>
+                                                            <h3>${algorithm.description}</h3>
                                                             `;
-        }
-
-        document.getElementById('DFSDropdown').onclick = () => {
-            document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Visualize DFS</button>`;
-            board.selectedAlgorithm = "DFS";
-            document.getElementById('algo_def').innerHTML = `<h3 id='algo_def' style="text-align: center;">
-                                                            Depth First Search (Unweighted):</h3>
-                                                            <h3>A search algorithm that traverse from the root node to the deepest branch before backtracking. Doesn't Guarantee shortest path.</h3>
-                                                            `;
-        }
-
-        document.getElementById('DijkstraDropdown').onclick = () => {
-            document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Visualize Dijkstra</button>`;
-            board.selectedAlgorithm = "Dijkstra";
-            document.getElementById('algo_def').innerHTML = `<h3 id='algo_def' style="text-align: center;">
-                                                            Dijkstra Algorithm (Weighted):</h3>
-                                                            <h3>A search algorithm that prioritize the least weight distance to search for shortest path. Guarantee shortest path.</h3>
-                                                            `;
-        }
-
-        document.getElementById('AStarDropdown').onclick = () => {
-            document.getElementById('VisualizeButtonli').innerHTML = `<button id="VisualizeButton" class="btn btn-default navbar-btn" type="button">Visualize A*</button>`;
-            board.selectedAlgorithm = "AStar";
-            document.getElementById('algo_def').innerHTML = `<h3 id='algo_def' style="text-align: center;">
-                                                            A-Star Algorithm (Weighted):</h3>
-                                                            <h3>An informed search algorithm that uses heuristics method to search for shortest path. Guarantee shortest path.</h3>
-                                                            `;
+                document.getElementById('greedControl').style.display = name === 'WeightedAStar' ? 'block' : 'none';
+            }
         }
 
         // Clear Board and clear path
@@ -805,10 +837,9 @@ Board.prototype.toggleButtons = function() {
         }
         
         // Off Algo selection
-        document.getElementById('BFSDropdown').onclick = null
-        document.getElementById('DFSDropdown').onclick = null
-        document.getElementById('DijkstraDropdown').onclick = null
-        document.getElementById('AStarDropdown').onclick = null
+        for (const name of Object.keys(ALGORITHMS)) {
+            document.getElementById(`${name}Dropdown`).onclick = null
+        }
 
         // Off reset and clear
         document.getElementById('startButtonClearBoard').onclick = null
@@ -855,6 +886,7 @@ Board.prototype.resizeboard = function(height, width){
 	this.AnimateFoundPath = [];
 	
 	this.selectedAlgorithm = null;
+	this.greed = 2; // Weighted A* only
 	this.buttonsOn = false;
 	this.speed = 1;
 
@@ -870,6 +902,11 @@ Board.prototype.resizeboard = function(height, width){
 // let initialBoard = new Board(21, 31);
 let initialBoard = new Board(33, 63);
 initialBoard.initialise();
+
+document.getElementById("greedSlider").oninput = () => {
+    initialBoard.greed = Number(document.getElementById("greedSlider").value);
+    document.getElementById("greedValue").textContent = initialBoard.greed;
+}
 
 document.getElementById("changeBoardSizeSlider").oninput = () => {
     let val = document.getElementById("changeBoardSizeSlider").value    

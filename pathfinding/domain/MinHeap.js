@@ -16,7 +16,16 @@ class MinHeap {
     this._siftUp(this._items.length - 1);
   }
 
-  // Returns {priority, value}; caller checks size first.
+  // Caller checks size first for peek/peekPriority/pop.
+  peek() {
+    return this._items[0].value;
+  }
+
+  peekPriority() {
+    return this._items[0].priority;
+  }
+
+  // Returns {priority, value}.
   pop() {
     const items = this._items;
     const top = items[0];

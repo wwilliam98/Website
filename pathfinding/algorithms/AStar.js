@@ -17,10 +17,15 @@ class AStar extends PathfindingAlgorithm {
     return Math.sqrt(rowDelta * rowDelta + colDelta * colDelta);
   }
 
+  // f = g + h. Weighted A* overrides this to inflate h.
+  _priority(costSoFar, estimate) {
+    return costSoFar + estimate;
+  }
+
   findPath(grid) {
     const gScore = new Map([[grid.start.id, 0]]);
     const heap = new MinHeap();
-    heap.push(AStar._heuristic(grid.start, grid.target), grid.start);
+    heap.push(this._priority(0, AStar._heuristic(grid.start, grid.target)), grid.start);
     const settled = new Set();
     const cameFrom = new Map();
     const visitedOrder = [];
@@ -36,7 +41,7 @@ class AStar extends PathfindingAlgorithm {
         if (candidate < (gScore.get(neighbor.id) ?? Infinity)) {
           gScore.set(neighbor.id, candidate);
           cameFrom.set(neighbor.id, current);
-          heap.push(candidate + AStar._heuristic(neighbor, grid.target), neighbor);
+          heap.push(this._priority(candidate, AStar._heuristic(neighbor, grid.target)), neighbor);
         }
       }
     }

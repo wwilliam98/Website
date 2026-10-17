@@ -48,10 +48,16 @@
                                 <div class="dropdown-divider"><u>Unweighted Algorithm</u></div>
                                 <li id='BFSDropdown'><a href="#">Breadth-first Search</a></li>
                                 <li id='DFSDropdown'><a href="#">Depth-first Search</a></li>
+                                <li id='GreedyBestFirstDropdown'><a href="#">Greedy Best-first Search</a></li>
+                                <li id='JumpPointDropdown'><a href="#">Jump Point Search</a></li>
+                                <li id='IterativeDeepeningDropdown'><a href="#">Iterative Deepening DFS</a></li>
                                 <div class="dropdown-divider">------------------------------</div>
                                 <div class="dropdown-divider"><u>Weighted Algorithm</u></div>
                                 <li id='DijkstraDropdown'><a href="#" disabled>Dijkstra's Algorithm</a></li>
                                 <li id='AStarDropdown'><a href="#" disabled>A* Search</a></li>
+                                <li id='WeightedAStarDropdown'><a href="#">Weighted A* Search</a></li>
+                                <li id='BidirectionalDropdown'><a href="#">Bidirectional Dijkstra</a></li>
+                                <li id='BellmanFordDropdown'><a href="#">Bellman-Ford</a></li>
                             </ul>
                         </li>
 
@@ -111,6 +117,10 @@
                     <div id="about_algorithm_div">
                         <u><h1 style="text-align: center;">About Algorithm</h1></u>
                         <h3 id='algo_def' style="text-align: center;">Select an Algorithm to see the definition</h3>
+                        <div id="greedControl" style="display: none;">
+                            <h3 style="text-align: center;">Greed: <span id="greedValue">2</span></h3>
+                            <input id="greedSlider" type="range" min="1" max="5" step="0.5" value="2" class="slider">
+                        </div>
                     </div>
 
                 </div>
