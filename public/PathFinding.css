@@ -1,669 +1,408 @@
-body{
-  background-color: #f2f2f2;
+/* Pathfinding visualizer. Chrome matches the portfolio (gray-800, sky accent);
+   the grid stays light so the weight and node icons read clearly. */
+:root {
+  --bg: #1f2937;          /* gray-800, same as the portfolio */
+  --bg-deep: #111827;     /* gray-900 */
+  --surface: #273449;
+  --border: #374151;
+  --text: #f3f4f6;
+  --muted: #9ca3af;
+  --accent: #38BDF8;
+  --accent-strong: #0ea5e9;
+
+  --grid-line: #dbe3ec;
+  --cell-bg: #ffffff;
+  --wall: #334155;
+  --visited: #bae6fd;
+  --path: #fbbf24;
+
+  --weight2: #ecfdf5;
+  --weight4: #bbf7d0;
+  --weight6: #86efac;
+  --weight8: #4ade80;
+  --weight10: #22c55e;
+
+  --cell: 22px;           /* set from JS to fit the board */
 }
 
-.navbar {
-  background-color: rgb(31 41 55);
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
-.container-fluid {
+button, select, input { font: inherit; }
+
+[hidden] { display: none !important; }
+
+/* Header */
+.pf-header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
-.navbar-inverse .navbar-nav{
+.pf-brand {
   display: flex;
-  justify-content: space-evenly;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
-.navbar-inverse .navbar-nav>li>a{
-  color: rgb(156 163 175);;
+.pf-brand-icon {
+  width: 22px;
+  height: 22px;
+  filter: invert(72%) sepia(54%) saturate(1000%) hue-rotate(170deg) brightness(101%);
 }
 
-.navbar-brand {
-  color: rgb(156 163 175);
-}
+.pf-header-links { display: flex; align-items: center; gap: 14px; }
 
-.navbar-nav {
+.pf-link { color: var(--muted); text-decoration: none; }
+.pf-link:hover { color: var(--accent); }
+
+.pf-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+}
+.pf-icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.pf-icon-btn-light { background: transparent; font-size: 20px; line-height: 1; }
+
+/* Toolbar */
+.pf-toolbar {
   display: flex;
-  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 24px;
+  padding: 10px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
-.nav {
+.pf-toolbar-group { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; }
+
+.pf-btn-row { margin-left: auto; }
+
+.pf-field { display: flex; flex-direction: column; gap: 4px; }
+
+.pf-field-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.pf-select, .pf-btn {
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.pf-select { padding: 0 10px; min-width: 150px; cursor: pointer; }
+
+.pf-btn { padding: 0 14px; cursor: pointer; white-space: nowrap; }
+.pf-btn:hover:not(:disabled), .pf-select:hover:not(:disabled) { border-color: var(--accent); }
+
+.pf-btn-primary {
+  min-width: 150px;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--bg-deep);
+  font-weight: 700;
+}
+.pf-btn-primary:hover:not(:disabled) { background: var(--accent-strong); }
+
+.pf-btn:focus-visible, .pf-select:focus-visible, .pf-icon-btn:focus-visible,
+.pf-brush:focus-visible, .pf-slider:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+:disabled { opacity: .45; cursor: not-allowed !important; }
+
+.pf-greed { margin-top: 12px; }
+.pf-greed .pf-slider { width: 100%; }
+
+.pf-slider { width: 160px; height: 36px; accent-color: var(--accent); cursor: pointer; }
+
+/* Layout */
+.pf-main { display: flex; align-items: flex-start; gap: 16px; padding: 16px; }
+
+.pf-board-wrap {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
-.dropdown:hover{
-  /* opacity: 0.7; */
-  background-color: #d3d3d3;
-  border-style: separate;
-  border-radius: 14cm;
-  border-width: 10px;
-  transition: opacity 0.3s ease;
-  
-}
-
-.navbar-nav li>a:hover{
-  color: black
-}
-
-.navbar-nav{
+.pf-panel {
+  width: 300px;
+  flex-shrink: 0;
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.navbar-btn:focus, .navbar-btn:active {
-  outline: none;
+.pf-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
 }
 
-.navbar-btn > p {
-  color: rgb(156 163 175);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+.pf-card-title { margin: 0 0 8px; font-size: 15px; font-weight: 700; }
+.pf-card-text { margin: 8px 0 0; color: #d1d5db; }
+.pf-muted { color: var(--muted); font-weight: 400; }
+.pf-hint { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
 
-.btn-disabled{
+.pf-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-tag {
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+}
+.pf-tag-good { border-color: rgba(56, 189, 248, .5); color: var(--accent); }
+
+/* Brushes */
+.pf-brushes { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; }
+.pf-brushes .pf-brush { grid-column: span 2; justify-content: center; }
+.pf-brushes .pf-brush-wide { grid-column: span 5; justify-content: flex-start; }
+
+.pf-brush {
   display: flex;
-  justify-content: space-evenly;
-  background-color: red;
-  
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
 }
-
-/* For Tutorial buttons */
-#tutorial {
-  position: absolute;
-  z-index: 3;
-  background-color: rgba(255, 255, 255, 1);
-  width: 50%;
-  height: 70%;
-  border: 8px solid #34495e;
-  border-radius: 25px;
-  text-align: center;
-  float: right;
+.pf-brush:hover:not(:disabled) { border-color: var(--accent); }
+.pf-brush[aria-checked="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  background: rgba(56, 189, 248, .12);
+}
+.pf-brush kbd {
   margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  right: 0;
+  padding: 0 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font: 11px ui-monospace, monospace;
 }
 
-#tutorial > h3 {
-  padding-bottom: 10px;
-  padding-top: 20px;
+.pf-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg-deep);
+  color: #d1d5db;
+}
+.pf-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+body.pf-busy .pf-status::before { background: var(--path); animation: pf-pulse 1s infinite; }
+
+@keyframes pf-pulse { 50% { opacity: .3; } }
+
+/* Results */
+.pf-outcome { margin: 0 0 10px; font-weight: 600; }
+.pf-outcome.pf-fail { color: #fca5a5; }
+.pf-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; }
+.pf-stats div { padding: 8px; border-radius: 8px; background: var(--bg-deep); text-align: center; }
+.pf-stats dt { color: var(--muted); font-size: 11px; }
+.pf-stats dd { margin: 2px 0 0; font-size: 18px; font-weight: 700; }
+
+/* Legend */
+.pf-legend {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #d1d5db;
+}
+.pf-legend li { display: flex; align-items: center; gap: 6px; }
+
+.pf-swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--grid-line);
+  background-color: var(--cell-bg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  animation: none !important;
+}
+.pf-swatch.wall { border-color: #64748b; }
+.pf-swatch-visited { background-color: var(--visited); }
+.pf-swatch-path { background-color: var(--path); }
+
+/* Tutorial */
+.pf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(3, 7, 18, .7);
 }
 
-#tutorial > p {
-  font-weight: bolder;
-  padding: 5px 20px 5px 20px;
+.pf-modal-card {
+  width: min(520px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 20px 24px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
 }
 
-#mainTutorialImage {
-  width: 70%;
-  padding-top: 5px;
-}
+.pf-modal-top { display: flex; align-items: center; justify-content: space-between; }
+.pf-modal-card h2 { margin: 8px 0; font-size: 20px; }
+.pf-modal-card p { margin: 0; color: #d1d5db; }
+#mainTutorialImage { display: block; max-width: 100%; max-height: 220px; margin: 16px auto 0; border-radius: 8px; }
+.pf-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
 
-.KeyDisplay{
-  flex: 1;
-  flex-basis: 0;
-  
-  /* Styles for individual items */
-  /* For demonstration purposes */
-  width: 10%;
-  height: 10%;
-  border: 5px solid rgb(31 41 55);
-  background: white;
-  border-radius: 25px;
-  text-align: center;
-  font-weight: bold;
-  padding: 5px;
-  margin: 10px;
-}
-
-.WeightDisplay{
-  flex: 1;
-  flex-basis: 0;
-  
-  /* Styles for individual items */
-  /* For demonstration purposes */
-  width: 5%;
-  height: 5%;
-  border: 5px solid rgb(31 41 55);
-  background: white;
-  border-radius: 25px;
-  text-align: center;
-  font-weight: bold;
-  padding: 5px;
-  margin: 10px;
-}
-
-#nextButton {
-  color: #ffffff;
-  background-color: rgb(31 41 55);
-  position: absolute;
-  right: 2%;
-  bottom: 2%;
-}
-
-#skipButton {
-  color: #ffffff;
-  background-color: rgb(31 41 55);
-  position: absolute;
-  left: 2%;
-  bottom: 2%;
-}
-
-#previousButton {
-  color: #ffffff;
-  background-color: rgb(31 41 55);
-  position: absolute;
-  right: 17%;
-  bottom: 2%;
-}
-
-#finishButton {
-  color: #ffffff;
-  background-color: rgb(31 41 55);
-  position: absolute;
-  right: 2%;
-  bottom: 2%;
-}
-
-.slider {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  width: 100%; /* Full-width */
-  height: 25px; /* Specified height */
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-}
-
-/* Mouse-over effects */
-/* .slider:hover { */
-  /* opacity: 1; Fully shown on mouse-over */
-/* } */
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: rgb(31 41 55); /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-.slider::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: rgb(31 41 55); /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-/* For Tutorial buttons */
-
+/* Grid */
 #board {
-    margin-left: 5px;
-    margin-right: 5px;
-    border-collapse: collapse;
+  border-collapse: collapse;
+  background: var(--cell-bg);
+  box-shadow: 0 0 0 1px var(--border);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-#board td{
-    /*border: 1px solid rgb(175, 216, 248);*/
-    width: 25px;
-    height: 25px;
+#board td {
+  width: var(--cell);
+  height: var(--cell);
+  min-width: var(--cell);
+  padding: 0;
+  border: 1px solid var(--grid-line);
+  background-color: var(--cell-bg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 85%;
+  cursor: crosshair;
 }
 
-.normal{
-  border: 1.5px solid rgb(0,0,0);
-  background-color:white;
+#board td.start, #board td.target,
+#board td.visitedstart, #board td.visitedtarget,
+#board td.pathstart, #board td.pathtarget { cursor: grab; }
+
+.wall { background-color: var(--wall) !important; border-color: var(--wall) !important; }
+
+.start, .visitedstart, .pathstart { background-image: url(images/pathFindingStartIcon.svg); }
+.target, .visitedtarget, .pathtarget { background-image: url(images/pathFindingTargetIcon.svg); }
+
+.weight2, .visitedweight2, .pathweight2 { background-color: var(--weight2) !important; background-image: url(images/weight2.png); }
+.weight4, .visitedweight4, .pathweight4 { background-color: var(--weight4) !important; background-image: url(images/weight4.png); }
+.weight6, .visitedweight6, .pathweight6 { background-color: var(--weight6) !important; background-image: url(images/weight6.png); }
+.weight8, .visitedweight8, .pathweight8 { background-color: var(--weight8) !important; background-image: url(images/weight8.png); }
+.weight10, .visitedweight10, .pathweight10 { background-color: var(--weight10) !important; background-image: url(images/weight10.png); }
+
+/* Weighted cells keep their colour; a ring shows they were explored or on the path */
+.visitedweight2, .visitedweight4, .visitedweight6, .visitedweight8, .visitedweight10 {
+  box-shadow: inset 0 0 0 2px var(--visited);
+}
+.pathweight2, .pathweight4, .pathweight6, .pathweight8, .pathweight10 {
+  box-shadow: inset 0 0 0 3px var(--path);
 }
 
-.wall{
-  /* background-image:url(../images/brick.jpeg); */
-  background-color: darkgrey;
-  animation-name: wallAnimation;
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
+.visited, .visitedstart, .visitedtarget { background-color: var(--visited) !important; }
+.path, .pathstart, .pathtarget { background-color: var(--path) !important; }
 
-.weight2{
-  background-color:lightcyan;
-  background-image:url(../images/weight2.png);
-  background-size: contain;
-  animation-name: wallAnimation;
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.weight4{
-  background-color:lightgreen;
-  background-image:url(../images/weight4.png);
-  background-size: contain;
-  animation-name: wallAnimation;
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.weight6{
-  background-color:turquoise;
-  background-image:url(../images/weight6.png);
-  background-size: contain;
-  animation-name: wallAnimation;
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.weight8{
-  background-color:yellow;
-  background-image:url(../images/weight8.png);
-  background-size: contain;
-  animation-name: wallAnimation;
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.weight10{
-  background-color:red;
-  background-image:url(../images/weight10.png);
-  background-size: contain;
-  animation-name: wallAnimation;
-  animation-duration: 0.3s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-/* Visited Wights */
-.visitedweight2{
-  background-color:lightcyan;
-  background-image:url(../images/weight2.png);
-  background-size: contain;
-  animation-name: visitedAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.visitedweight4{
-  background-color:lightgreen;
-  background-image:url(../images/weight4.png);
-  background-size: contain;
-  animation-name: visitedAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.visitedweight6{
-  background-color:turquoise;
-  background-image:url(../images/weight6.png);
-  background-size: contain;
-  animation-name: visitedAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.visitedweight8{
-  background-color:yellow;
-  background-image:url(../images/weight8.png);
-  background-size: contain;
-  animation-name: visitedAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.visitedweight10{
-  background-color:red;
-  background-image:url(../images/weight10.png);
-  background-size: contain;
-  animation-name: visitedAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-/* Path Wights */
-.pathweight2{
-  background-color:lightcyan;
-  background-image:url(../images/weight2.png);
-  background-size: contain;
-  animation-name: pathAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.pathweight4{
-  background-color:lightgreen;
-  background-image:url(../images/weight4.png);
-  background-size: contain;
-  animation-name: pathAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.pathweight6{
-  background-color:turquoise;
-  background-image:url(../images/weight6.png);
-  background-size: contain;
-  animation-name: pathAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.pathweight8{
-  background-color:yellow;
-  background-image:url(../images/weight8.png);
-  background-size: contain;
-  animation-name: pathAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-.pathweight10{
-  background-color:red;
-  background-image:url(../images/weight10.png);
-  background-size: contain;
-  animation-name: pathAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-  border: 1.5px solid rgb(0,0,0);
-}
-
-/* Header Buttons */
-.visualizeAvailable{
-  background-color:white;
-}
-.visualizeUnavailable{
-  background-color:red;
-}
+/* Animations */
+.wall, .weight2, .weight4, .weight6, .weight8, .weight10 { animation: wallAnimation .3s ease-out; }
+.visited, .visitedstart, .visitedtarget,
+.visitedweight2, .visitedweight4, .visitedweight6, .visitedweight8, .visitedweight10 { animation: visitedAnimation 1.2s ease-out; }
+.path, .pathstart, .pathtarget,
+.pathweight2, .pathweight4, .pathweight6, .pathweight8, .pathweight10 { animation: pathAnimation .9s ease-out; }
+.start, .target { animation: specialNodes .6s ease-out; }
 
 @keyframes wallAnimation {
-  0% {
-    transform: scale(.1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.visited{
-  border: 1px solid rgb(175, 216, 248);
-  animation-name: visitedAnimation;
-  animation-duration: 1.5s;
-  animation-timing-function: ease-in-out;
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-}
-
-/* .startImage{
-  background-image: url(../images/pathFindingStartIcon.svg);
-  width: 50px;
-  height: 50px;
-} */
-
-.visitedstart{
-  background-image: url(../images/pathFindingStartIcon.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  animation-name: visitedAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-}
-
-.visitedtarget{
-  background-image: url(../images/pathFindingTargetIcon.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  animation-name: visitedAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
+  0% { transform: scale(.3); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 @keyframes visitedAnimation {
-  0% {
-    transform: scale(.3);
-    background-color: rgba(0, 0, 66, 0.75);
-    border-radius: 100%;
-  }
-
-  50% {
-    background-color: yellow;
-    border: 1.5px solid rgb(0,0,0);
-  }
-
-  75% {
-    transform: scale(.5);
-    background-color: yellowgreen;
-    border: 1.5px solid rgb(0,0,0);
-  }
-
-  100% {
-    transform: scale(1.0);
-    background-color: lightyellow;
-    border: 1.5px solid rgb(0,0,0);
-  }
-}
-
-.path{
-  border: 1px solid rgb(175, 216, 248);
-  animation-name: pathAnimation;
-  animation-duration: 2s;
-  animation-timing-function: ease-in-out;
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-}
-
-.pathstart{
-  background-image: url(../images/pathFindingStartIcon.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  animation-name: pathAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
-}
-
-.pathtarget{
-  background-image: url(../images/pathFindingTargetIcon.svg);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  animation-name: pathAnimation;
-  animation-duration: 2.0s;
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-play-state: running;
+  0% { transform: scale(.3); background-color: #1e3a8a; border-radius: 50%; }
+  50% { background-color: #38bdf8; }
+  100% { transform: scale(1); }
 }
 
 @keyframes pathAnimation {
-  0% {
-    transform: scale(.3);
-    background-color: rgba(0, 0, 66, 0.75);
-    border-radius: 100%;
-  }
-
-  50% {
-    background-color: lightsteelblue;
-    border: 1.5px solid rgb(0,0,0);
-  }
-
-  75% {
-    transform: scale(1.2);
-    background-color: lightskyblue;
-    border: 1.5px solid rgb(0,0,0);
-  }
-
-  100% {
-    transform: scale(1.0);
-    background-color: lightseagreen;
-    border: 1.5px solid rgb(0,0,0);
-  }
-}
-
-.start{
-    background-image:url(../images/pathFindingStartIcon.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    animation-name: specialNodes;
-    animation-duration: 2.0s;
-    animation-timing-function: ease-out;
-    animation-delay: 0;
-    animation-direction: alternate;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    animation-play-state: running;
-}
-
-.target{
-    background-image: url(../images/pathFindingTargetIcon.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    animation-name: specialNodes;
-    animation-duration: 2.0s;
-    animation-timing-function: ease-out;
-    animation-delay: 0;
-    animation-direction: alternate;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    animation-play-state: running;
+  0% { transform: scale(.4); background-color: #f59e0b; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 @keyframes specialNodes {
-  0% {
-    transform: scale(.3);
-    /*background-color: darkslategrey;*/
-  }
-
-  50% {
-    transform: scale(1.2);
-    /*background-color: darkslategrey;*/
-  }
-
-  100% {
-    transform: scale(1.0);
-    /*background-color: darkslategrey;*/
-  }
+  0% { transform: scale(.3); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
-/* Misc */
-.circle-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid black;
+@media (prefers-reduced-motion: reduce) {
+  #board td { animation: none !important; }
+}
+
+/* Small screens: panel moves under the grid */
+@media (max-width: 900px) {
+  .pf-main { flex-direction: column; align-items: stretch; padding: 12px; }
+  .pf-panel { width: auto; }
+  .pf-btn-row { margin-left: 0; }
+}
+
+@media (max-width: 600px) {
+  .pf-header { padding: 10px 12px; }
+  .pf-brand { font-size: 16px; }
+  .pf-toolbar { padding: 10px 12px; gap: 10px; }
+  .pf-toolbar-group { width: 100%; }
+  .pf-toolbar-group .pf-field { flex: 1; }
+  .pf-toolbar-group:first-child .pf-field { flex-basis: 100%; }
+  .pf-select { min-width: 0; width: 100%; font-size: 16px; }
+  .pf-btn-primary { min-width: 0; flex: 1; }
+  .pf-slider { width: 100%; }
+  .pf-btn-row .pf-btn { flex: 1; padding: 0 6px; }
 }
