@@ -1,50 +1,14 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import SectionHeading from './SectionHeading'
+import content from '../data/content.json'
 
 import STLogo from "../Images/STMicroelectronicLogo.png"
 import OpenSlotPic from "../Images/OpenSlot.png"
 
-const experiences = [
-  {
-    logo: STLogo,
-    company: 'STMicroelectronics',
-    title: 'Software Engineer II',
-    period: 'May 2024 – Present',
-    tags: ['Python', 'OpenCV', 'YOLO', 'LSTM'],
-    bullets: [
-      'Designed and deployed AI applications for cross-functional teams using CNN architectures.',
-      'Built AI-driven computer vision solutions with Raspberry Pi, Python, and YOLO, automating defect detection.',
-      'Developed LSTM predictive models for Epitaxy gas flow planning, improving process efficiency and scheduling accuracy.',
-      'Lead a 100-person AI community, running quarterly training on Python, ML, and computer vision.',
-    ],
-  },
-  {
-    logo: STLogo,
-    company: 'STMicroelectronics',
-    title: 'Software Engineer',
-    period: 'May 2022 – April 2024',
-    tags: ['Python', 'PHP', 'JavaScript', 'Perl', 'MySQL'],
-    bullets: [
-      'Designed RESTful APIs to integrate data across teams, improving system interoperability.',
-      'Built and maintained PHP/MySQL websites for the Reticle Assembly Team.',
-      'Migrated Excel data to MySQL with Python Pandas, streamlining data management.',
-      'Visualized production statistics on internal websites using Pandas and Matplotlib.',
-    ],
-  },
-  {
-    logo: OpenSlotPic,
-    company: 'OpenSlot Inc.',
-    title: 'Quality Assurance',
-    period: 'Summer 2018 & 2019',
-    tags: ['JavaScript', 'HTML', 'Testing'],
-    bullets: [
-      'Identified and documented application faults, reducing defects by 50%.',
-      'Designed test plans with doctors and dentists to align functionality with business needs.',
-      'Provided usability and functionality recommendations that improved application features.',
-    ],
-  },
-]
+// Experience text lives in data/content.json (shared with the chat assistant)
+const logos = { st: STLogo, openslot: OpenSlotPic }
+const experiences = content.experiences.map((exp) => ({ ...exp, logo: logos[exp.logo] }))
 
 function WorkExperience() {
   return (

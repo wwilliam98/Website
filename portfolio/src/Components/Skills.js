@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import SectionHeading from './SectionHeading'
+import content from '../data/content.json'
 
 import PythonLogo from "../Images/pythonlogo.jpeg"
 import MysqlLogo from "../Images/MysqlLogo.png"
@@ -20,45 +21,17 @@ import CppLogo from "../Images/cpplogo.png"
 import CssLogo from "../Images/CSSlogo.png"
 import OpenCVLogo from "../Images/OpenCVlogo.png"
 
-const skillGroups = [
-  {
-    category: 'Languages',
-    skills: [
-      { logo: PythonLogo, name: 'Python' },
-      { logo: JsLogo, name: 'JavaScript' },
-      { logo: JavaLogo, name: 'Java' },
-      { logo: CppLogo, name: 'C++' },
-      { logo: PhpLogo, name: 'PHP' },
-      { logo: PerlLogo, name: 'Perl' },
-    ],
-  },
-  {
-    category: 'AI & data',
-    skills: [
-      { logo: OpenCVLogo, name: 'OpenCV' },
-      { logo: PandasLogo, name: 'Pandas' },
-      { logo: MysqlLogo, name: 'MySQL' },
-      { logo: MongoDBLogo, name: 'MongoDB' },
-    ],
-  },
-  {
-    category: 'Web',
-    skills: [
-      { logo: ReactLogo, name: 'React' },
-      { logo: NodejsLogo, name: 'Node.js' },
-      { logo: ExpressLogo, name: 'Express' },
-      { logo: TailwindLogo, name: 'Tailwind' },
-      { logo: HtmlLogo, name: 'HTML' },
-      { logo: CssLogo, name: 'CSS' },
-    ],
-  },
-  {
-    category: 'Tools',
-    skills: [
-      { logo: LinuxLogo, name: 'Linux' },
-    ],
-  },
-]
+// Skill names live in data/content.json (shared with the chat assistant); logos are keyed by name
+const logos = {
+  'Python': PythonLogo, 'JavaScript': JsLogo, 'Java': JavaLogo, 'C++': CppLogo, 'PHP': PhpLogo, 'Perl': PerlLogo,
+  'OpenCV': OpenCVLogo, 'Pandas': PandasLogo, 'MySQL': MysqlLogo, 'MongoDB': MongoDBLogo,
+  'React': ReactLogo, 'Node.js': NodejsLogo, 'Express': ExpressLogo, 'Tailwind': TailwindLogo, 'HTML': HtmlLogo, 'CSS': CssLogo,
+  'Linux': LinuxLogo,
+}
+const skillGroups = content.skillGroups.map((group) => ({
+  ...group,
+  skills: group.skills.map((name) => ({ name, logo: logos[name] })),
+}))
 
 function Skills() {
   return (
