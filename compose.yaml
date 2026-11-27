@@ -1,0 +1,19 @@
+# Deploy: git pull && docker compose up -d --build
+services:
+  website:
+    build: .
+    restart: unless-stopped
+    # Only nginx on the host can reach it; port 3000 isn't exposed to the internet.
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      NODE_ENV: production
+      TRUST_PROXY: "1"   # one hop: nginx on the host
+    volumes:
+      - ./config.js:/app/config.js:ro
+      - ./private:/app/private:ro
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

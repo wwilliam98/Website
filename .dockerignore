@@ -1,0 +1,9 @@
+.git
+**/node_modules
+portfolio/build
+config.js
+private
+.env
+DareMightyThings2019-master
+.claude
+*.md
