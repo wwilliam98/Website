@@ -1,19 +1,38 @@
-# Deploy: git pull && docker compose up -d --build
+# Deploy: git pull && docker compose up -d --build && docker image prune -f
 services:
   website:
     build: .
     restart: unless-stopped
-    # Only nginx on the host can reach it; port 3000 isn't exposed to the internet.
+    # Localhost only, for checks like curl localhost:3000; visitors come in through Caddy.
     ports:
       - "127.0.0.1:3000:3000"
     environment:
       NODE_ENV: production
-      TRUST_PROXY: "1"   # one hop: nginx on the host
+      TRUST_PROXY: "1"   # one hop: Caddy
     volumes:
       - ./config.js:/app/config.js:ro
       - ./private:/app/private:ro
-    logging:
+    logging: &logging
       driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
+
+  caddy:
+    image: caddy:2.10
+    restart: unless-stopped
+    depends_on:
+      - website
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data     # certificates; keep this volume or Caddy re-issues them
+      - caddy_config:/config
+    logging: *logging
+
+volumes:
+  caddy_data:
+  caddy_config:

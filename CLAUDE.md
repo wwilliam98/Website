@@ -35,8 +35,10 @@ npm test    # pathfinding algorithms + request validation (node:test, no depende
 
 ### Deployment
 There is no CI/CD: merging to `main` does not deploy, and the only automated PR check
-is GitGuardian (secret scanning). Production is one container (`Dockerfile` + `compose.yaml`,
-`restart: unless-stopped`) behind nginx on the host, which terminates TLS (certbot). Deploy with
+is GitGuardian (secret scanning). Production is Docker Compose (`compose.yaml`): the `website`
+container (`Dockerfile`) behind a `caddy` container that terminates TLS with automatic Let's Encrypt
+certificates and sets security headers (`Caddyfile`). Certificates live in the `caddy_data` volume
+(never `docker compose down -v`). Port 3000 is published on 127.0.0.1 only, for local checks. Deploy with
 `git pull && docker compose up -d --build`. `config.js` and `private/` are bind-mounted read-only,
 never copied into the image (`.dockerignore` excludes them). The runtime image must include
 `portfolio/src/data/content.json`, because `utils/chatPrompt.js` reads it at startup; a new

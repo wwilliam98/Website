@@ -100,8 +100,9 @@ and request validation. The React app has no test suite yet.
 
 ## Deployment
 
-There's no CI/CD: merging to `main` doesn't deploy. Production runs in Docker behind nginx
-(which handles HTTPS). On the server, with `config.js` and `private/resume.pdf` in the repo
+There's no CI/CD: merging to `main` doesn't deploy. Production runs in Docker: the site plus a
+[Caddy](https://caddyserver.com) container that handles HTTPS (it gets and renews the
+Let's Encrypt certificate itself). On the server, with `config.js` and `private/resume.pdf` in the repo
 folder:
 
 ```bash
@@ -109,8 +110,8 @@ git pull && docker compose up -d --build && docker image prune -f
 ```
 
 The `Dockerfile` builds the React site and pins the Node version; `compose.yaml` mounts
-`config.js` and `private/` read-only, sets `NODE_ENV=production` and `TRUST_PROXY=1`, and
-only listens on `127.0.0.1:3000` so nginx is the sole way in.
+`config.js` and `private/` read-only and sets `NODE_ENV=production` and `TRUST_PROXY=1`;
+`Caddyfile` holds the domain, the www redirect and the security headers.
 
 ## Contributing notes
 
