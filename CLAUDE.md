@@ -35,8 +35,15 @@ npm test    # pathfinding algorithms + request validation (node:test, no depende
 
 ### Deployment
 There is no CI/CD: merging to `main` does not deploy, and the only automated PR check
-is GitGuardian (secret scanning). Production is one long-running process, `npm start`
-(Express), kept alive by a process manager (e.g. pm2 or systemd).
+is GitGuardian (secret scanning). Production is Docker Compose (`compose.yaml`): the `website`
+container (`Dockerfile`) behind a `caddy` container that terminates TLS with automatic Let's Encrypt
+certificates and sets security headers (`Caddyfile`). Certificates live in the `caddy_data` volume
+(never `docker compose down -v`). Port 3000 is published on 127.0.0.1 only, for local checks. Deploy with
+`git pull && docker compose up -d --build`. `config.js` and `private/` are bind-mounted read-only,
+never copied into the image (`.dockerignore` excludes them). The runtime image must include
+`portfolio/src/data/content.json`, because `utils/chatPrompt.js` reads it at startup; a new
+top-level backend folder needs its own `COPY` line in the Dockerfile. The Node version lives in the
+Dockerfile's `FROM` lines. Building the React site needs ~1.5 GB RAM (add swap on a 1 GB instance).
 
 ## Architecture
 
