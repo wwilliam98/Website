@@ -1,7 +1,7 @@
 # Caddy terminates HTTPS (gets and renews the Let's Encrypt certificate itself)
-# and forwards to the Express container. HTTP is redirected to HTTPS automatically.
-willwebx.com {
-	reverse_proxy website:3000
+# and forwards to the app containers. HTTP is redirected to HTTPS automatically.
+
+(security_headers) {
 	header {
 		Strict-Transport-Security "max-age=31536000"
 		X-Frame-Options SAMEORIGIN
@@ -12,6 +12,18 @@ willwebx.com {
 	}
 }
 
+willwebx.com {
+	reverse_proxy website:3000
+	import security_headers
+}
+
 www.willwebx.com {
 	redir https://willwebx.com{uri} permanent
+}
+
+# Badminton app: a container from a separate compose project, reached over the
+# shared "web" Docker network (see compose.yaml).
+badminton.willwebx.com {
+	reverse_proxy badminton-web:80
+	import security_headers
 }
