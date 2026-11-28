@@ -13,8 +13,17 @@
 }
 
 willwebx.com {
+	encode zstd gzip
 	reverse_proxy website:3000
 	import security_headers
+	# The React build's /static/ files have content hashes in their names, so
+	# browsers can keep them for a year instead of re-checking on every visit.
+	@hashed path /static/*
+	header @hashed {
+		# defer: replace Express's own "max-age=0" instead of adding a second header
+		Cache-Control "public, max-age=31536000, immutable"
+		defer
+	}
 }
 
 www.willwebx.com {
@@ -24,6 +33,7 @@ www.willwebx.com {
 # Badminton app: a container from a separate compose project, reached over the
 # shared "web" Docker network (see compose.yaml).
 badminton.willwebx.com {
+	encode zstd gzip
 	reverse_proxy badminton-web:80
 	import security_headers
 }
