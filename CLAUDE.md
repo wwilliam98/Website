@@ -41,7 +41,9 @@ certificates and sets security headers (`Caddyfile`). Certificates live in the `
 (never `docker compose down -v`). Port 3000 is published on 127.0.0.1 only, for local checks. Caddy also fronts
 `badminton.willwebx.com` → `badminton-web:80`, a container from a separate compose project on the same server
 that joins the shared `web` network (`external: true` there; this compose file creates it). Other apps
-must not publish host ports 80/443, which Caddy owns. Deploy with
+must not publish host ports 80/443, which Caddy owns. After a Caddyfile-only change, run `docker compose restart caddy`:
+`up -d` doesn't notice it, and `caddy reload` keeps reading the old file because `git pull` replaces the
+file and the single-file bind mount still points at the old copy. Deploy with
 `git pull && docker compose up -d --build`. `config.js` and `private/` are bind-mounted read-only,
 never copied into the image (`.dockerignore` excludes them). The runtime image must include
 `portfolio/src/data/content.json`, because `utils/chatPrompt.js` reads it at startup; a new
