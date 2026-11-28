@@ -31,7 +31,16 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data     # certificates; keep this volume or Caddy re-issues them
       - caddy_config:/config
+    networks:
+      - default
+      - web   # shared with other compose projects on this server (e.g. badminton-web)
     logging: *logging
+
+networks:
+  # Fixed name so other compose projects can join it with `external: true`.
+  # This project creates it if it doesn't exist yet.
+  web:
+    name: web
 
 volumes:
   caddy_data:
